@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control @error('documento') is-invalid @enderror" id="doc" placeholder="name@example.com" name="documento" aria-describedby="helpDoc">
+                                <input type="text" class="form-control @error('documento') is-invalid @enderror" id="doc" placeholder="name@example.com" name="documento" aria-describedby="helpDoc" autofocus>
                                 <label for="doc">Usuario <b style="color: red;">*</b></label>
                                 <div id="helpDoc" class="form-text">
                                     Ingresar nombre de usuario para iniciar recolección.

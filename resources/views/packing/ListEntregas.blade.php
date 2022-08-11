@@ -2,11 +2,9 @@
 @section('tittle',('Lista Entregas'))
 
 @section('content')
-
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10  py-5 px-1 px-sm-5 mt-5 mt-sm-0 opacidad rounded">
-                
                 <div class="row justify-content-start mb-3">
                     <div class="col-12">
                         <div class="row">
@@ -20,7 +18,7 @@
                             <div class="col-10 col-sm-10 col-md-11 py-2 py-sm-0">
                                 <div>
                                     <div class="collapse collapse-horizontal" id="collapseWidthExample2">
-                                        <input class="form-control" type="number" id="b_lista" onkeyup="search()"  placeholder="Codigo entrega">
+                                        <input class="form-control" type="number" id="b_lista" onkeyup="search()" autofocus  placeholder="Codigo entrega">
                                     </div>
                                 </div>
                             </div>
@@ -28,15 +26,15 @@
                     </div>
                 </div>
 
-                <div class="list-group lista">
-                    @foreach($entregas as $value)
+                <div class="list-group " id="lista">
+                    <!-- @foreach($entregas as $value)
                         <a href="/indexPack/{{$value['DocNum']}}" class="list-group-item list-group-item-action" aria-current="true">
                             <div class="d-flex w-100 justify-content-between">
                             <h5 class=" text-center mb-1">{{$value['DocNum']}}-- {{$value['CardName']}}</h5>
                             <p>{{$value['DocDate']}}</p>
                             </div>
                         </a>
-                    @endforeach
+                    @endforeach -->
              
                 </div>
             </div>
@@ -96,19 +94,15 @@
             
             var array = '<?php echo json_encode($entregas)?>';
             
-            // let pedi = JSON.parse(array);
-
-            console.log(array);
+            let pedi = JSON.parse(array);
 
             function search() {
                 
                 let busqueda = $('#b_lista').val();
-                console.log(busqueda);
                 $('#lista').text('');
 
-                for(let element of array) {
+                for(let element of pedi) {
                     let elemento = element['DocNum'];
-                    console.log(elemento);
                     let string = String(elemento);
                         if (string.indexOf(busqueda) !== -1) {
                             $('#lista').append(`

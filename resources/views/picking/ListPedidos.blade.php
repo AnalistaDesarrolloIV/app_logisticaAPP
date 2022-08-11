@@ -129,6 +129,7 @@
                             <a href="/indexPick/${element['BaseRef']}" class="list-group-item list-group-item-action" aria-current="true">
                                 <div class="d-flex w-100 justify-content-between">
                                 <h5 class=" text-start mb-1">${element['BaseRef']} -- ${element['CardName']}</h5>
+                                <p>${element['DocDate']}</p>
                                 </div>
                             </a>
                         `);
@@ -159,6 +160,7 @@
                             <a href="/indexPick/${element['BaseRef']}" class="list-group-item list-group-item-action" aria-current="true">
                                 <div class="d-flex w-100 justify-content-between">
                                 <h5 class=" text-start mb-1">${element['BaseRef']} -- ${element['CardName']}</h5>
+                                <p>${element['DocDate']}</p>
                                 </div>
                             </a>
                         `);

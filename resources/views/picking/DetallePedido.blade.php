@@ -16,12 +16,13 @@
                 </div>
                 
 
-                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%">
+                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
                     <thead class="table-dark">
                         <tr>
                             <!-- <th>Codigo pedido</th> -->
                             <th class="text-center">Codigo de barras</th>
                             <th class="text-center">Nombre producto</th>
+                            <th class="text-center">Lote</th>
                             <th class="text-center">Cantidad</th>
                             <th class="text-center">Comentarios</th>
                         </tr>
@@ -32,7 +33,8 @@
                             <!-- <td>{{$value['BaseRef']}}</td> -->
                             <td><b>{{$value['CodeBars']}}</b></td>
                             <td><b>{{$value['Dscription']}}</b></td>
-                            <td><b>{{$value['Quantity']}}</b></td>
+                            <td><b>{{$value['LOTE']}}</b></td>
+                            <td><b>{{$value['CantLote']}}</b></td>
                             <td><b>{{$value['Comments']}}</b></td>
                         </tr>                  
                         @endforeach

@@ -34,7 +34,7 @@ class LoginDatabase extends Command
             'Password' => '1234',
         ])->json();
 
-        session_start();
-        $_SESSION['B1SESSION'] = $response['SessionId'];
+        $_SESSION['B1SESSION'] = '';
+        return $_SESSION['B1SESSION'];
     }
 }

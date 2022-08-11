@@ -27,19 +27,44 @@
                             <th class="text-center">Comentarios</th>
                         </tr>
                     </thead>
-                    <tbody style="font-size: bold;">
-                        @foreach($entrega as $value)  
-                        <tr>
-                            <!-- <td>{{$value['BaseRef']}}</td> -->
-                            <td><b>{{$value['CodeBars']}}</b></td>
-                            <td><b>{{$value['Dscription']}}</b></td>
-                            <td><b>{{$value['LOTE']}}</b></td>
-                            <td><b>{{$value['Quantity']}}</b></td>
-                            <td><b>{{$value['Comments']}}</b></td>
-                        </tr>                  
-                        @endforeach
+                    <tbody style="font-size: bold;" id="tabla">
+                        <!-- @foreach($entrega as $value)  
+                        
+                            <tr>
+                                <td><b>{{$value['CodeBars']}}</b></td>
+                                <td>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton{{$value['id__']}}" onclick="modal_p()">
+                                        <s>{{$value['id__']}}</s>
+                                        <b>{{$value['Dscription']}}</b>
+                                    </button>
+                                </td>
+                                
+                                <td><b>{{$value['LOTE']}}</b></td>
+                                <td><b>{{$value['CantLote']}}</b></td>
+                                <td><b>{{$value['Comments']}}</b></td>
+                            </tr>                  
+                        @endforeach -->
                     </tbody>
+
                 </table>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Detalle producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="contenido">
+                    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary">Guardar</button>
+                    </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -98,6 +123,13 @@
                 max-height: 48rem;
             }
         }
+        .conta{
+            max-width: 80px;
+            min-width: 80px;
+            border:solid 1px  black;
+            border-radius: 20px;
+            padding-left: 10px;
+        }
     </style>
 @endsection
 
@@ -145,5 +177,47 @@
             //         }
             //     }  );
             // });
+            
+            var array = '<?php echo json_encode($entrega)?>';
+            
+            let arreglo = JSON.parse(array);
+            
+            console.log(arreglo);
+
+            for(let element of arreglo) {
+                $('#tabla').append(`
+                <tr>
+                    <td><b>${element['CodeBars']}</b></td>
+                    <td>
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton" onclick="modal_p(${element['id__']})">
+                            <b>${element['Dscription']}</b>
+                        </button>
+                    </td>
+                    
+                    <td><b>${element['LOTE']}</b></td>
+                    <td><b>${element['CantLote']}</b></td>
+                    <td><b>${element['Comments']}</b></td>
+                </tr> 
+                `);
+            }
+
+            function modal_p(id) {
+                console.log(id);
+                $("#contenido").text('');
+                for(let element of arreglo) {
+                    if (element['id__'] == id) {
+                        console.log(element['Dscription'])
+                        $("#contenido").append(`
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><b>Codigo de barras:</b> ${element['CodeBars']}</li>
+                                <li class="list-group-item"><b>Producto:</b> ${element['Dscription']}</li>
+                                <li class="list-group-item"><b>Lote:</b> ${element['LOTE']}</li>
+                                <li class="list-group-item"><b>Cantidad:</b> <input type="number" class="conta" id="contador"> <b>de</b> ${element['CantLote']}</li>
+                                <li class="list-group-item"><b>Comentarios de empaque:</b> ${element['Comments']}</li>
+                            </ul>
+                        `);
+                    }
+                }
+            }
         </script>
 @endsection

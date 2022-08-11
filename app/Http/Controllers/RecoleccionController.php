@@ -31,7 +31,7 @@ class RecoleccionController extends Controller
                     $_SESSION['EMPLEADO'] = $value;
                     // dd($_SESSION['EMPLEADO']);
     
-                    $pedido = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGAS?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef))")->json();
+                    $pedido = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef))")->json();
                     $pedido = $pedido['value'];
                     // dd($pedido);
                     return view('picking.ListPedidos', compact('pedido'));
@@ -50,12 +50,11 @@ class RecoleccionController extends Controller
     public function indexPick($id)
     {
         // dd($id);
-        
         session_start();
         if (isset($_SESSION['B1SESSION'])) {
-            $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGAS?$filter =BaseRef eq ('.$id.')')->json();
-            $ped =$ped['value'];
-            dd($ped);
+            $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")->json();
+            $ped = $ped['value'];
+            // dd($ped);
             return view('picking.DetallePedido', compact('ped', 'id'));
         }else {
             Alert::warnig('Reinicio', 'Reinicio forsado');
