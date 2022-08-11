@@ -29,10 +29,17 @@ class EmpaqueController extends Controller
                 if ($value['OPE_OPERATORE'] == $identificador) {
                     $_SESSION['EMPLEADO'] = $value;
     
-                    $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/DeliveryNotes?".'$select'." = DocDate,DocNum,CardCode,CardName,&".'$filter'." =DocumentStatus eq 'bost_Open'")->json();
-                    $entregas = $entregas['value'];
-                    // dd($entregas);
-                    return view('packing.ListEntregas', compact('entregas'));
+                    $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/DeliveryNotes?".'$select'." = DocDate,DocNum,CardCode,CardName,&".'$filter'." =DocumentStatus eq 'bost_Open'");
+                    $estado = $entregas->status();
+                    if ($estado == 200) {
+                        $entregas->json();
+                        $entregas = $entregas['value'];
+                        dd($entregas);
+                        return view('packing.ListEntregas', compact('entregas'));
+                    }else{
+                        Alert::error('¡Error!', 'Error interno.');
+                        return redirect('/');
+                    }
                 }
             }
             Alert::error('¡Error!', 'Usuario no existe');
