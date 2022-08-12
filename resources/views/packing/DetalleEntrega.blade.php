@@ -14,7 +14,14 @@
                         <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Entrega N° {{$id}}.</h3>
                     </div>
                 </div>
-                
+                <div class="row justify-content-center pb-3">
+                    <div class="col-5">
+                        <div class="input-group flex-nowrap">
+                            <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
+                            <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" onchange="lector()">
+                        </div>
+                    </div>
+                </div>
 
                 <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%">
                     <thead class="table-dark">
@@ -24,7 +31,6 @@
                             <th class="text-center">Nombre producto</th>
                             <th class="text-center">Lote</th>
                             <th class="text-center">Cantidad</th>
-                            <th class="text-center">Comentarios</th>
                         </tr>
                     </thead>
                     <tbody style="font-size: bold;" id="tabla">
@@ -60,9 +66,8 @@
                     <div class="modal-body" id="contenido">
                     
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary">Guardar</button>
+                    <div class="modal-footer" id="foot">
+
                     </div>
                     </div>
                 </div>
@@ -77,6 +82,7 @@
 <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css"> -->
 <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
+<!-- <link rel="stylesheet" href="sweetalert2.min.css"> -->
     <style>
         
         .packing{
@@ -141,6 +147,7 @@
         <script src="https://cdn.datatables.net/fixedheader/3.2.4/js/dataTables.fixedHeader.min.js"></script>
         <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
         <script src="https://cdn.datatables.net/responsive/2.3.0/js/responsive.bootstrap.min.js"></script>
+        <!-- <script src="sweetalert2.all.min.js"></script> -->
         <script>
             $(document).ready(function() {
                 var table = $('#tbl').DataTable( {
@@ -161,63 +168,109 @@
             
                 new $.fn.dataTable.FixedHeader( table );
             } );
-            // $(document).ready(function () {
-            //     $('#tbl').DataTable( {
-            //         "language": {
-            //             "lengthMenu": "Mostrar _MENU_ registros por pagina",
-            //             "zeroRecords": "No hay registros por mostrar",
-            //             "info": "Mostrando página _PAGE_ de _PAGES_",
-            //             "infoEmpty": "No hay registros disponibles",
-            //             "infoFiltered": "(filtrado de _MAX_ registros totales)",
-            //             "search": "Buscar:",
-            //             "paginate": {
-            //                 'next': 'Siguiente',
-            //                 'previous': 'Anterior'
-            //             }
-            //         }
-            //     }  );
-            // });
+            
+            $('#code_bar').focus();
             
             var array = '<?php echo json_encode($entrega)?>';
             
             let arreglo = JSON.parse(array);
             
-            console.log(arreglo);
 
             for(let element of arreglo) {
                 $('#tabla').append(`
-                <tr>
+                <tr id="fila-${element['id__']}">
                     <td><b>${element['CodeBars']}</b></td>
                     <td>
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton" onclick="modal_p(${element['id__']})">
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
                             <b>${element['Dscription']}</b>
                         </button>
                     </td>
                     
                     <td><b>${element['LOTE']}</b></td>
                     <td><b>${element['CantLote']}</b></td>
-                    <td><b>${element['Comments']}</b></td>
                 </tr> 
                 `);
             }
 
             function modal_p(id) {
-                console.log(id);
                 $("#contenido").text('');
+                $('#foot').text('');
                 for(let element of arreglo) {
                     if (element['id__'] == id) {
-                        console.log(element['Dscription'])
-                        $("#contenido").append(`
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><b>Codigo de barras:</b> ${element['CodeBars']}</li>
-                                <li class="list-group-item"><b>Producto:</b> ${element['Dscription']}</li>
-                                <li class="list-group-item"><b>Lote:</b> ${element['LOTE']}</li>
-                                <li class="list-group-item"><b>Cantidad:</b> <input type="number" class="conta" id="contador"> <b>de</b> ${element['CantLote']}</li>
-                                <li class="list-group-item"><b>Comentarios de empaque:</b> ${element['Comments']}</li>
-                            </ul>
-                        `);
+                        if (element['CantLote'] > 5) {
+                            console.log(element['Dscription'])
+                            $("#contenido").append(`
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><b>Codigo de barras:</b> ${element['CodeBars']}</li>
+                                    <li class="list-group-item"><b>Producto:</b> ${element['Dscription']}</li>
+                                    <li class="list-group-item"><b>Lote:</b> ${element['LOTE']}</li>
+                                    <li class="list-group-item"><b>Cantidad:</b> <input type="number" class="conta" id="contador${element['id__']}" value="1"> <b>de</b> ${element['CantLote']}</li>
+                                    <li class="list-group-item"><b>Comentarios de empaque:</b> ${element['Comments']}</li>
+                                </ul>
+                            `);
+                            $('#foot').append(`
+                                <button type="button"  id="cerrar"  class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" onclick="check(${element['id__']})">Guardar</button>
+                            `);
+                        }else {
+                            
+                            console.log(element['Dscription'])
+                            $("#contenido").append(`
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><b>Codigo de barras:</b> ${element['CodeBars']}</li>
+                                    <li class="list-group-item"><b>Producto:</b> ${element['Dscription']}</li>
+                                    <li class="list-group-item"><b>Lote:</b> ${element['LOTE']}</li>
+                                    <li class="list-group-item"><b>Cantidad:</b> <input type="number" class="conta" id="contador${element['id__']}" readonly value="1"> <b>de</b> ${element['CantLote']}</li>
+                                    <li class="list-group-item"><b>Comentarios de empaque:</b> ${element['Comments']}</li>
+                                </ul>
+                            `);
+                            $('#foot').append(`
+                                <button type="button"  id="cerrar"  class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" onclick="check(${element['id__']})">Guardar</button>
+                            `);
+                        }
                     }
                 }
+            }
+            
+            function lector() {
+                let codigo = $('#code_bar').val();
+                console.log(codigo);
+                let cont = 0;
+                for(let element of arreglo) {
+                    if (element['CodeBars'] == codigo) {
+                        cont+= 1;
+
+                    }
+                }
+                if (cont == 1) {
+                    for(let element of arreglo) {
+                        if (element['CodeBars'] == codigo) {
+                            $('#boton_m').click();
+
+                            modal_p(element['id__']);
+                        }
+                    }
+                }else {
+
+                }
+
+                $('#code_bar').val('');
+            }
+
+            function check(id) {
+
+                for(let element of arreglo) {
+                    if (element['id__'] == id) {
+                        if ($('#contador'+element['id__']).val() == element['CantLote']) {
+                            $('#fila-'+id).addClass('table-success');
+                            $('#cerrar').click();
+                        }else {
+
+                        }
+                    }
+                }
+
             }
         </script>
 @endsection
