@@ -27,14 +27,15 @@ class EmpaqueController extends Controller
             $emp = Empleados::all();
             foreach ($emp as $key => $value) {
                 if ($value['OPE_OPERATORE'] == $identificador) {
-                    $_SESSION['EMPLEADO'] = $value;
+                    $_SESSION['EMPLEADO_E'] = $value;
     
-                    $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef,DocNum))");
+                    $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Comments,Departamento,Municipio_Ciudad,Estado_linea))");
                     $estado = $entregas->status();
                     if ($estado == 200) {
                         $entregas->json();
                         $entregas = $entregas['value'];
                         // dd($entregas);
+                        Alert::success('Bienvenid@', $_SESSION['EMPLEADO_E']['OPE_OPERATORE']);
                         return view('packing.ListEntregas', compact('entregas'));
                     }else{
                         Alert::error('¡Error!', 'Error interno.');
@@ -58,12 +59,12 @@ class EmpaqueController extends Controller
 
     public function indexPack($id)
     {
-        // dd($id);
-
+        $fecha_hora = date('Y-m-d h:m:s', timestamp:time());
         
+        $_SESSION['H_I_EMP'] = $fecha_hora;
         session_start();
         if (isset($_SESSION['B1SESSION'])) {
-            $entrega = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=DocNum eq (".$id.")")->json();
+            $entrega = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")->json();
             $entrega = $entrega['value'];
             // dd($entrega);
             return view('packing.DetalleEntrega', compact('entrega', 'id'));
@@ -72,5 +73,10 @@ class EmpaqueController extends Controller
             return redirect('/');
         }
         
+    }
+    public function savePack(Request $request, $id)
+    {
+        $input = $request->all();
+        dd($input);
     }
 }

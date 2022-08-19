@@ -28,12 +28,12 @@ class RecoleccionController extends Controller
             $emp = Empleados::all();
             foreach ($emp as $key => $value) {
                 if ($value['OPE_OPERATORE'] == $identificador) {
-                    $_SESSION['EMPLEADO'] = $value;
-                    // dd($_SESSION['EMPLEADO']);
+                    $_SESSION['EMPLEADO_R'] = $value;
     
-                    $pedido = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef))")->json();
+                    $pedido = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Comments,Departamento,Municipio_Ciudad,Estado_linea))")->json();
                     $pedido = $pedido['value'];
                     // dd($pedido);
+                    Alert::success('Bienvenid@', $_SESSION['EMPLEADO_E']['OPE_OPERATORE']);
                     return view('picking.ListPedidos', compact('pedido'));
                 }
             }
@@ -49,28 +49,13 @@ class RecoleccionController extends Controller
 
     public function indexPick($id)
     {
-        // session_start();
-        // $date = date('Y-m-d');
-        // $datos = Http::get('https://mandaryservir.co/mys/users/remesasivanagro/'.$date)->json();
-        // $datos = $datos['Guia'];
-        // foreach ($datos as $key => $value) {;
-        //     $numeroD = $value['Venta']['documento1'];
-        //     $envio_sap = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/Invoices?$select = DocEntry,DocNum &$filter=DocNum eq '.$numeroD)->json();
-        //     $envio_sap = $envio_sap['value'];
-        //     if (isset($envio_sap[0]['DocEntry'])) {
-        //         $id_doc = $envio_sap[0]['DocEntry'];
-        //         $save_sap = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/Invoices(".$id_doc.")", [
-        //             "U_R_GUIA"=>$value['Venta']['remesa'],
-        //             "U_F_GUIA"=>$value['Venta']['fecha'],
-        //             "U_H_GUIA"=>$value['Venta']['hora'],
-        //             "U_E_Guia"=>"02"
-        //         ])->status();
-        //     }
-        // }
+        $fecha_hora = date('Y-m-d h:m:s', time());
+        $_SESSION['H_I_REC'] = $fecha_hora;
         session_start();
         if (isset($_SESSION['B1SESSION'])) {
             $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")->json();
             $ped = $ped['value'];
+            // dd($ped);
             return view('picking.DetallePedido', compact('ped', 'id'));
         }else {
             Alert::warnig('Reinicio', 'Reinicio forsado');

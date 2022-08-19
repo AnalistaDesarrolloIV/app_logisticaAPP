@@ -3,72 +3,114 @@
 
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-12  py-3 px-1 px-sm-5 mt-5 mt-sm-0 opacidad rounded">
-                <div class="row">
-                    <div class="col-1">
-                        <a class="btn btn-outline-dark" href="/logPack" id="volver" ><i class="fas fa-chevron-left"></i></a>
-                    </div>
-                    <div class="col-11">
-                        <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Entrega N° {{$id}}.</h3>
-                    </div>
-                </div>
-                <div class="row justify-content-center pb-3">
-                    <div class="col-5">
-                        <div class="input-group flex-nowrap">
-                            <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                            <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" onchange="lector()">
+            <div class="col-12  py-3 px-1 px-sm-3 mt-5 mt-sm-0 opacidad rounded">
+                <div class="row mt-5 mt-lg-0">
+                    <div class="col-lg-12 ">
+                        <div class="row">
+                            <div class="col-1">
+                                <a class="btn btn-outline-dark" href="/logPack" id="volver" ><i class="fas fa-chevron-left"></i></a>
+                            </div>
+                            <div class="col-11">
+                                <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-3 columna cabecera">
+                                
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
+                                        <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
+                                        <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
+                                    </div>
+                                </div>
+
+                                <div class="row " id="d_fijos">
+
+                                </div>
+
+                                <form action="/savePack/{{$id}}" method="post">
+                                    @csrf
+                                    <div class="row" id="lista_form">
+
+                                    </div>
+                                    <div class="row justify-content-end">
+
+                                        <div class="col-5" id="cont_boton_f">
+
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div class="col-md-12 col-lg-9 columna">
+                                <div class="row justify-content-center py-3">
+                                    <div class="col-md-5 col-lg-8">
+                                        <div class="input-group flex-nowrap">
+                                            <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
+                                            <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" onchange="lector()">
+                                        </div>
+                                    </div>
+                                </div>
+                                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center">Codigo de barras</th>
+                                            <th class="text-center">Nombre producto</th>
+                                            <th class="text-center">Lote</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-center">Cajas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: bold;" id="tabla">
+
+                                    </tbody>
+
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%">
-                    <thead class="table-dark">
-                        <tr>
-                            <!-- <th>Codigo pedido</th> -->
-                            <th class="text-center">Codigo de barras</th>
-                            <th class="text-center">Nombre producto</th>
-                            <th class="text-center">Lote</th>
-                            <th class="text-center">Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody style="font-size: bold;" id="tabla">
-                        <!-- @foreach($entrega as $value)  
-                        
-                            <tr>
-                                <td><b>{{$value['CodeBars']}}</b></td>
-                                <td>
-                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton{{$value['id__']}}" onclick="modal_p()">
-                                        <s>{{$value['id__']}}</s>
-                                        <b>{{$value['Dscription']}}</b>
-                                    </button>
-                                </td>
-                                
-                                <td><b>{{$value['LOTE']}}</b></td>
-                                <td><b>{{$value['CantLote']}}</b></td>
-                                <td><b>{{$value['Comments']}}</b></td>
-                            </tr>                  
-                        @endforeach -->
-                    </tbody>
-
-                </table>
-                </div>
             </div>
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            
+            <!-- Modal 1-->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-scrollable">
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Detalle producto</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" id="close_m" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="contenido">
-                    
+
                     </div>
                     <div class="modal-footer" id="foot">
 
                     </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cont_boton_m2">
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="boton_m2"></button>
+            </div>
+            <!-- Modal 2-->
+            <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">productos</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="list-group" id="contenido2">
+                            </div>
+                        </div>
+                        <div class="modal-footer" id="foot2">
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,12 +119,12 @@
 @endsection
 
 @section('css')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css"> -->
-<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
-<!-- <link rel="stylesheet" href="sweetalert2.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="sweetalert2.min.css"> -->
     <style>
         
         .packing{
@@ -91,42 +133,52 @@
         .back{
             display: none;
         }
-        .opacidad{
+        .columna{
             overflow: hidden;
             overflow-y: auto;
-            min-height: 40rem;
-            max-height: 40rem;
+            min-height: 35rem;
+            max-height: 35rem;
         }
 
-        .opacidad::-webkit-scrollbar {
+        .columna::-webkit-scrollbar {
             -webkit-appearance: none;
         }
 
-        .opacidad::-webkit-scrollbar:vertical {
+        .columna::-webkit-scrollbar:vertical {
             width:10px;
         }
 
-        .opacidad::-webkit-scrollbar-button:increment,.opacidad::-webkit-scrollbar-button {
+        .columna::-webkit-scrollbar-button:increment,.columna::-webkit-scrollbar-button {
             display: none;
         } 
 
-        .opacidad::-webkit-scrollbar:horizontal {
+        .columna::-webkit-scrollbar:horizontal {
             height: 10px;
         }
 
-        .opacidad::-webkit-scrollbar-thumb {
+        .columna::-webkit-scrollbar-thumb {
             background-color: #797979;
             border-radius: 20px;
             border: 2px solid #989898;
         }
 
-        .opacidad::-webkit-scrollbar-track {
+        .columna::-webkit-scrollbar-track {
             border-radius: 10px;  
         }
         @media (max-width: 600px) {
-            .opacidad{
+            .columna{
                 min-height: 48rem;
                 max-height: 48rem;
+            }.cabecera{
+                min-height: 48rem !important;
+                max-height: 48rem !important;
+            }
+        }
+        
+        @media (max-width: 1000px) {
+            .cabecera{
+                min-height: 20rem !important;
+                max-height: 20rem !important;
             }
         }
         .conta{
@@ -149,6 +201,7 @@
         <script src="https://cdn.datatables.net/responsive/2.3.0/js/responsive.bootstrap.min.js"></script>
         <!-- <script src="sweetalert2.all.min.js"></script> -->
         <script>
+            let tabla_cont = 0;
             $(document).ready(function() {
                 var table = $('#tbl').DataTable( {
                     responsive: true,
@@ -167,80 +220,293 @@
                 } );
             
                 new $.fn.dataTable.FixedHeader( table );
+                $('#code_bar').focus();
             } );
-            
-            $('#code_bar').focus();
             
             var array = '<?php echo json_encode($entrega)?>';
             
             let arreglo = JSON.parse(array);
-            
 
             for(let element of arreglo) {
-                $('#tabla').append(`
-                <tr id="fila-${element['id__']}">
-                    <td><b>${element['CodeBars']}</b></td>
-                    <td>
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
-                            <b>${element['Dscription']}</b>
-                        </button>
-                    </td>
-                    
-                    <td><b>${element['LOTE']}</b></td>
-                    <td><b>${element['CantLote']}</b></td>
-                </tr> 
+                if (element['Biologico'] !== '') {
+                    $('#tabla').append(`
+                        <tr id="fila-${element['id__']}" class="table-warning">
+                            <td>
+                                <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                <b>${element['CodeBars']}</b>
+                            </td>
+                            <td>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                    <b>${element['Dscription']}</b>
+                                </button>
+                            </td>
+                            
+                            <td>
+                                <b>${element['LOTE']}</b>
+                            </td>
+                            <td>
+                                <b>${element['CantLote']}</b>
+                            </td>
+                            <td>
+                                <ul  id="n_cajas-${element['id__']}">
+                                
+                                </ul>
+                            </td>
+                        </tr> 
+                    `);
+                }else if (element['TOXICO'] !== "N") {
+                    $('#tabla').append(`
+                        <tr id="fila-${element['id__']}" class="table-danger">
+                            <td>
+                                <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                <b>${element['CodeBars']}</b>
+                            </td>
+                            <td>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                    <b>${element['Dscription']}</b>
+                                </button>
+                            </td>
+                            
+                            <td>
+                                <b>${element['LOTE']}</b>
+                            </td>
+                            <td>
+                                <b>${element['CantLote']}</b>
+                            </td>
+                            <td>
+                                <b id="n_cajas-${element['id__']}"></b>
+                            </td>
+                        </tr> 
+                    `);
+                }else {
+                    $('#tabla').append(`
+                        <tr id="fila-${element['id__']}">
+                            <td>
+                                <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                <b>${element['CodeBars']}</b>
+                            </td>
+                            <td>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                    <b>${element['Dscription']}</b>
+                                </button>
+                            </td>
+                            
+                            <td>
+                                <b>${element['LOTE']}</b>
+                            </td>
+                            <td>
+                                <b>${element['CantLote']}</b>
+                            </td>
+                            <td>
+                                <b id="n_cajas-${element['id__']}"></b>
+                            </td>
+                        </tr> 
+                    `);
+                }
+            }
+
+            let contador_cajas = 0;
+
+            for(let element of arreglo) {
+                $('#d_fijos').text('');
+                $('#d_fijos').append(`
+                    <div class="col-12">
+                        <ul class="list-group list-group-flush rounded">
+                            <li class="list-group-item"><b>Departamento: </b>${element['Departamento']}</li>
+                            <li class="list-group-item"><b>Municipio / Ciudad: </b>${element['Municipio_Ciudad']}</li>
+                            <li class="list-group-item"><b>Fecha Creación: </b>${element['DocDate']}</li>
+                            <li class="list-group-item"><b>Comentarios: </b>${element['Comments']}</li>
+                        </ul>
+                    </div>
                 `);
             }
 
             function modal_p(id) {
                 $("#contenido").text('');
+                $("#contenido").removeClass('d-flex justify-content-center');
                 $('#foot').text('');
+                $('#divi').text('');
+                contador_cajas = 0;
                 for(let element of arreglo) {
-                    if (element['id__'] == id) {
-                        if (element['CantLote'] > 5) {
-                            console.log(element['Dscription'])
-                            $("#contenido").append(`
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><b>Codigo de barras:</b> ${element['CodeBars']}</li>
-                                    <li class="list-group-item"><b>Producto:</b> ${element['Dscription']}</li>
-                                    <li class="list-group-item"><b>Lote:</b> ${element['LOTE']}</li>
-                                    <li class="list-group-item"><b>Cantidad:</b> <input type="number" class="conta" id="contador${element['id__']}" value="1"> <b>de</b> ${element['CantLote']}</li>
-                                    <li class="list-group-item"><b>Comentarios de empaque:</b> ${element['Comments']}</li>
-                                </ul>
-                            `);
-                            $('#foot').append(`
-                                <button type="button"  id="cerrar"  class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="button" class="btn btn-primary" onclick="check(${element['id__']})">Guardar</button>
-                            `);
-                        }else {
-                            
-                            console.log(element['Dscription'])
-                            $("#contenido").append(`
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><b>Codigo de barras:</b> ${element['CodeBars']}</li>
-                                    <li class="list-group-item"><b>Producto:</b> ${element['Dscription']}</li>
-                                    <li class="list-group-item"><b>Lote:</b> ${element['LOTE']}</li>
-                                    <li class="list-group-item"><b>Cantidad:</b> <input type="number" class="conta" id="contador${element['id__']}" readonly value="1"> <b>de</b> ${element['CantLote']}</li>
-                                    <li class="list-group-item"><b>Comentarios de empaque:</b> ${element['Comments']}</li>
-                                </ul>
-                            `);
-                            $('#foot').append(`
-                                <button type="button"  id="cerrar"  class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="button" class="btn btn-primary" onclick="check(${element['id__']})">Guardar</button>
-                            `);
+                    if ($('#check-'+id).prop('checked') != true) {
+                        if (element['id__'] == id) {
+                            if (element['CantLote'] > 5) {
+                                $("#contenido").append(`
+                                    <div class="row justify-content-center pb-3">
+                                        <div class="col-lg-5">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="input-group-text" id="Code_b"> <i class="fas fa-barcode"></i> </span>
+                                                <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="Code_b" id="code" onchange="contador(${element['id__']})">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <b>Codigo de barras:</b>
+                                            ${element['CodeBars']}
+                                         </li>
+                                        <li class="list-group-item">
+                                            <b>Producto:</b> 
+                                            ${element['Dscription']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Lote:</b> 
+                                            ${element['LOTE']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Fecha de vencimiento:</b>
+                                            ${element['Fecha_Vencimiento_Lote']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Cantidad:</b>
+                                            <input type="number" class="conta" id="contador${element['id__']}" value="1"> 
+                                            <b>de</b> 
+                                            ${element['CantLote']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Comentarios de empaque:</b>
+                                            ${element['Comments']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Cajas de empaque:</b>
+                                            <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}"> 
+                                            <b> unidades en caja N° </b>
+                                            <input type="number" class="conta" id="caja-${element['id__']}-${contador_cajas}" value="${contador_cajas+1}"> 
+                                            <button class="btn btn-dark btn-sm" id="btn_div" onclick="dividir(${element['id__']})">Dividir</button>
+                                        </li>
+                                        <li class="list-group-item" id="divi">
+
+                                        </li>
+
+                                    </ul>
+
+                                    <div id="tit_just">
+
+                                    </div>
+
+                                    <div class="form-floating" id="just">
+                                    
+                                    </div>
+                                `);
+                                $('#foot').append(`
+                                    <button type="button"  id="cerrar1"  class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Cerrar
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="check(${element['id__']})">Guardar</button>
+                                `);
+                            }else {
+                                
+                                $("#contenido").append(`
+                                    <div class="row justify-content-center pb-3">
+                                        <div class="col-lg-5">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="input-group-text" id="Code_b"> <i class="fas fa-barcode"></i> </span>
+                                                <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="Code_b" id="code" onchange="contador(${element['id__']})">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <b>Codigo de barras:</b> 
+                                            ${element['CodeBars']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Producto:</b> 
+                                            ${element['Dscription']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Lote:</b> 
+                                            ${element['LOTE']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Fecha de vencimiento:</b>
+                                            ${element['Fecha_Vencimiento_Lote']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Cantidad:</b> 
+                                            <input type="number" class="conta" id="contador${element['id__']}" readonly value="1"> 
+                                            <b>de</b>
+                                            ${element['CantLote']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Comentarios de empaque:</b> 
+                                            ${element['Comments']}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Cajas de empaque:</b>
+                                            <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}"> 
+                                            <b> unidades en caja N° </b>
+                                            <input type="number" class="conta" id="caja-${element['id__']}-${contador_cajas}" value="${contador_cajas+1}"> 
+                                            <button class=" btn btn-dark btn-sm" id="btn_div" onclick="dividir(${element['id__']})">Dividir</button>
+                                        </li>
+                                        <li class="list-group-item" id="divi">
+
+                                        </li>
+                                    </ul>
+
+                                    <div id="tit_just">
+
+                                    </div>
+                                    
+                                    <div class="form-floating" id="just">
+                                    
+                                    </div>
+                                `);
+                                $('#foot').append(`
+                                    <button type="button"  id="cerrar1"  class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-primary" onclick="check(${element['id__']})">Guardar</button>
+                                `);
+                            }
                         }
                     }
                 }
+                if ($("#contenido").text()== '') {
+                    $("#contenido").addClass('d-flex justify-content-center');
+                    $("#contenido").append(`
+                        <strong class="text-center text-danger text-lg">El producto no esta en el pedido o ya fue revisado</strong>
+                    `);
+                }
+            }
+
+            function dividir(id) {
+                contador_cajas +=1;
+                $('#divi').append(` 
+                    <hr>
+                    <b>Cajas de empaque:</b>
+                    <input type="number" class="conta" id="unidades-${id}-${contador_cajas}"> 
+                    <b> unidades en caja N° </b>
+                    <input type="number" class="conta" id="caja-${id}-${contador_cajas}" value="${contador_cajas+1}"> 
+                `);
+            }
+            
+            function contador(id) {
+                let codigo = $('#code').val();
+                for(let element of arreglo) {
+                    if (element['id__'] == id) {
+                        if (element['CodeBars'] == codigo) {
+                            let cantidad = $('#contador'+id).val();
+                            if (element['CantLote'] > cantidad) {
+                                $('#contador'+id).val(parseInt(cantidad)+1);
+                            }else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Cantidad',
+                                    text: 'Cantidad alcanzada',
+                                })
+                            }
+                        }
+                    }
+                }
+                $('#code').val('');
+                $('#code').focus();
             }
             
             function lector() {
                 let codigo = $('#code_bar').val();
-                console.log(codigo);
                 let cont = 0;
                 for(let element of arreglo) {
                     if (element['CodeBars'] == codigo) {
                         cont+= 1;
-
                     }
                 }
                 if (cont == 1) {
@@ -252,25 +518,217 @@
                         }
                     }
                 }else {
+                    $('#boton_m2').click();
 
+                    modal2(codigo);
                 }
 
-                $('#code_bar').val('');
             }
+
+            function modal2 (codigo) {
+                    $("#contenido2").text('');
+                    $("#contenido2").removeClass('d-flex justify-content-center');
+                    for(let element of arreglo) {
+                        if ($('#check-'+element['id__']).prop('checked') != true) {
+                            if (element['CodeBars'] == codigo) {
+                                $("#contenido2").append(`
+                                    <button type="button" class="list-group-item list-group-item-action"  data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                        
+                                    <strong>${element['Dscription']}</strong> ----  Lote: <small>${element['LOTE']}</small>
+                                    </button>
+
+                                `);
+                            }
+                        }
+                    }
+                if ($("#contenido2").text()== '') {
+                    $("#contenido2").addClass('d-flex justify-content-center');
+                    $("#contenido2").append(`
+                        <strong class="text-center text-danger">Los productos no estan en el pedido o ya fueron revisados</strong>
+                    `);
+                }
+            }
+
 
             function check(id) {
 
                 for(let element of arreglo) {
                     if (element['id__'] == id) {
                         if ($('#contador'+element['id__']).val() == element['CantLote']) {
-                            $('#fila-'+id).addClass('table-success');
-                            $('#cerrar').click();
-                        }else {
-
+                            // $('#fila-'+id).addClass('table-success');
+                            for (let c = 0; c <= contador_cajas; c++) {
+                                let uni = $('#unidades-'+id+'-'+c).val();
+                                let ca = $('#caja-'+id+'-'+c).val();
+                                $('#n_cajas-'+id).append(`
+                                    <li><b>${uni} unidades en caja ${ca}</b></li>
+                                `);
+                                
+                                $('#lista_form').append(`
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="floatingInput" name="id[]" value="${element['id__']}" placeholder="${element['id__']}">
+                                                </div>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="floatingInput" name="Producto[]" value="${element['Dscription']}" placeholder="${element['Dscription']}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" value="${uni}" name="unidad[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" value=" " name="justify[]">
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
+                            }
+                            $('#check-'+id).prop("checked", true);
+                            tabla_cont += 1;
+                            $('#cerrar1').click();
                         }
                     }
                 }
 
+                for(let element of arreglo) {
+                    if (element['id__'] == id) {
+                        if ($('#contador'+element['id__']).val() != element['CantLote']) {
+                            Swal.fire({
+                                title: 'Segur@?',
+                                text: "Cantidad insuficiente! Justificar faltante.",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Si',
+                                cancelButtonText: 'No'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        $('#tit_just').text('');
+                                        $('#tit_just').append(`
+                                            <h4 class="text-danger text-center">Justificación</h4>
+                                        `);
+                                        $("#just").text('');     
+                                        $("#just").append(`
+                                            <select class="form-select" id="justy" aria-label="Justificacion">
+                                                <option selected value="0">Seleccionar</option>
+                                                <option value="1">Sin existencias en bodega.</option>
+                                                <option value="2">Daño</option>
+                                                <option value="3">Caja abierta.</option>
+                                            </select>
+                                            <label for="justy">Justificación</label>
+                                        `);
+                                        $('#foot').text('');
+                                        $('#foot').append(`
+                                            <button type="button" class="btn btn-primary" onclick="check_just(${element['id__']})">Guardar y justificar</button>
+                                        `);
+
+                                    }
+                                })
+                        }
+                    }
+                }
+                
+                if (tabla_cont == (arreglo.length)) {
+                    $('#cont_boton_f').append(`
+                        <div class="d-grid gap-2 py-3">
+                            <button class="btn btn-dark" type="button">Finalizar</button>
+                        </div>
+                    `);
+                }
+                $('#code_bar').val('');
+                $('#code_bar').focus();
+
+            }
+            function check_just(id) {
+                let just = $('#justy option:selected').val();
+                let just_text = $('#justy option:selected').text();
+                console.log(just);
+                if (just == 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Justificación',
+                        text: 'Seleccionar una opcion para la justificación',
+                    })
+                }else {
+                    for(let element of arreglo) {
+                        if (element['id__'] == id) {
+                            $('#check-'+id).prop("checked", true);
+                            
+                            $('#n_cajas-'+id).append(`
+                                    <li><b>Justificación faltante: </b>${just_text} </li>
+                                `);
+                            for (let c = 0; c < contador_cajas+1; c++) {
+                                let uni = $('#unidades-'+id+'-'+c).val();
+                                let ca = $('#caja-'+id+'-'+c).val();
+                                $('#n_cajas-'+id).append(`
+                                    <li><b>${uni}</b> unidades en caja <b>${ca}</b></li>
+                                `);
+                                $('#lista_form').append(`
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="floatingInput" name="id[]" value="${element['id__']}" placeholder="${element['id__']}">
+                                                </div>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="floatingInput" name="Producto[]" value="${element['Dscription']}" placeholder="${element['Dscription']}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" value="${uni}" name="unidad[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" value="${just_text}" name="justify[]">
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
+                            }
+                            tabla_cont += 1;
+                            $('#close_m').click();
+                                Swal.fire(
+                                    'Justificado!',
+                                    'Checkeado y justificado exitosamente.',
+                                    'success'
+                                );
+                                
+                        }
+                    }
+                }
+                
+                if (tabla_cont == (arreglo.length)) {
+                    $('#cont_boton_f').append(`
+                        <div class="d-grid gap-2 py-3">
+                            <button class="btn btn-dark" type="submit">Finalizar</button>
+                        </div>
+                    `);
+                }
+                $('#code_bar').val('');
+                $('#code_bar').focus();
             }
         </script>
 @endsection

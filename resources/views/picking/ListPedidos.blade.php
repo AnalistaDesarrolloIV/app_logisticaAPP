@@ -5,12 +5,14 @@
 
     <div class="container-fluid">
         <div class="row justify-content-around">
-            <div class="col-10 col-md-6 col-lg-5 py-3 px-5 my-5 my-md-0 opacidad rounded">
+            <div class="col-10 col-md-6 col-lg-5 py-3 px-3 my-5 my-md-0 opacidad rounded">
                 
-                <div class="row justify-content-start">
-                    <div class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-sm-8">
                         <div class="row">
-                            <div class="col-auto col-sm-2 py-2 py-sm-0">
+                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedidos Envío.</h3>
+                            
+                            <!-- <div class="col-auto col-sm-2 py-2 py-sm-0">
                                 <div style=" float:left;">
                                     <button class="btn btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
                                         <i class="fas fa-search"></i>
@@ -23,24 +25,28 @@
                                         <input class="form-control" type="number" width="100%" id="b_envio" onkeyup="search_env()" placeholder="Codigo Pedido">
                                     </div>
                                 </div>
+                            </div> -->
+                            <div class="input-group input-group-lg mb-3">
+                                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="b_envio" onkeyup="search_env()" placeholder="Numero Pedido" aria-label="codigo_e" aria-describedby="basic-addon1">
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedidos Envío.</h3>
-                <div class="list-group" id="envio">
+                <div class="row justify-content-center flex-row flex-wrap py-3" id="envio">
              
                 </div>
             </div>
 
             
-            <div class="col-10 col-md-6 col-lg-5 py-3 px-5 opacidad rounded">
+            <div class="col-10 col-md-6 col-lg-5 py-3 px-3 opacidad rounded">
                 
-                <div class="row justify-content-start">
-                    <div class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-sm-8">
                         <div class="row">
-                            <div class="col-auto col-sm-2 py-2 py-sm-0">
+                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedidos Mostrador.</h3>
+                            <!-- <div class="col-auto col-sm-2 py-2 py-sm-0">
                                 <div style=" float:left;">
                                     <button class="btn btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample2" aria-expanded="false" aria-controls="collapseWidthExample2">
                                         <i class="fas fa-search"></i>
@@ -53,13 +59,16 @@
                                         <input class="form-control" type="number" id="b_mostrador" onkeyup="search_most()" placeholder="Codigo Pedido">
                                     </div>
                                 </div>
+                            </div> -->
+                            <div class="input-group input-group-lg  mb-3">
+                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" type="number" id="b_mostrador" onkeyup="search_most()" placeholder="Numero Pedido" aria-label="codigo_m" aria-describedby="basic-addon2">
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedidos Mostrador.</h3>
-                <div class="list-group" id="mostrador">
+                <div class="row justify-content-center flex-row flex-wrap py-3" id="mostrador">
                     
                 </div>
             </div>
@@ -104,6 +113,39 @@
             border-radius: 10px;  
         }
         
+        .targeta{
+            width: 100%;
+            overflow: hidden;
+            overflow: auto;
+            min-height: 14rem;
+            max-height: 14rem;
+        }
+
+        .targeta::-webkit-scrollbar {
+            -webkit-appearance: none;
+        }
+
+        .targeta::-webkit-scrollbar:vertical {
+            width:10px;
+        }
+
+        .targeta::-webkit-scrollbar-button:increment,.targeta::-webkit-scrollbar-button {
+            display: none;
+        } 
+
+        .targeta::-webkit-scrollbar:horizontal {
+            height: 5px;
+        }
+
+        .targeta::-webkit-scrollbar-thumb {
+            background-color: #797979;
+            border-radius: 20px;
+            border: 1px solid #989898;
+        }
+
+        .targeta::-webkit-scrollbar-track {
+            border-radius: 10px;  
+        }
     </style>
 @endsection
 
@@ -125,14 +167,22 @@
                 let inicial = string.substring(1, -long);
                 if(inicial == 5) {
                     if (string.indexOf(busqueda) !== -1) {
-                        $('#mostrador').append(`
-                            <a href="/indexPick/${element['BaseRef']}" class="list-group-item list-group-item-action" aria-current="true">
-                                <div class="d-flex w-100 justify-content-between">
-                                <h5 class=" text-start mb-1">${element['BaseRef']} -- ${element['CardName']}</h5>
-                                <p>${element['DocDate']}</p>
+                        if (element['Estado_linea'] == "Por Recoger") {
+                            $('#mostrador').append(`
+                                <div class="col-12 col-md-6">
+                                    <a href="/indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;" >
+                                        <div class="card my-2 targeta">
+                                            <div class="card-body">
+                                                <h4 class="card-title">${element['CardName']}</h4>
+                                                <h5 class="card-subtitle mb-2 text-muted"><b>Pedido N°: </b> ${element['BaseRef']}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted"><b>Municipio / Ciudad: </b> ${element['Municipio_Ciudad']}</h6>
+                                                <p class="card-text">${element['Comments']}</p>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
-                        `);
+                            `);
+                        }
                     }
                 }
             }
@@ -156,14 +206,22 @@
                 let inicial = string.substring(1, -long);
                 if(inicial == 7) {
                     if (string.indexOf(busqueda_env) !== -1) {
-                        $('#envio').append(`
-                            <a href="/indexPick/${element['BaseRef']}" class="list-group-item list-group-item-action" aria-current="true">
-                                <div class="d-flex w-100 justify-content-between">
-                                <h5 class=" text-start mb-1">${element['BaseRef']} -- ${element['CardName']}</h5>
-                                <p>${element['DocDate']}</p>
+                        if (element['Estado_linea'] == "Por Recoger") {
+                            $('#envio').append(`
+                                <div class="col-12 col-md-6">
+                                    <a href="/indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;" >
+                                        <div class="card my-2 targeta">
+                                            <div class="card-body">
+                                                <h4 class="card-title">${element['CardName']}</h4>
+                                                <h5 class="card-subtitle mb-2 text-muted"><b>Pedido N°: </b> ${element['BaseRef']}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted"><b>Municipio / Ciudad: </b> ${element['Municipio_Ciudad']}</h6>
+                                                <p class="card-text">${element['Comments']}</p>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
-                        `);
+                            `);
+                        }
                     }
                 }
             }
