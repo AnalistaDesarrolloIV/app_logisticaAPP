@@ -18,45 +18,35 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
-        'CompanyDB' => 'INVERSIONES0804',
-        'UserName' => 'Prueba',
-        'Password' => '1234',
-    ])->json();
+    try {
+        // $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
+        //     'CompanyDB' => 'INVERSIONES0804',
+        //     'UserName' => 'Prueba',
+        //     'Password' => '1234',
+        // ])->json();
+        // session_start();
+        // $_SESSION['B1SESSION'] = $response['SessionId'];
+            
+            // $datos = Http::get('https://mandaryservir.co/mys/users/remesasivanagro/2022-08-30')->json();
+            // $datos = $datos['Guia'];
+            // dd($datos); 
 
-    // dd($response);
-    session_start();
-    $_SESSION['B1SESSION'] = $response['SessionId'];
-    
-    // $date = date('Y-m-d');
-    // $datos = Http::get('https://mandaryservir.co/mys/users/remesasivanagro/2022-08-19')->json();
-    // $datos = $datos['Guia'];
-    // dd($datos);
-    // foreach ($datos as $key => $value) {;
-    //     $numeroD = $value['Venta']['documento1'];
-    //     $envio_sap = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/Invoices?$select = DocEntry,DocNum &$filter=DocNum eq 1596146')->json();
-    //     $envio_sap = $envio_sap['value'];
-    //     // dd($envio_sap);
-    //     if ($envio_sap !== '') {
-    //         // dd("si");
-    //         $id_doc = $envio_sap[0]['DocEntry'];
-    //         dd($id_doc);
-    //         $save_sap = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/Invoices(".$id_doc.")", [
-    //             "U_R_GUIA"=>$value['Venta']['remesa'],
-    //             "U_F_GUIA"=>$value['Venta']['fecha'],
-    //             "U_H_GUIA"=>$value['Venta']['hora'],
-    //             "U_E_Guia"=>"02"
-    //         ])->status();
-    //     }
-    // }
-    return view('Opciones');
+
+        return view('Opciones');
+
+    } catch (\Throwable $th) {
+        Alert::error($th->getMessage());
+        return redirect('/');
+    }
 });
-
-Route::post('/consulta',[EmpaqueController::class,'consulta'])->name('consulta');
+Route::get('/offline', function () {    
+    return view('vendor/laravelpwa/offline');
+});
 
 Route::get('/logPick',[RecoleccionController::class,'logPick'])->name('logPick');
 Route::post('/loginPick',[RecoleccionController::class,'loginPick'])->name('loginPick');
 Route::get('/indexPick/{id}',[RecoleccionController::class,'indexPick'])->name('indexPick');
+Route::get('/savePick/{id}',[RecoleccionController::class,'savePick'])->name('savePick');
 
 
 Route::get('/logPack',[EmpaqueController::class,'logPack'])->name('logPack');

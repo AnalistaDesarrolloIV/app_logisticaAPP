@@ -5,7 +5,7 @@
 
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-12  py-3 px-1 px-sm-5 mt-5 mt-sm-0 opacidad rounded">
+            <div class="col-12  pt-3 px-1 px-sm-5 mt-5  opacidad rounded">
                 <div class="row">
                     <div class="col-1">
                         <a class="btn btn-outline-dark" href="/logPick" id="volver" ><i class="fas fa-chevron-left"></i></a>
@@ -16,11 +16,59 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-md-12 col-lg-3 columna cabecera">
                         <div class="row mb-3">
                             <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
                             <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
                             <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
+                        </div>
+                        <!-- <ol class="list-group list-group-numbered">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                <div class="fw-bold">Biologicos</div>
+                                <b>Bahia: </b>80000
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                <div class="fw-bold">Almacen</div>
+                                <b>Bahia: </b>80003
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                <div class="fw-bold">Abastecimiento</div>
+                                <b>Bahia: </b>80012, 80015, 80013, 80014, 80002, 80011
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                <div class="fw-bold">Venenos</div>
+                                <b>Bahia: </b>80005
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                <div class="fw-bold">Modula 1</div>
+                                <b>Bahia: </b>11
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                <div class="fw-bold">Modula 2</div>
+                                <b>Bahia: </b>21
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                <div class="fw-bold">Modula 3</div>
+                                <b>Bahia: </b>31
+                                </div>
+                            </li>
+                        </ol> -->
+                        
+                        <div class="row " id="d_fijos">
+
                         </div>
                         <div class="row justify-content-end">
                             <div class="col-4" id="cont_boton_f">
@@ -28,7 +76,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-9">
+                    <div class="col-md-12 col-lg-9 columna">
                         <div class="row justify-content-center pb-3">
                             <div class="col-sm-5">
                                 <div class="input-group flex-nowrap">
@@ -37,21 +85,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="table-responsive">
+                            <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-center">Ubicación</th>
+                                        <th class="text-center">Nombre producto</th>
+                                        <th class="text-center">Lote</th>
+                                        <th class="text-center">Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: bold;" id="tabla">
 
-                        <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
-                            <thead class="table-dark">
-                                <tr>
-                                    <!-- <th>Codigo pedido</th> -->
-                                    <th class="text-center">Codigo de barras</th>
-                                    <th class="text-center">Nombre producto</th>
-                                    <th class="text-center">Lote</th>
-                                    <th class="text-center">Cantidad</th>
-                                </tr>
-                            </thead>
-                            <tbody style="font-size: bold;" id="tabla">
-
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>                
             </div>
@@ -71,7 +119,6 @@
                             </div>
                         </div>
                         <div class="modal-footer" id="foot2">
-
                         </div>
                     </div>
                 </div>
@@ -97,8 +144,8 @@
         .opacidad{
             overflow: hidden;
             overflow-y: auto;
-            min-height: 40rem;
-            max-height: 40rem;
+            min-height: 46rem;
+            max-height: 46rem;
         }
 
         .opacidad::-webkit-scrollbar {
@@ -126,11 +173,63 @@
         .opacidad::-webkit-scrollbar-track {
             border-radius: 10px;  
         }
+        .columna{
+            overflow: hidden;
+            overflow-y: auto;
+            min-height: 40rem;
+            max-height: 40rem;
+        }
+
+        .columna::-webkit-scrollbar {
+            -webkit-appearance: none;
+        }
+
+        .columna::-webkit-scrollbar:vertical {
+            width:10px;
+        }
+
+        .columna::-webkit-scrollbar-button:increment,.columna::-webkit-scrollbar-button {
+            display: none;
+        } 
+
+        .columna::-webkit-scrollbar:horizontal {
+            height: 10px;
+        }
+
+        .columna::-webkit-scrollbar-thumb {
+            background-color: #797979;
+            border-radius: 20px;
+            border: 2px solid #989898;
+        }
+
+        .columna::-webkit-scrollbar-track {
+            border-radius: 10px;  
+        }
         @media (max-width: 600px) {
-            .opacidad{
+            .columna{
                 min-height: 48rem;
                 max-height: 48rem;
             }
+            .cabecera{
+                min-height: 48rem !important;
+                max-height: 48rem !important;
+            }
+            body {
+                font-family: 'Nunito', sans-serif;
+                font-size: 12px;
+            }
+        } 
+        @media (max-width: 1000px) {
+            .cabecera{
+                min-height: 22rem !important;
+                max-height: 22rem !important;
+            }
+        }
+        .bio {
+            background: #ffbe00 !important;
+        }
+        .tox {
+            background: #f41b35 !important;
         }
     </style>
 @endsection
@@ -146,7 +245,7 @@
         <script>
             $(document).ready(function() {
                 var table = $('#tbl').DataTable( {
-                    responsive: true,
+                    responsive: false,
                     "language": {
                         "lengthMenu": "Mostrar _MENU_ registros por pagina",
                         "zeroRecords": "No hay registros por mostrar",
@@ -169,28 +268,120 @@
             var array = '<?php echo json_encode($ped)?>';
             
             let arreglo = JSON.parse(array);
+
+            
+            let inicioR = '<?php echo $_SESSION['H_I_REC']?>';
+
+            var Pedtal = '<?php echo json_encode($invoices)?>';
+            
+            let arreglo2 = JSON.parse(Pedtal);
             
 
+            for(let element2 of arreglo2) {
+                for(let element of arreglo) {
+                    if(element['ItemCode'] == element2['Articulo Efectuado']){
+                        let bahia = "";
+                        let cantidad = "";
+
+                        if (element2['Bahia'] == '80000') {
+                            bahia = "Biologico";
+                        }else if (element2['Bahia'] == '80003') {
+                            bahia = "Almacen";
+                        } else if(element2['Bahia'] == '80005'){
+                            bahia = "Venenos";
+                        } else if(element2['Bahia'] == '80002' || element2['Bahia'] == '80011' || element2['Bahia'] == '80012' || element2['Bahia'] == '80013' || element2['Bahia'] == '80014' || element2['Bahia'] == '80015'){
+                            bahia = "Abastecimiento";
+                        } else if(element2['Bahia'] == '11'){
+                            bahia = "Modula 1";
+                        } else if(element2['Bahia'] == '21'){
+                            bahia = "Modula 2";
+                        } else if(element2['Bahia'] == '31'){
+                            bahia = "Modula 3";
+                        }
+                        if(element2['Cantidad'] !== element['CantLote']){
+                            cantidad = Math.trunc(element2['Cantidad']);
+                        }else {
+                            cantidad = element['CantLote'];
+                        }
+                        if (element['Biologico'] == 'BIOLOGICOS') {
+                            $('#tabla').append(`
+                                <tr id="fila-${element['id__']}" class="bio">
+                                    <td>
+                                        <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                        <b>${bahia}</b>
+                                    </td>
+                                    <td>
+                                        <b>${element['Dscription']}</b>
+                                    </td>
+                                    
+                                    <td>
+                                        <b>${element['LOTE']}</b>
+                                    </td>
+                                    <td>
+                                        <b>${cantidad}</b>
+                                    </td>
+                                </tr> 
+                            `);
+                        }else if (element['TOXICO'] == "Y") {
+                            $('#tabla').append(`
+                                <tr id="fila-${element['id__']}" class="tox">
+                                    <td>
+                                        <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                        <b>${bahia}</b>
+                                    </td>
+                                    <td>
+                                        <b>${element['Dscription']}</b>
+                                    </td>
+                                    
+                                    <td>
+                                        <b>${element['LOTE']}</b>
+                                    </td>
+                                    <td>
+                                        <b>${cantidad}</b>
+                                    </td>
+                                </tr> 
+                            `);
+                        }else {
+                            $('#tabla').append(`
+                                <tr id="fila-${element['id__']}">
+                                    <td>
+                                        <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                        <b>${bahia}</b>
+                                    </td>
+                                    <td>
+                                        <b>${element['Dscription']}</b>
+                                    </td>
+                                    
+                                    <td>
+                                        <b>${element['LOTE']}</b>
+                                    </td>
+                                    <td>
+                                        <b>${cantidad}</b>
+                                    </td>
+                                </tr> 
+                            `);
+                        }
+
+                    }
+                }
+            }
+
+            
             for(let element of arreglo) {
-                $('#tabla').append(`
-                    <tr id="fila-${element['id__']}">
-                        <td>
-                            <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
-                            <b>${element['CodeBars']}</b>
-                        </td>
-                        <td>
-                            <b>${element['Dscription']}</b>
-                        </td>
-                        
-                        <td>
-                            <b>${element['LOTE']}</b>
-                        </td>
-                        <td>
-                            <b>${element['CantLote']}</b>
-                        </td>
-                    </tr> 
+                $('#d_fijos').text('');
+                $('#d_fijos').append(`
+                    <div class="col-12 mb-3 mb-md-0">
+                        <ul class="list-group list-group-flush rounded">
+                            <li class="list-group-item"><b>Hora de inicio: </b>${inicioR}</li>
+                            <li class="list-group-item"><b>Departamento: </b>${element['Departamento']}</li>
+                            <li class="list-group-item"><b>Municipio / Ciudad: </b>${element['Municipio_Ciudad']}</li>
+                            <li class="list-group-item"><b>Fecha Creación: </b>${element['DocDate']}</li>
+                            <li class="list-group-item"><b>Comentarios: </b>${element['Comments']}</li>
+                        </ul>
+                    </div>
                 `);
             }
+
             let tabla_cont = 0;
             function lector() {
                 let codigo = $('#code_bar').val();
@@ -222,7 +413,9 @@
                 if (tabla_cont == (arreglo.length)) {
                     $('#cont_boton_f').append(`
                         <div class="d-grid gap-2 py-3">
-                            <button class="btn btn-dark" type="button">Finalizar</button>
+                            <a href="{{route('savePick',$id)}}" class="btn btn-dark">
+                                Finalizar
+                            </a>
                         </div>
                     `);
                 }
@@ -269,7 +462,9 @@
                 if (tabla_cont == (arreglo.length)) {
                     $('#cont_boton_f').append(`
                         <div class="d-grid gap-2 py-3">
-                            <button class="btn btn-dark" type="button">Finalizar</button>
+                            <a href="{{route('savePick',$id)}}" class="btn btn-dark">
+                                Finalizar
+                            </a>
                         </div>
                     `);
                 }

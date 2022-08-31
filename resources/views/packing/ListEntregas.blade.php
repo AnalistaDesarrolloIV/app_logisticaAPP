@@ -125,17 +125,23 @@
             
             let pedi = JSON.parse(array);
             console.log(pedi);
-
+             
+        
             function search() {
                 
                 let busqueda = $('#b_lista').val();
+                
+                $('#b_lista').val(busqueda.toUpperCase());
+                busqueda = busqueda.toUpperCase();
                 $('#lista').text('');
 
                 for(let element of pedi) {
                     let elemento = element['BaseRef'];
+                    let elemento2 = element['CardName'];
                     let string = String(elemento);
-                        if (string.indexOf(busqueda) !== -1) {
-                            // if (element['Estado_linea'] == "Recogido") {
+                    let string2 = String(elemento2);
+                        if (string.indexOf(busqueda) !== -1 || string2.indexOf(busqueda) !== -1) {
+                            if (element['Estado_linea'] == "Recogido") {
                                 $('#lista').append(`
                                     <div class="col-12 col-sm-6 col-md-4 col-xl-3">
                                         <a href="/indexPack/${element['BaseRef']}" style="text-decoration: none; color: black;" >
@@ -150,7 +156,7 @@
                                         </a>
                                     </div>
                                 `);
-                            // }
+                            }
                         }
                 }
                 if ($('#lista').text() == '') {

@@ -12,6 +12,7 @@
         "laravel/tinker": "^2.7",
         "laraveles/spanish": "^1.5",
         "realrashid/sweet-alert": "^5.1",
+        "silviolleite/laravelpwa": "^2.0",
         "twbs/bootstrap": "5.2.0"
     },
     "require-dev": {

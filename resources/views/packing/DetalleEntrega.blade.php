@@ -33,14 +33,14 @@
 
                                 <form action="/savePack/{{$id}}" method="post">
                                     @csrf
-                                    <div class="row" id="lista_form">
-
-                                    </div>
                                     <div class="row justify-content-end">
 
                                         <div class="col-5" id="cont_boton_f">
 
                                         </div>
+                                    </div>
+                                    <div class="row" id="lista_form">
+
                                     </div>
                                 </form>
 
@@ -54,21 +54,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th class="text-center">Codigo de barras</th>
-                                            <th class="text-center">Nombre producto</th>
-                                            <th class="text-center">Lote</th>
-                                            <th class="text-center">Cantidad</th>
-                                            <th class="text-center">Cajas</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody style="font-size: bold;" id="tabla">
+                                
+                                <div class="table-responsive">
+                                    <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th class="text-center">Codigo de barras</th>
+                                                <th class="text-center">Nombre producto</th>
+                                                <th class="text-center">Lote</th>
+                                                <th class="text-center">Cantidad</th>
+                                                <th class="text-center">Cajas</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="font-size: bold;" id="tabla">
 
-                                    </tbody>
+                                        </tbody>
 
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -169,16 +172,21 @@
             .columna{
                 min-height: 48rem;
                 max-height: 48rem;
-            }.cabecera{
+            }
+            .cabecera{
                 min-height: 48rem !important;
                 max-height: 48rem !important;
+            }
+            body {
+                font-family: 'Nunito', sans-serif;
+                font-size: 12px;
             }
         }
         
         @media (max-width: 1000px) {
             .cabecera{
-                min-height: 20rem !important;
-                max-height: 20rem !important;
+                min-height: 22rem !important;
+                max-height: 22rem !important;
             }
         }
         .conta{
@@ -187,6 +195,12 @@
             border:solid 1px  black;
             border-radius: 20px;
             padding-left: 10px;
+        }
+        .bio {
+            background: #ffbe00 !important;
+        }
+        .tox {
+            background: #f41b35 !important;
         }
     </style>
 @endsection
@@ -204,7 +218,7 @@
             let tabla_cont = 0;
             $(document).ready(function() {
                 var table = $('#tbl').DataTable( {
-                    responsive: true,
+                    responsive: false,
                     "language": {
                         "lengthMenu": "Mostrar _MENU_ registros por pagina",
                         "zeroRecords": "No hay registros por mostrar",
@@ -227,16 +241,24 @@
             
             let arreglo = JSON.parse(array);
 
+            var faltante = '<?php echo json_encode($justy)?>';
+            
+            let m_faltante = JSON.parse(faltante);
+
+            console.log(m_faltante);
+
+            let inicioE = '<?php echo $_SESSION['H_I_EMP']?>';
+
             for(let element of arreglo) {
-                if (element['Biologico'] !== '') {
+                if (element['Biologico'] == 'BIOLOGICOS') {
                     $('#tabla').append(`
-                        <tr id="fila-${element['id__']}" class="table-warning">
+                        <tr id="fila-${element['id__']}" class="bio">
                             <td>
                                 <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
                                 <b>${element['CodeBars']}</b>
                             </td>
                             <td>
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                <button type="button" class="btn btn-sm " data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
                                     <b>${element['Dscription']}</b>
                                 </button>
                             </td>
@@ -254,9 +276,9 @@
                             </td>
                         </tr> 
                     `);
-                }else if (element['TOXICO'] !== "N") {
+                }else if (element['TOXICO'] == "Y") {
                     $('#tabla').append(`
-                        <tr id="fila-${element['id__']}" class="table-danger">
+                        <tr id="fila-${element['id__']}" class="tox">
                             <td>
                                 <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
                                 <b>${element['CodeBars']}</b>
@@ -312,6 +334,7 @@
                 $('#d_fijos').append(`
                     <div class="col-12">
                         <ul class="list-group list-group-flush rounded">
+                            <li class="list-group-item"><b>Hora de inicio: </b>${inicioE}</li>
                             <li class="list-group-item"><b>Departamento: </b>${element['Departamento']}</li>
                             <li class="list-group-item"><b>Municipio / Ciudad: </b>${element['Municipio_Ciudad']}</li>
                             <li class="list-group-item"><b>Fecha Creación: </b>${element['DocDate']}</li>
@@ -369,7 +392,7 @@
                                         </li>
                                         <li class="list-group-item">
                                             <b>Cajas de empaque:</b>
-                                            <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}"> 
+                                            <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}" onchange="valid(${element['id__']}, ${contador_cajas})"> 
                                             <b> unidades en caja N° </b>
                                             <input type="number" class="conta" id="caja-${element['id__']}-${contador_cajas}" value="${contador_cajas+1}"> 
                                             <button class="btn btn-dark btn-sm" id="btn_div" onclick="dividir(${element['id__']})">Dividir</button>
@@ -434,7 +457,7 @@
                                         </li>
                                         <li class="list-group-item">
                                             <b>Cajas de empaque:</b>
-                                            <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}"> 
+                                            <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}" onchange="valid(${element['id__']}, ${contador_cajas})"> 
                                             <b> unidades en caja N° </b>
                                             <input type="number" class="conta" id="caja-${element['id__']}-${contador_cajas}" value="${contador_cajas+1}"> 
                                             <button class=" btn btn-dark btn-sm" id="btn_div" onclick="dividir(${element['id__']})">Dividir</button>
@@ -473,10 +496,27 @@
                 $('#divi').append(` 
                     <hr>
                     <b>Cajas de empaque:</b>
-                    <input type="number" class="conta" id="unidades-${id}-${contador_cajas}"> 
+                    <input type="number" class="conta" id="unidades-${id}-${contador_cajas}" onchange="valid(${id}, ${contador_cajas})"> 
                     <b> unidades en caja N° </b>
                     <input type="number" class="conta" id="caja-${id}-${contador_cajas}" value="${contador_cajas+1}"> 
                 `);
+            }
+
+            function valid(id, contador_cajas) {
+                let u = $("#unidades-"+id+"-"+contador_cajas).val();
+                let u_esc = $("#contador"+id).val();
+                // for(let element of arreglo) {
+                //     if (element['id__'] == id) {
+                        if (parseInt(u_esc) < parseInt(u)) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Cantidad en caja',
+                                text: 'Imposible cantidad escaneada insuficiente.',
+                            })
+                            $("#unidades-"+id+"-"+contador_cajas).val('');
+                        }
+                //     }
+                // }
             }
             
             function contador(id) {
@@ -556,51 +596,76 @@
                     if (element['id__'] == id) {
                         if ($('#contador'+element['id__']).val() == element['CantLote']) {
                             // $('#fila-'+id).addClass('table-success');
+                                let cantidadEmp = $('#contador'+element['id__']).val();
+                                    $('#lista_form').append(`
+                                        <div class="form-floating mb-3">
+                                            <input type="hidden" class="form-control" id="floatingInput" name="cantidadE[]" value="${cantidadEmp}" placeholder="${cantidadEmp}">
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="hidden" class="form-control" id="floatingInput" value=" " name="justify[]">
+                                        </div>
+                                        `);
                             for (let c = 0; c <= contador_cajas; c++) {
                                 let uni = $('#unidades-'+id+'-'+c).val();
                                 let ca = $('#caja-'+id+'-'+c).val();
-                                $('#n_cajas-'+id).append(`
-                                    <li><b>${uni} unidades en caja ${ca}</b></li>
-                                `);
-                                
-                                $('#lista_form').append(`
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" id="floatingInput" name="id[]" value="${element['id__']}" placeholder="${element['id__']}">
+                                if (uni !== '') {
+                                    $('#n_cajas-'+id).append(`
+                                        <li><b>${uni} unidades en caja ${ca}</b></li>
+                                    `);
+                                    $('#lista_form').append(`
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="id[]" value="${element['id__']}" placeholder="${element['id__']}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="Producto[]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
+                                                    </div>
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="UoMEntry[]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-10">
+                                            <div class="col-4">
                                                 <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" id="floatingInput" name="Producto[]" value="${element['Dscription']}" placeholder="${element['Dscription']}">
+                                                    <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="unidad[]">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" value="${uni}" name="unidad[]">
+                                            <div class="col-4">
+                                                <div class="form-floating mb-3">
+                                                    <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
                                             </div>
                                         </div>
-                                        <div class="col-4">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" value=" " name="justify[]">
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
+                                    `);
+                                    
+                                    $('#check-'+id).prop("checked", true);
+                                    tabla_cont += 1;
+                                    console.log(tabla_cont);
+                                    $('#cerrar1').click();
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Check',
+                                        text: 'Checkeado completo.',
+                                    })
+                                }
+                                if (uni == '') {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Complete',
+                                        text: 'Ingresar las cunidades en cajas.',
+                                    })
+                                }
                             }
-                            $('#check-'+id).prop("checked", true);
-                            tabla_cont += 1;
-                            $('#cerrar1').click();
                         }
                     }
                 }
+
 
                 for(let element of arreglo) {
                     if (element['id__'] == id) {
@@ -616,6 +681,7 @@
                                 cancelButtonText: 'No'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
+                                        $("#justy").text('');
                                         $('#tit_just').text('');
                                         $('#tit_just').append(`
                                             <h4 class="text-danger text-center">Justificación</h4>
@@ -624,9 +690,6 @@
                                         $("#just").append(`
                                             <select class="form-select" id="justy" aria-label="Justificacion">
                                                 <option selected value="0">Seleccionar</option>
-                                                <option value="1">Sin existencias en bodega.</option>
-                                                <option value="2">Daño</option>
-                                                <option value="3">Caja abierta.</option>
                                             </select>
                                             <label for="justy">Justificación</label>
                                         `);
@@ -634,17 +697,22 @@
                                         $('#foot').append(`
                                             <button type="button" class="btn btn-primary" onclick="check_just(${element['id__']})">Guardar y justificar</button>
                                         `);
-
+                                        for(let f of m_faltante) {
+                                            $("#justy").append(`
+                                                    <option value="${f['FldValue']}">${f['Descr']}</option>
+                                            `);
+                                        }
                                     }
                                 })
                         }
                     }
                 }
                 
-                if (tabla_cont == (arreglo.length)) {
+                if (tabla_cont >= (arreglo.length)) {
+                    $('#cont_boton_f').text('');
                     $('#cont_boton_f').append(`
                         <div class="d-grid gap-2 py-3">
-                            <button class="btn btn-dark" type="button">Finalizar</button>
+                            <button class="btn btn-dark" type="submit">Finalizar</button>
                         </div>
                     `);
                 }
@@ -652,10 +720,10 @@
                 $('#code_bar').focus();
 
             }
+            
             function check_just(id) {
                 let just = $('#justy option:selected').val();
                 let just_text = $('#justy option:selected').text();
-                console.log(just);
                 if (just == 0) {
                     Swal.fire({
                         icon: 'warning',
@@ -665,62 +733,85 @@
                 }else {
                     for(let element of arreglo) {
                         if (element['id__'] == id) {
-                            $('#check-'+id).prop("checked", true);
-                            
-                            $('#n_cajas-'+id).append(`
-                                    <li><b>Justificación faltante: </b>${just_text} </li>
-                                `);
+                                let cantidadEmp = $('#contador'+element['id__']).val();
+                                    $('#lista_form').append(`
+                                        <div class="form-floating mb-3">
+                                            <input type="hidden" class="form-control" id="floatingInput" name="cantidadE[]" value="${cantidadEmp}" placeholder="${cantidadEmp}">
+                                        </div>
+                                        
+                                            <div class="form-floating mb-3">
+                                                <input type="hidden" class="form-control" id="floatingInput" value="${just}" name="justify[]">
+                                            </div>
+                                        `);
                             for (let c = 0; c < contador_cajas+1; c++) {
                                 let uni = $('#unidades-'+id+'-'+c).val();
                                 let ca = $('#caja-'+id+'-'+c).val();
-                                $('#n_cajas-'+id).append(`
-                                    <li><b>${uni}</b> unidades en caja <b>${ca}</b></li>
-                                `);
-                                $('#lista_form').append(`
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" id="floatingInput" name="id[]" value="${element['id__']}" placeholder="${element['id__']}">
+                                if (uni !== '') {
+                                    $('#check-'+id).prop("checked", true);
+                                    
+                                    $('#n_cajas-'+id).append(`
+                                            <li><b>Justificación faltante: </b>${just_text} </li>
+                                        `);
+                                    $('#n_cajas-'+id).append(`
+                                        <li><b>${uni}</b> unidades en caja <b>${ca}</b></li>
+                                    `);
+                                    $('#lista_form').append(`
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="id[]" value="${element['id__']}" placeholder="${element['id__']}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="Producto[]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
+                                                    </div>
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="UoMEntry[]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-10">
+                                            <div class="col-4">
                                                 <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" id="floatingInput" name="Producto[]" value="${element['Dscription']}" placeholder="${element['Dscription']}">
+                                                    <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="unidad[]">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" value="${uni}" name="unidad[]">
+                                            <div class="col-4">
+                                                <div class="form-floating mb-3">
+                                                    <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
                                             </div>
                                         </div>
-                                        <div class="col-4">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" value="${just_text}" name="justify[]">
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
+                                    `);
+                                    tabla_cont += 1;
+                                    console.log(tabla_cont);
+                                    $('#close_m').click();
+                                    Swal.fire(
+                                        'Justificado!',
+                                        'Checkeado y justificado exitosamente.',
+                                        'success'
+                                    );
+                                }
+                                
+                                if (uni == '') {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Complete',
+                                        text: 'Ingresar las cunidades en cajas.',
+                                    })
+                                }
                             }
-                            tabla_cont += 1;
-                            $('#close_m').click();
-                                Swal.fire(
-                                    'Justificado!',
-                                    'Checkeado y justificado exitosamente.',
-                                    'success'
-                                );
                                 
                         }
                     }
                 }
                 
-                if (tabla_cont == (arreglo.length)) {
+              
+                if (tabla_cont >= (arreglo.length)) {
+                    $('#cont_boton_f').text('');
                     $('#cont_boton_f').append(`
                         <div class="d-grid gap-2 py-3">
                             <button class="btn btn-dark" type="submit">Finalizar</button>

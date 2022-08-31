@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\login;
 use App\Models\Empleados;
+use DateTime;
+use DateTimeZone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -17,49 +20,117 @@ class RecoleccionController extends Controller
     }
     public function loginPick(login $request)
     {
-        session_start();
-        if (isset($_SESSION['B1SESSION'])) {
-        
-            $input = $request->all();
-            // dd($input);
-            $identificador = $input['documento'];
-            // dd($identificador);
-    
-            $emp = Empleados::all();
-            foreach ($emp as $key => $value) {
-                if ($value['OPE_OPERATORE'] == $identificador) {
-                    $_SESSION['EMPLEADO_R'] = $value;
-    
-                    $pedido = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Comments,Departamento,Municipio_Ciudad,Estado_linea))")->json();
-                    $pedido = $pedido['value'];
-                    // dd($pedido);
-                    Alert::success('Bienvenid@', $_SESSION['EMPLEADO_E']['OPE_OPERATORE']);
-                    return view('picking.ListPedidos', compact('pedido'));
-                }
-            }
-            
-            Alert::error('¡Error!', 'Usuario no existe');
-            return Redirect()->route('logPick');
+        try {
+            session_start();
+            $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
+                'CompanyDB' => 'INVERSIONES0804',
+                'UserName' => 'Prueba',
+                'Password' => '1234',
+            ])->json();
 
-        } else {
-            Alert::warnig('Reinicio', 'Reinicio forsado');
-            return redirect('/');
+            $_SESSION['B1SESSION'] = $response['SessionId'];
+
+
+                $input = $request->all();
+                $identificador = $input['documento'];
+                $emp = Empleados::all();
+                foreach ($emp as $key => $value) {
+                    if ($value['OPE_OPERATORE'] == $identificador) {
+                        $_SESSION['EMPLEADO_R'] = $value;
+                        $_SESSION['H_I_REC'] = '';
+                        $pedido = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Comments,Departamento,Municipio_Ciudad,Estado_linea))")->json();
+                        $pedido = $pedido['value'];
+                        Alert::success('Bienvenid@', $_SESSION['EMPLEADO_R']['OPE_OPERATORE']);
+                        return view('picking.ListPedidos', compact('pedido'));
+                    }
+                }
+                
+                Alert::error('¡Error!', 'Usuario no existe');
+                return Redirect()->route('logPick');
+        } catch (\Throwable $th) {
+            Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
+            return redirect()->route('logPick');
         }
     }
 
     public function indexPick($id)
     {
-        $fecha_hora = date('Y-m-d h:m:s', time());
-        $_SESSION['H_I_REC'] = $fecha_hora;
+        
+        // dd($id);  
         session_start();
-        if (isset($_SESSION['B1SESSION'])) {
+        try {
+            if ($_SESSION['H_I_REC'] == '') {
+                $fecha_hora = new DateTime("now", new DateTimeZone('America/Bogota'));
+    
+                $_SESSION['H_I_REC'] = $fecha_hora->format('H:i:s');    
+            }
+
+                $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")->json();
+                $ped = $ped['value'];
+                // dd($ped);
+                
+                $invoices = DB::connection('sqlsrv2')->table('Historico')->where('Pedido', $id)->get();
+                $invoices = $invoices->all();
+                // dd($invoices);
+
+
+                return view('picking.DetallePedido', compact('ped', 'id', 'invoices'));
+        } catch (\Throwable $th) {
+            Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
+            return redirect()->route('logPick');
+        }
+    }
+
+    public function savePick($id)
+    { 
+        try { 
+            session_start();
+            $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
+                'CompanyDB' => 'INVERSIONES0804',
+                'UserName' => 'Prueba',
+                'Password' => '1234',
+            ])->json();
+    
+            $_SESSION['B1SESSION'] = $response['SessionId'];
+            
+            $state = "Recogido";
+    
             $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")->json();
             $ped = $ped['value'];
-            // dd($ped);
-            return view('picking.DetallePedido', compact('ped', 'id'));
-        }else {
-            Alert::warnig('Reinicio', 'Reinicio forsado');
+            
+            $H_F_REC = new DateTime("now", new DateTimeZone('America/Bogota'));
+    
+            $lapsoR = "inicio de recolección ".$_SESSION['H_I_REC']." ---- Hora fin recolección ".$H_F_REC->format('H:i:s');
+             
+    
+            foreach ( $ped  as $key => $value ) {
+                $identi = $value['DocEntry']; 
+                $linenum = $value['LineNum'];
+                $itemCode = $value['ItemCode'];
+    
+    
+                $gard = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")", [
+                    "U_IV_FECHREC"=>$H_F_REC->format('Y-m-d'),
+                    "U_IV_INIREC"=> $_SESSION['H_I_REC'],
+                    "U_IN_FINREC"=> $H_F_REC->format('H:i:s'),
+                    "DocumentLines"=> [
+                        [
+                            "LineNum"=> $linenum,
+                            "ItemCode"=> $itemCode,
+                            "U_IV_ESTA"=> $state
+                        ]
+                    ]
+                ])->json();
+            }
+            session_destroy();
+            Alert::success('¡Guardado!', "Recoleccion finalizada exitosamente.");
             return redirect('/');
+        } catch (\Throwable $th) {
+            session_destroy();
+            Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
+            return redirect()->route('logPick');
         }
+       
+        
     }
 }

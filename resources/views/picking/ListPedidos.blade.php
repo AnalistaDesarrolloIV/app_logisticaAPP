@@ -158,15 +158,18 @@
         function search_most() {
             
             let busqueda = $('#b_mostrador').val();
+                busqueda = busqueda.toUpperCase();
             
             $('#mostrador').text('');
             for(let element of arreglo) {
                 let elemento = element['BaseRef'];
+                let elemento2 = element['CardName'];
                 let string = String(elemento);
+                let string2 = String(elemento2);
                 let long = string.length;
                 let inicial = string.substring(1, -long);
                 if(inicial == 5) {
-                    if (string.indexOf(busqueda) !== -1) {
+                    if (string.indexOf(busqueda) !== -1 || string2.indexOf(busqueda) !== -1) {
                         if (element['Estado_linea'] == "Por Recoger") {
                             $('#mostrador').append(`
                                 <div class="col-12 col-md-6">
@@ -197,15 +200,18 @@
         function search_env() {
 
             let busqueda_env = $('#b_envio').val();
+                busqueda_env = busqueda_env.toUpperCase();
             
             $('#envio').text('');
             for(let element of arreglo) {
                 let elemento = element['BaseRef'];
+                let elemento2 = element['CardName'];
                 let string = String(elemento);
+                let string2 = String(elemento2);
                 let long = string.length;
                 let inicial = string.substring(1, -long);
                 if(inicial == 7) {
-                    if (string.indexOf(busqueda_env) !== -1) {
+                    if (string.indexOf(busqueda_env) !== -1 || string2.indexOf(busqueda_env) !== -1) {
                         if (element['Estado_linea'] == "Por Recoger") {
                             $('#envio').append(`
                                 <div class="col-12 col-md-6">
