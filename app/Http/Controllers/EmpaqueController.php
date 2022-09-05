@@ -22,9 +22,9 @@ class EmpaqueController extends Controller
         try {
             session_start();
             $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
-                'CompanyDB' => 'INVERSIONES0804',
-                'UserName' => 'Prueba',
-                'Password' => '1234',
+                'CompanyDB' => 'INVERSIONES',
+                'UserName' => 'Desarrollos',
+                'Password' => 'Asdf1234$',
             ])->json();
 
             $_SESSION['B1SESSION'] = $response['SessionId'];
@@ -36,12 +36,12 @@ class EmpaqueController extends Controller
                     if ($value['OPE_OPERATORE'] == $identificador) {
                         $_SESSION['EMPLEADO_E'] = $value;
         
-                        $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Comments,Departamento,Municipio_Ciudad,Estado_linea))");
+                        $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA))');
                         $estado = $entregas->status();
                         if ($estado == 200) {
                             $entregas->json();
                             $entregas = $entregas['value'];
-                            // dd($entregas);
+
                             Alert::success('Bienvenid@', $_SESSION['EMPLEADO_E']['OPE_OPERATORE']);
                             return view('packing.ListEntregas', compact('entregas'));
                         }else{
@@ -69,16 +69,12 @@ class EmpaqueController extends Controller
             
             $_SESSION['H_I_EMP'] = $fecha_hora->format('H:i:s');
 
-            // dd($_SESSION['H_I_EMP']);
-
 
             $entrega = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")->json();
             $entrega = $entrega['value'];
 
             $justy = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/SQLQueries('codigofalt')/List")->json();
-            $justy = $justy['value']; 
-            // dd($justy);
-
+            $justy = $justy['value'];
             return view('packing.DetalleEntrega', compact('entrega', 'id', 'justy'));
 
 
@@ -96,9 +92,9 @@ class EmpaqueController extends Controller
         $idFor = $input['id'];
         session_start();
         $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
-            'CompanyDB' => 'INVERSIONES0804',
-            'UserName' => 'Prueba',
-            'Password' => '1234',
+            'CompanyDB' => 'INVERSIONES',
+            'UserName' => 'Desarrollos',
+            'Password' => 'Asdf1234$',
         ])->json();
 
         $_SESSION['B1SESSION'] = $response['SessionId'];
@@ -116,38 +112,23 @@ class EmpaqueController extends Controller
             $linenum = $value['LineNum'];
             $itemCode = $value['ItemCode'];
 
-            if ($input['justify'][$key] !== null) {
-                $gard = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")", [
-                    "U_IV_FECHEMP"=>$H_F_EMP->format('Y-m-d'),
-                    "U_IV_INIEMP"=> $_SESSION['H_I_EMP'],
-                    "U_IV_FINEMP"=> $H_F_EMP->format('H:i:s'),
-                    "DocumentLines"=> [
-                        [
-                            "LineNum"=> $linenum,
-                            "ItemCode"=> $itemCode,
-                            "U_IV_ESTA"=> $state,
-                            "U_IV_EMPAC"=>$input['cantidadE'][$key],
-                            "U_IV_MTOFAL"=> $input['justify'][$key]
-                        ]
+
+            $gard = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")", [
+                "U_IV_FECHEMP"=>$H_F_EMP->format('Y-m-d'),
+                "U_IV_INIEMP"=> $_SESSION['H_I_EMP'],
+                "U_IV_FINEMP"=> $H_F_EMP->format('H:i:s'),
+                "DocumentLines"=> [
+                    [
+                        "LineNum"=> $linenum,
+                        "ItemCode"=> $itemCode,
+                        "U_IV_ESTA"=> $state,
+                        "U_IV_EMPAC"=>$input['cantidadE'][$key]
                     ]
-                ])->json();
-            }else{
-                $gard = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")", [
-                    "U_IV_FECHEMP"=>$H_F_EMP->format('Y-m-d'),
-                    "U_IV_INIEMP"=> $_SESSION['H_I_EMP'],
-                    "U_IV_FINEMP"=> $H_F_EMP->format('H:i:s'),
-                    "DocumentLines"=> [
-                        [
-                            "LineNum"=> $linenum,
-                            "ItemCode"=> $itemCode,
-                            "U_IV_ESTA"=> $state,
-                            "U_IV_EMPAC"=>$input['cantidadE'][$key]
-                        ]
-                    ]
-                ])->json();
-            }
+                ]
+            ])->json();
+
             foreach ($idFor as $key => $val) {
-                $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")?".'$select'."=DocumentPackages", [
+                $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')?$select=DocumentPackages', [
                     "Number"=> $input['caja'][$key],
                     "Type"=> "CAJA GENERICA",
                     "DocumentPackageItems"=> [
@@ -166,9 +147,5 @@ class EmpaqueController extends Controller
         Alert::success('¡Guardado!', "Empaque finalizado exitosamente.");
         return redirect('/');
 
-
-        // $lapso = "inicio de empaque ".$_SESSION['H_I_EMP']." ---- Hora fin empaque ".$H_F_EMP->format('H:i:s');
-
-        // dd($lapso);
     }
 }

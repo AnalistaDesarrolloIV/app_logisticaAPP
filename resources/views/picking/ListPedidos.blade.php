@@ -170,10 +170,10 @@
                 let inicial = string.substring(1, -long);
                 if(inicial == 5) {
                     if (string.indexOf(busqueda) !== -1 || string2.indexOf(busqueda) !== -1) {
-                        if (element['Estado_linea'] == "Por Recoger") {
+                        if (element['U_IV_ESTA'] == "Por Recoger") {
                             $('#mostrador').append(`
                                 <div class="col-12 col-md-6">
-                                    <a href="/indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;" >
+                                    <a href="indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;" >
                                         <div class="card my-2 targeta">
                                             <div class="card-body">
                                                 <h4 class="card-title">${element['CardName']}</h4>
@@ -212,10 +212,10 @@
                 let inicial = string.substring(1, -long);
                 if(inicial == 7) {
                     if (string.indexOf(busqueda_env) !== -1 || string2.indexOf(busqueda_env) !== -1) {
-                        if (element['Estado_linea'] == "Por Recoger") {
+                        if (element['U_IV_ESTA'] == "Por Recoger") {
                             $('#envio').append(`
                                 <div class="col-12 col-md-6">
-                                    <a href="/indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;" >
+                                    <a href="indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;" >
                                         <div class="card my-2 targeta">
                                             <div class="card-body">
                                                 <h4 class="card-title">${element['CardName']}</h4>

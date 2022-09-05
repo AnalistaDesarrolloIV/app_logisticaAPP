@@ -8,7 +8,7 @@
             <div class="col-12  pt-3 px-1 px-sm-5 mt-5  opacidad rounded">
                 <div class="row">
                     <div class="col-1">
-                        <a class="btn btn-outline-dark" href="/logPick" id="volver" ><i class="fas fa-chevron-left"></i></a>
+                        <a class="btn btn-outline-dark" href="{{route('logPick')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
                     </div>
                     <div class="col-11">
                         <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
@@ -22,50 +22,6 @@
                             <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
                             <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
                         </div>
-                        <!-- <ol class="list-group list-group-numbered">
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                <div class="fw-bold">Biologicos</div>
-                                <b>Bahia: </b>80000
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                <div class="fw-bold">Almacen</div>
-                                <b>Bahia: </b>80003
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                <div class="fw-bold">Abastecimiento</div>
-                                <b>Bahia: </b>80012, 80015, 80013, 80014, 80002, 80011
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                <div class="fw-bold">Venenos</div>
-                                <b>Bahia: </b>80005
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                <div class="fw-bold">Modula 1</div>
-                                <b>Bahia: </b>11
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                <div class="fw-bold">Modula 2</div>
-                                <b>Bahia: </b>21
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                <div class="fw-bold">Modula 3</div>
-                                <b>Bahia: </b>31
-                                </div>
-                            </li>
-                        </ol> -->
                         
                         <div class="row " id="d_fijos">
 
@@ -90,9 +46,9 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th class="text-center">Ubicación</th>
-                                        <th class="text-center">Nombre producto</th>
-                                        <th class="text-center">Lote</th>
                                         <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Lote</th>
+                                        <th class="text-center">Nombre producto</th>
                                     </tr>
                                 </thead>
                                 <tbody style="font-size: bold;" id="tabla">
@@ -249,7 +205,7 @@
                     "language": {
                         "lengthMenu": "Mostrar _MENU_ registros por pagina",
                         "zeroRecords": "No hay registros por mostrar",
-                        "info": "Mostrando página _PAGE_ de _PAGES_",
+                        "info": "Mostrando pÃ¡gina _PAGE_ de _PAGES_",
                         "infoEmpty": "No hay registros disponibles",
                         "infoFiltered": "(filtrado de _MAX_ registros totales)",
                         "search": "Buscar:",
@@ -268,6 +224,7 @@
             var array = '<?php echo json_encode($ped)?>';
             
             let arreglo = JSON.parse(array);
+            // console.log(arreglo);
 
             
             let inicioR = '<?php echo $_SESSION['H_I_REC']?>';
@@ -298,11 +255,9 @@
                         } else if(element2['Bahia'] == '31'){
                             bahia = "Modula 3";
                         }
-                        if(element2['Cantidad'] !== element['CantLote']){
+                        // if(element2['Cantidad'] !== element['CantLote']){
                             cantidad = Math.trunc(element2['Cantidad']);
-                        }else {
-                            cantidad = element['CantLote'];
-                        }
+                        // }
                         if (element['Biologico'] == 'BIOLOGICOS') {
                             $('#tabla').append(`
                                 <tr id="fila-${element['id__']}" class="bio">
@@ -311,15 +266,15 @@
                                         <b>${bahia}</b>
                                     </td>
                                     <td>
-                                        <b>${element['Dscription']}</b>
+                                        <b>${cantidad}</b>
                                     </td>
-                                    
                                     <td>
                                         <b>${element['LOTE']}</b>
                                     </td>
                                     <td>
-                                        <b>${cantidad}</b>
+                                        <b>${element['Dscription']}</b>
                                     </td>
+                                    
                                 </tr> 
                             `);
                         }else if (element['TOXICO'] == "Y") {
@@ -330,15 +285,15 @@
                                         <b>${bahia}</b>
                                     </td>
                                     <td>
-                                        <b>${element['Dscription']}</b>
+                                        <b>${cantidad}</b>
                                     </td>
-                                    
                                     <td>
                                         <b>${element['LOTE']}</b>
                                     </td>
                                     <td>
-                                        <b>${cantidad}</b>
+                                        <b>${element['Dscription']}</b>
                                     </td>
+                                    
                                 </tr> 
                             `);
                         }else {
@@ -349,15 +304,15 @@
                                         <b>${bahia}</b>
                                     </td>
                                     <td>
-                                        <b>${element['Dscription']}</b>
+                                        <b>${cantidad}</b>
                                     </td>
-                                    
                                     <td>
                                         <b>${element['LOTE']}</b>
                                     </td>
                                     <td>
-                                        <b>${cantidad}</b>
+                                        <b>${element['Dscription']}</b>
                                     </td>
+                                    
                                 </tr> 
                             `);
                         }
@@ -391,7 +346,7 @@
                         cont += 1;
                     }
                 }
-                if (cont = 1) {
+                if (cont == 1) {
                     for(let element of arreglo) {
                         let id = element['id__'];
                         if (element['CodeBars'] == codigo) {
@@ -399,15 +354,32 @@
                                 $('#fila-'+id).addClass('table-success');
                                 $('#check-'+id).prop("checked", true);
                                     tabla_cont += 1;
+                                    
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Producto',
+                                    text: element['Dscription']+' encontrado.',
+                                })
                             }
                         }
                     }
                     $('#code_bar').val('');
                     $('#code_bar').focus();
-                }else {
+                }else if(cont > 1) {
                     modal2(codigo);
 
                     $('#boton_m2').click();
+                }
+                if (cont == 0){
+                    
+                    $('#code_bar').val('');
+                    $('#code_bar').focus();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Producto',
+                        text: 'Producto no encontrado dentro del pedido.',
+                    })
+
                 }
                 $('#cont_boton_f').text('');
                 if (tabla_cont == (arreglo.length)) {

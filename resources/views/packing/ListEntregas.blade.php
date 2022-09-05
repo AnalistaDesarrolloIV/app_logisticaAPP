@@ -8,20 +8,6 @@
                 <div class="row justify-content-center mb-3">
                     <div class="col-sm-8">
                         <div class="row">
-                            <!-- <div class="col-2 col-sm-2 col-md-1 py-2 py-sm-0">
-                                <div style=" float:left;">
-                                    <button class="btn btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample2" aria-expanded="false" aria-controls="collapseWidthExample2">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-10 col-sm-10 col-md-11 py-2 py-sm-0">
-                                <div>
-                                    <div class="collapse collapse-horizontal" id="collapseWidthExample2">
-                                        <input class="form-control" type="number" id="b_lista" onkeyup="search()" autofocus  placeholder="Numero de pedido">
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="input-group input-group-lg mb-3">
                                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
                                 <input type="text" class="form-control" id="b_lista" onkeyup="search()" autofocus  placeholder="Numero pedido" aria-label="n_ped" aria-describedby="basic-addon1">
@@ -141,7 +127,7 @@
                     let string = String(elemento);
                     let string2 = String(elemento2);
                         if (string.indexOf(busqueda) !== -1 || string2.indexOf(busqueda) !== -1) {
-                            if (element['Estado_linea'] == "Recogido") {
+                            if (element['U_IV_ESTA'] == "Recogido") {
                                 $('#lista').append(`
                                     <div class="col-12 col-sm-6 col-md-4 col-xl-3">
                                         <a href="/indexPack/${element['BaseRef']}" style="text-decoration: none; color: black;" >

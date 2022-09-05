@@ -391,9 +391,8 @@
                                             ${element['Comments']}
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Cajas de empaque:</b>
                                             <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}" onchange="valid(${element['id__']}, ${contador_cajas})"> 
-                                            <b> unidades en caja N° </b>
+                                            <b> unidades empacadas en caja N° </b>
                                             <input type="number" class="conta" id="caja-${element['id__']}-${contador_cajas}" value="${contador_cajas+1}"> 
                                             <button class="btn btn-dark btn-sm" id="btn_div" onclick="dividir(${element['id__']})">Dividir</button>
                                         </li>
@@ -557,10 +556,20 @@
                             modal_p(element['id__']);
                         }
                     }
-                }else {
+                }else if(cont > 1) {
                     $('#boton_m2').click();
 
                     modal2(codigo);
+                }
+                if (cont == 0) {
+                    
+                    $('#code_bar').val('');
+                    $('#code_bar').focus();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Producto',
+                        text: 'Producto no encontrado dentro del pedido.',
+                    })
                 }
 
             }

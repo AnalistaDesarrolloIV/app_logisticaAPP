@@ -20,16 +20,16 @@ class RecoleccionController extends Controller
     }
     public function loginPick(login $request)
     {
-        try {
+        // try {
             session_start();
             $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
-                'CompanyDB' => 'INVERSIONES0804',
-                'UserName' => 'Prueba',
-                'Password' => '1234',
+                'CompanyDB' => 'INVERSIONES',
+                'UserName' => 'Desarrollos',
+                'Password' => 'Asdf1234$',
             ])->json();
 
             $_SESSION['B1SESSION'] = $response['SessionId'];
-
+                // dd($_SESSION['B1SESSION']);
 
                 $input = $request->all();
                 $identificador = $input['documento'];
@@ -38,19 +38,19 @@ class RecoleccionController extends Controller
                     if ($value['OPE_OPERATORE'] == $identificador) {
                         $_SESSION['EMPLEADO_R'] = $value;
                         $_SESSION['H_I_REC'] = '';
-                        $pedido = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$apply'."=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Comments,Departamento,Municipio_Ciudad,Estado_linea))")->json();
+                        $pedido = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA))')->json();
                         $pedido = $pedido['value'];
+                        // dd($pedido);
                         Alert::success('Bienvenid@', $_SESSION['EMPLEADO_R']['OPE_OPERATORE']);
                         return view('picking.ListPedidos', compact('pedido'));
                     }
                 }
-                
-                Alert::error('¡Error!', 'Usuario no existe');
+                Alert::error('Â¡Error!', 'Usuario no existe');
                 return Redirect()->route('logPick');
-        } catch (\Throwable $th) {
-            Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
-            return redirect()->route('logPick');
-        }
+        //} catch (\Throwable $th) {
+        //    Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
+        //    return redirect()->route('logPick');
+        //}
     }
 
     public function indexPick($id)
@@ -76,7 +76,7 @@ class RecoleccionController extends Controller
 
                 return view('picking.DetallePedido', compact('ped', 'id', 'invoices'));
         } catch (\Throwable $th) {
-            Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
+            Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
         }
     }
@@ -86,9 +86,9 @@ class RecoleccionController extends Controller
         try { 
             session_start();
             $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
-                'CompanyDB' => 'INVERSIONES0804',
-                'UserName' => 'Prueba',
-                'Password' => '1234',
+                'CompanyDB' => 'INVERSIONES',
+                'UserName' => 'Desarrollos',
+                'Password' => 'Asdf1234$',
             ])->json();
     
             $_SESSION['B1SESSION'] = $response['SessionId'];
@@ -100,7 +100,7 @@ class RecoleccionController extends Controller
             
             $H_F_REC = new DateTime("now", new DateTimeZone('America/Bogota'));
     
-            $lapsoR = "inicio de recolección ".$_SESSION['H_I_REC']." ---- Hora fin recolección ".$H_F_REC->format('H:i:s');
+            $lapsoR = "inicio de recolecciÃ³n ".$_SESSION['H_I_REC']." ---- Hora fin recolecciÃ³n ".$H_F_REC->format('H:i:s');
              
     
             foreach ( $ped  as $key => $value ) {
@@ -123,11 +123,11 @@ class RecoleccionController extends Controller
                 ])->json();
             }
             session_destroy();
-            Alert::success('¡Guardado!', "Recoleccion finalizada exitosamente.");
+            Alert::success('Â¡Guardado!', "Recoleccion finalizada exitosamente.");
             return redirect('/');
         } catch (\Throwable $th) {
             session_destroy();
-            Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
+            Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
         }
        
