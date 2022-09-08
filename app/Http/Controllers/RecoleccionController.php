@@ -40,7 +40,6 @@ class RecoleccionController extends Controller
                         $_SESSION['H_I_REC'] = '';
                         $pedido = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA))')->json();
                         $pedido = $pedido['value'];
-                        // dd($pedido);
                         Alert::success('Bienvenid@', $_SESSION['EMPLEADO_R']['OPE_OPERATORE']);
                         return view('picking.ListPedidos', compact('pedido'));
                     }
@@ -69,6 +68,9 @@ class RecoleccionController extends Controller
                 $ped = $ped['value'];
                 // dd($ped);
                 
+                $cantidad_lote = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA/$count?$filter =BaseRef eq ('.$id.')')->json();
+                dd($cantidad_lote);
+
                 $invoices = DB::connection('sqlsrv2')->table('Historico')->where('Pedido', $id)->get();
                 $invoices = $invoices->all();
                 // dd($invoices);

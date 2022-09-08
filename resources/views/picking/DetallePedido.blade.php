@@ -49,6 +49,7 @@
                                         <th class="text-center">Cantidad</th>
                                         <th class="text-center">Lote</th>
                                         <th class="text-center">Nombre producto</th>
+                                        <th class="text-center">barras</th>
                                     </tr>
                                 </thead>
                                 <tbody style="font-size: bold;" id="tabla">
@@ -179,6 +180,7 @@
             .cabecera{
                 min-height: 22rem !important;
                 max-height: 22rem !important;
+                margin-bottom: 3rem !important;
             }
         }
         .bio {
@@ -224,7 +226,7 @@
             var array = '<?php echo json_encode($ped)?>';
             
             let arreglo = JSON.parse(array);
-            // console.log(arreglo);
+            console.log(arreglo);
 
             
             let inicioR = '<?php echo $_SESSION['H_I_REC']?>';
@@ -274,6 +276,9 @@
                                     <td>
                                         <b>${element['Dscription']}</b>
                                     </td>
+                                    <td>
+                                        <b>${element['CodeBars']}</b>
+                                    </td>
                                     
                                 </tr> 
                             `);
@@ -292,6 +297,9 @@
                                     </td>
                                     <td>
                                         <b>${element['Dscription']}</b>
+                                    </td>
+                                    <td>
+                                        <b>${element['CodeBars']}</b>
                                     </td>
                                     
                                 </tr> 
@@ -312,6 +320,9 @@
                                     <td>
                                         <b>${element['Dscription']}</b>
                                     </td>
+                                    <td>
+                                        <b>${element['CodeBars']}</b>
+                                    </td>
                                     
                                 </tr> 
                             `);
@@ -328,6 +339,7 @@
                     <div class="col-12 mb-3 mb-md-0">
                         <ul class="list-group list-group-flush rounded">
                             <li class="list-group-item"><b>Hora de inicio: </b>${inicioR}</li>
+                            <li class="list-group-item"><b>Cliente: </b>${element['CardName']}</li>
                             <li class="list-group-item"><b>Departamento: </b>${element['Departamento']}</li>
                             <li class="list-group-item"><b>Municipio / Ciudad: </b>${element['Municipio_Ciudad']}</li>
                             <li class="list-group-item"><b>Fecha Creación: </b>${element['DocDate']}</li>

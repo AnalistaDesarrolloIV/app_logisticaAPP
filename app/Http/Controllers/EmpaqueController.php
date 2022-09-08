@@ -74,7 +74,9 @@ class EmpaqueController extends Controller
             $entrega = $entrega['value'];
 
             $justy = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/SQLQueries('codigofalt')/List")->json();
+
             $justy = $justy['value'];
+
             return view('packing.DetalleEntrega', compact('entrega', 'id', 'justy'));
 
 
@@ -106,6 +108,9 @@ class EmpaqueController extends Controller
         $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")->json();
         $ped = $ped['value'];
 
+        // dd($ped);
+
+
         
         foreach ( $ped  as $key => $value ) {
             $identi = $value['DocEntry']; 
@@ -113,36 +118,68 @@ class EmpaqueController extends Controller
             $itemCode = $value['ItemCode'];
 
 
-            $gard = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")", [
-                "U_IV_FECHEMP"=>$H_F_EMP->format('Y-m-d'),
-                "U_IV_INIEMP"=> $_SESSION['H_I_EMP'],
-                "U_IV_FINEMP"=> $H_F_EMP->format('H:i:s'),
-                "DocumentLines"=> [
-                    [
-                        "LineNum"=> $linenum,
-                        "ItemCode"=> $itemCode,
-                        "U_IV_ESTA"=> $state,
-                        "U_IV_EMPAC"=>$input['cantidadE'][$key]
-                    ]
-                ]
-            ])->json();
-
-            foreach ($idFor as $key => $val) {
-                $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')?$select=DocumentPackages', [
-                    "Number"=> $input['caja'][$key],
-                    "Type"=> "CAJA GENERICA",
-                    "DocumentPackageItems"=> [
+            if ($input['justify'][$key] !== null) {
+                $gard = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")", [
+                    "U_IV_FECHEMP"=>$H_F_EMP->format('Y-m-d'),
+                    "U_IV_INIEMP"=> $_SESSION['H_I_EMP'],
+                    "U_IV_FINEMP"=> $H_F_EMP->format('H:i:s'),
+                    "DocumentLines"=> [
                         [
-                            "PackageNumber"=> $input['caja'][$key],
-                            "ItemCode"=> $input['Producto'][$key],
-                            "UoMEntry"=> $input['UoMEntry'][$key],
-                            "Quantity"=> $input['unidad'][$key]
+                            "LineNum"=> $linenum,
+                            "ItemCode"=> $itemCode,
+                            "U_IV_ESTA"=> $state,
+                            "U_IV_EMPAC"=>$input['cantidadE'][$key],
+                            "U_IV_MTOFAL"=> $input['justify'][$key]
                         ]
                     ]
                 ])->json();
+
+                foreach ($idFor as $key => $val) {
+                    $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')?$select=DocumentPackages', [
+                        "Number"=> $input['caja'][$key],
+                        "Type"=> $input['tipo_emp'][$key],
+                        "DocumentPackageItems"=> [
+                            [
+                                "PackageNumber"=> $input['caja'][$key],
+                                "ItemCode"=> $input['Producto'][$key],
+                                "UoMEntry"=> $input['UoMEntry'][$key],
+                                "Quantity"=> $input['unidad'][$key]
+                            ]
+                        ]
+                    ])->json();
+                }
+            }else{
+                $gard = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")", [
+                    "U_IV_FECHEMP"=>$H_F_EMP->format('Y-m-d'),
+                    "U_IV_INIEMP"=> $_SESSION['H_I_EMP'],
+                    "U_IV_FINEMP"=> $H_F_EMP->format('H:i:s'),
+                    "DocumentLines"=> [
+                        [
+                            "LineNum"=> $linenum,
+                            "ItemCode"=> $itemCode,
+                            "U_IV_ESTA"=> $state,
+                            "U_IV_EMPAC"=>$input['cantidadE'][$key]
+                        ]
+                    ]
+                ])->json();
+
+                foreach ($idFor as $key => $val) {
+                    $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')?$select=DocumentPackages', [
+                        "Number"=> $input['caja'][$key],
+                        "Type"=> $input['tipo_emp'][$key],
+                        "DocumentPackageItems"=> [
+                            [
+                                "PackageNumber"=> $input['caja'][$key],
+                                "ItemCode"=> $input['Producto'][$key],
+                                "UoMEntry"=> $input['UoMEntry'][$key],
+                                "Quantity"=> $input['unidad'][$key]
+                            ]
+                        ]
+                    ])->json();
+                }
             }
-        }
-        
+        }    
+
         session_destroy();
         Alert::success('¡Guardado!', "Empaque finalizado exitosamente.");
         return redirect('/');

@@ -236,7 +236,8 @@
                 new $.fn.dataTable.FixedHeader( table );
                 $('#code_bar').focus();
             } );
-            
+
+          
             var array = '<?php echo json_encode($entrega)?>';
             
             let arreglo = JSON.parse(array);
@@ -335,6 +336,7 @@
                     <div class="col-12">
                         <ul class="list-group list-group-flush rounded">
                             <li class="list-group-item"><b>Hora de inicio: </b>${inicioE}</li>
+                            <li class="list-group-item"><b>Cliente: </b>${element['CardName']}</li>
                             <li class="list-group-item"><b>Departamento: </b>${element['Departamento']}</li>
                             <li class="list-group-item"><b>Municipio / Ciudad: </b>${element['Municipio_Ciudad']}</li>
                             <li class="list-group-item"><b>Fecha Creación: </b>${element['DocDate']}</li>
@@ -392,7 +394,15 @@
                                         </li>
                                         <li class="list-group-item">
                                             <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}" onchange="valid(${element['id__']}, ${contador_cajas})"> 
-                                            <b> unidades empacadas en caja N° </b>
+                                            <b> unidades empacadas en </b>
+                                                <select class="conta" id="tipo_emp-${element['id__']}-${contador_cajas}">
+                                                    <option value="CAJA GENERICA">CAJA GENERICA</option>
+                                                    <option value="BOLSA">BOLSA</option>
+                                                    <option value="NEVERA 7LT">NEVERA 7LT</option>
+                                                    <option value="NEVERA 10LT">NEVERA 10LT</option>
+                                                    <option value="NEVERA 14LT">NEVERA 14LT</option>
+                                                </select>
+                                            <b> N° </b>
                                             <input type="number" class="conta" id="caja-${element['id__']}-${contador_cajas}" value="${contador_cajas+1}"> 
                                             <button class="btn btn-dark btn-sm" id="btn_div" onclick="dividir(${element['id__']})">Dividir</button>
                                         </li>
@@ -457,7 +467,15 @@
                                         <li class="list-group-item">
                                             <b>Cajas de empaque:</b>
                                             <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}" onchange="valid(${element['id__']}, ${contador_cajas})"> 
-                                            <b> unidades en caja N° </b>
+                                            <b> unidades empacadas en </b>
+                                                <select class="conta" id="tipo_emp-${element['id__']}-${contador_cajas}">
+                                                    <option value="CAJA GENERICA">CAJA GENERICA</option>
+                                                    <option value="BOLSA">BOLSA</option>
+                                                    <option value="NEVERA 7LT">NEVERA 7LT</option>
+                                                    <option value="NEVERA 10LT">NEVERA 10LT</option>
+                                                    <option value="NEVERA 14LT">NEVERA 14LT</option>
+                                                </select>
+                                            <b> N° </b>
                                             <input type="number" class="conta" id="caja-${element['id__']}-${contador_cajas}" value="${contador_cajas+1}"> 
                                             <button class=" btn btn-dark btn-sm" id="btn_div" onclick="dividir(${element['id__']})">Dividir</button>
                                         </li>
@@ -494,10 +512,18 @@
                 contador_cajas +=1;
                 $('#divi').append(` 
                     <hr>
-                    <b>Cajas de empaque:</b>
                     <input type="number" class="conta" id="unidades-${id}-${contador_cajas}" onchange="valid(${id}, ${contador_cajas})"> 
-                    <b> unidades en caja N° </b>
+                    <b> unidades empacadas en </b>
+                        <select class="conta" id="tipo_emp-${id}-${contador_cajas}">
+                            <option value="CAJA GENERICA">CAJA GENERICA</option>
+                            <option value="BOLSA">BOLSA</option>
+                            <option value="NEVERA 7LT">NEVERA 7LT</option>
+                            <option value="NEVERA 10LT">NEVERA 10LT</option>
+                            <option value="NEVERA 14LT">NEVERA 14LT</option>
+                        </select>
+                    <b> N° </b>
                     <input type="number" class="conta" id="caja-${id}-${contador_cajas}" value="${contador_cajas+1}"> 
+                    <button class=" btn btn-dark btn-sm" id="btn_div" onclick="dividir(${id})">Dividir</button>
                 `);
             }
 
@@ -616,10 +642,12 @@
                                         `);
                             for (let c = 0; c <= contador_cajas; c++) {
                                 let uni = $('#unidades-'+id+'-'+c).val();
+                                let tipo_e = $("#tipo_emp-"+id+'-'+c+" option:selected").val();
+                                console.log(tipo_e);
                                 let ca = $('#caja-'+id+'-'+c).val();
                                 if (uni !== '') {
                                     $('#n_cajas-'+id).append(`
-                                        <li><b>${uni} unidades en caja ${ca}</b></li>
+                                        <li><b>${uni}</b> unidades en <b> ${tipo_e} </b> N° <b>${ca}</b></li>
                                     `);
                                     $('#lista_form').append(`
                                         <div class="col-12">
@@ -639,11 +667,17 @@
                                                 </div>
                                             </div>
                                             <div class="col-4">
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="Producto[]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
+                                                    </div>
                                                 <div class="form-floating mb-3">
                                                     <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="unidad[]">
                                                 </div>
                                             </div>
                                             <div class="col-4">
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="tipo_emp[]" value="${tipo_e}">
+                                                    </div>
                                                 <div class="form-floating mb-3">
                                                     <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
                                                 </div>
@@ -754,6 +788,8 @@
                                         `);
                             for (let c = 0; c < contador_cajas+1; c++) {
                                 let uni = $('#unidades-'+id+'-'+c).val();
+                                let tipo_e = $("#tipo_emp-"+id+'-'+c+" option:selected").val();
+                                console.log(tipo_e);
                                 let ca = $('#caja-'+id+'-'+c).val();
                                 if (uni !== '') {
                                     $('#check-'+id).prop("checked", true);
@@ -762,7 +798,7 @@
                                             <li><b>Justificación faltante: </b>${just_text} </li>
                                         `);
                                     $('#n_cajas-'+id).append(`
-                                        <li><b>${uni}</b> unidades en caja <b>${ca}</b></li>
+                                        <li><b>${uni}</b> unidades en <b> ${tipo_e} </b> N° <b>${ca}</b></li>
                                     `);
                                     $('#lista_form').append(`
                                         <div class="col-12">
@@ -787,6 +823,9 @@
                                                 </div>
                                             </div>
                                             <div class="col-4">
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="tipo_emp[]" value="${tipo_e}">
+                                                    </div>
                                                 <div class="form-floating mb-3">
                                                     <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
                                                 </div>

@@ -151,10 +151,17 @@
 
 @section('script')
 
+
     <script>
             var array = '<?php echo json_encode($pedido)?>';
             
+            var session = '<?php echo $_SESSION['B1SESSION']?>';
+            console.log(session);
+            
             let arreglo = JSON.parse(array);
+
+            console.log(arreglo);
+
         function search_most() {
             
             let busqueda = $('#b_mostrador').val();
@@ -162,6 +169,8 @@
             
             $('#mostrador').text('');
             for(let element of arreglo) {
+
+
                 let elemento = element['BaseRef'];
                 let elemento2 = element['CardName'];
                 let string = String(elemento);
