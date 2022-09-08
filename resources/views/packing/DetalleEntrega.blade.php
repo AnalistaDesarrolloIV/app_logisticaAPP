@@ -31,7 +31,7 @@
 
                                 </div>
 
-                                <form action="/savePack/{{$id}}" method="post">
+                                <form action="{{route('savePack',$id)}}" method="post">
                                     @csrf
                                     <div class="row justify-content-end">
 
@@ -653,36 +653,27 @@
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-3">
+                                                    
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="id[]" value="${element['id__']}" placeholder="${element['id__']}">
+                                                        <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="embalaje[${c}][caja]">
+                                                    </div>
+                                                    
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][tipo_emp]" value="${tipo_e}">
+                                                    </div>
+                                                    
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][Producto]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
+                                                    </div>
+                                                    
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][UoMEntry]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
+                                                    </div>
+
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="embalaje[${c}][unidad]">
                                                     </div>
                                                 </div>
-                                                <div class="col-10">
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="Producto[]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
-                                                    </div>
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="UoMEntry[]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="Producto[]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
-                                                    </div>
-                                                <div class="form-floating mb-3">
-                                                    <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="unidad[]">
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="tipo_emp[]" value="${tipo_e}">
-                                                    </div>
-                                                <div class="form-floating mb-3">
-                                                    <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
                                             </div>
                                         </div>
                                     `);
@@ -804,33 +795,27 @@
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-3">
+                                                    
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="id[]" value="${element['id__']}" placeholder="${element['id__']}">
+                                                        <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="embalaje[${c}][caja]">
+                                                    </div>
+                                                    
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][tipo_emp]" value="${tipo_e}">
+                                                    </div>
+                                                    
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][Producto]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
+                                                    </div>
+                                                    
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][UoMEntry]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
+                                                    </div>
+
+                                                    <div class="form-floating mb-3">
+                                                        <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="embalaje[${c}][unidad]">
                                                     </div>
                                                 </div>
-                                                <div class="col-10">
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="Producto[]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
-                                                    </div>
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="UoMEntry[]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="form-floating mb-3">
-                                                    <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="unidad[]">
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="tipo_emp[]" value="${tipo_e}">
-                                                    </div>
-                                                <div class="form-floating mb-3">
-                                                    <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="caja[]">
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
                                             </div>
                                         </div>
                                     `);

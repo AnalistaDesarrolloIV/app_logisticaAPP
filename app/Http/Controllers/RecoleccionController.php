@@ -57,7 +57,7 @@ class RecoleccionController extends Controller
         
         // dd($id);  
         session_start();
-        try {
+        // try {
             if ($_SESSION['H_I_REC'] == '') {
                 $fecha_hora = new DateTime("now", new DateTimeZone('America/Bogota'));
     
@@ -77,10 +77,10 @@ class RecoleccionController extends Controller
 
 
                 return view('picking.DetallePedido', compact('ped', 'id', 'invoices'));
-        } catch (\Throwable $th) {
-            Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
-            return redirect()->route('logPick');
-        }
+        // } catch (\Throwable $th) {
+        //     Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
+        //     return redirect()->route('logPick');
+        // }
     }
 
     public function savePick($id)

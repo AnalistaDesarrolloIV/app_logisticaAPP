@@ -90,8 +90,8 @@ class EmpaqueController extends Controller
     {
         
         $input = $request->all();
-        // dd($input);
-        $idFor = $input['id'];
+        $idFor = $input['embalaje'];
+        // dd($idFor);
         session_start();
         $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
             'CompanyDB' => 'INVERSIONES',
@@ -114,6 +114,7 @@ class EmpaqueController extends Controller
         
         foreach ( $ped  as $key => $value ) {
             $identi = $value['DocEntry']; 
+            // dd($identi);
             $linenum = $value['LineNum'];
             $itemCode = $value['ItemCode'];
 
@@ -132,22 +133,72 @@ class EmpaqueController extends Controller
                             "U_IV_MTOFAL"=> $input['justify'][$key]
                         ]
                     ]
-                ])->json();
+                ])->status();
 
-                foreach ($idFor as $key => $val) {
-                    $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')?$select=DocumentPackages', [
-                        "Number"=> $input['caja'][$key],
-                        "Type"=> $input['tipo_emp'][$key],
-                        "DocumentPackageItems"=> [
-                            [
-                                "PackageNumber"=> $input['caja'][$key],
-                                "ItemCode"=> $input['Producto'][$key],
-                                "UoMEntry"=> $input['UoMEntry'][$key],
-                                "Quantity"=> $input['unidad'][$key]
-                            ]
-                        ]
-                    ])->json();
-                }
+                    foreach ($idFor as $key => $val) {
+                        $lista = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')?$select=DocumentPackages')->json();
+                        $lista = $lista['DocumentPackages'];
+                        if ($lista !== null) {
+        
+                            foreach ($lista as $key => $num) {
+                                $numList[$key] = $num['Number'];
+                            }
+            
+                            if (in_array($val['caja'], $numList)) {
+                                $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')', [
+                                    "DocumentPackages"=> [
+                                        [
+                                            "DocumentPackageItems"=> [
+                                                [
+                                                    "PackageNumber"=> $val['caja'],
+                                                    "ItemCode"=> $val['Producto'],
+                                                    "UoMEntry"=> $val['UoMEntry'],
+                                                    "Quantity"=> $val['unidad']
+                                                ]
+                                            ]  
+                                        ]
+                                    ]
+                                ])->status();
+                            }else{
+                                $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')', [
+                                    "DocumentPackages"=> [
+                                        [
+                                            "Number"=> $val['caja'],
+                                            "Type"=> $val['tipo_emp'],
+                                            
+                                            "DocumentPackageItems"=> [
+                                                [
+                                                    "PackageNumber"=> $val['caja'],
+                                                    "ItemCode"=> $val['Producto'],
+                                                    "UoMEntry"=> $val['UoMEntry'],
+                                                    "Quantity"=> $val['unidad']
+                                                ]
+                                            ]  
+                                        ]
+                                    ]
+                                ])->status();
+                            }
+                        }else {
+                            $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')', [
+                                "DocumentPackages"=> [
+                                    [
+                                        "Number"=> $val['caja'],
+                                        "Type"=> $val['tipo_emp'],
+                                        
+                                        "DocumentPackageItems"=> [
+                                            [
+                                                "PackageNumber"=> $val['caja'],
+                                                "ItemCode"=> $val['Producto'],
+                                                "UoMEntry"=> $val['UoMEntry'],
+                                                "Quantity"=> $val['unidad']
+                                            ]
+                                        ]  
+                                    ]
+                                ]
+                            ])->status();
+                        }
+                    }
+
             }else{
                 $gard = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")", [
                     "U_IV_FECHEMP"=>$H_F_EMP->format('Y-m-d'),
@@ -163,20 +214,72 @@ class EmpaqueController extends Controller
                     ]
                 ])->json();
 
-                foreach ($idFor as $key => $val) {
-                    $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')?$select=DocumentPackages', [
-                        "Number"=> $input['caja'][$key],
-                        "Type"=> $input['tipo_emp'][$key],
-                        "DocumentPackageItems"=> [
-                            [
-                                "PackageNumber"=> $input['caja'][$key],
-                                "ItemCode"=> $input['Producto'][$key],
-                                "UoMEntry"=> $input['UoMEntry'][$key],
-                                "Quantity"=> $input['unidad'][$key]
-                            ]
-                        ]
-                    ])->json();
-                }
+
+                    foreach ($idFor as $key => $val) {
+                        $lista = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')?$select=DocumentPackages')->json();
+                        $lista = $lista['DocumentPackages'];
+                        if ($lista !== null) {
+        
+                            foreach ($lista as $key => $num) {
+                                $numList[$key] = $num['Number'];
+                            }
+            
+                            if (in_array($val['caja'], $numList)) {
+                                $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')', [
+                                    "DocumentPackages"=> [
+                                        [
+                                            "DocumentPackageItems"=> [
+                                                [
+                                                    "PackageNumber"=> $val['caja'],
+                                                    "ItemCode"=> $val['Producto'],
+                                                    "UoMEntry"=> $val['UoMEntry'],
+                                                    "Quantity"=> $val['unidad']
+                                                ]
+                                            ]  
+                                        ]
+                                    ]
+                                ])->status();
+                            }else{
+                                $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')', [
+                                    "DocumentPackages"=> [
+                                        [
+                                            "Number"=> $val['caja'],
+                                            "Type"=> $val['tipo_emp'],
+                                            
+                                            "DocumentPackageItems"=> [
+                                                [
+                                                    "PackageNumber"=> $val['caja'],
+                                                    "ItemCode"=> $val['Producto'],
+                                                    "UoMEntry"=> $val['UoMEntry'],
+                                                    "Quantity"=> $val['unidad']
+                                                ]
+                                            ]  
+                                        ]
+                                    ]
+                                ])->status();
+                            }
+
+                        }else {
+                            $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes('.$identi.')', [
+                                "DocumentPackages"=> [
+                                    [
+                                        "Number"=> $val['caja'],
+                                        "Type"=> $val['tipo_emp'],
+                                        
+                                        "DocumentPackageItems"=> [
+                                            [
+                                                "PackageNumber"=> $val['caja'],
+                                                "ItemCode"=> $val['Producto'],
+                                                "UoMEntry"=> $val['UoMEntry'],
+                                                "Quantity"=> $val['unidad']
+                                            ]
+                                        ]  
+                                    ]
+                                ]
+                            ])->status();
+                        }
+                    }
+
             }
         }    
 
