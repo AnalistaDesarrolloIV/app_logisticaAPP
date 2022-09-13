@@ -10,7 +10,7 @@
                     <div class="col-lg-12 ">
                         <div class="row">
                             <div class="col-1">
-                                <a class="btn btn-outline-dark" href="/logPack" id="volver" ><i class="fas fa-chevron-left"></i></a>
+                                <a class="btn btn-outline-dark" href="{{route('logPack')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
                             </div>
                             <div class="col-11">
                                 <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
@@ -30,19 +30,6 @@
                                 <div class="row " id="d_fijos">
 
                                 </div>
-
-                                <form action="{{route('savePack',$id)}}" method="post">
-                                    @csrf
-                                    <div class="row justify-content-end">
-
-                                        <div class="col-5" id="cont_boton_f">
-
-                                        </div>
-                                    </div>
-                                    <div class="row" id="lista_form">
-
-                                    </div>
-                                </form>
 
                             </div>
                             <div class="col-md-12 col-lg-9 columna">
@@ -72,6 +59,18 @@
 
                                     </table>
                                 </div>
+                                
+                                <form action="{{route('savePack',$id)}}" method="post">
+                                    @csrf
+                                    <div class="row justify-content-end">
+                                        <div class="col-5" id="cont_boton_f">
+
+                                        </div>
+                                    </div>
+                                    <div class="row" id="lista_form">
+
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -465,7 +464,6 @@
                                             ${element['Comments']}
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Cajas de empaque:</b>
                                             <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}" onchange="valid(${element['id__']}, ${contador_cajas})"> 
                                             <b> unidades empacadas en </b>
                                                 <select class="conta" id="tipo_emp-${element['id__']}-${contador_cajas}">
@@ -623,7 +621,7 @@
                     `);
                 }
             }
-
+	    let cont_em = 0;
 
             function check(id) {
 
@@ -641,6 +639,7 @@
                                         </div>
                                         `);
                             for (let c = 0; c <= contador_cajas; c++) {
+				cont_em += 1;
                                 let uni = $('#unidades-'+id+'-'+c).val();
                                 let tipo_e = $("#tipo_emp-"+id+'-'+c+" option:selected").val();
                                 console.log(tipo_e);
@@ -655,23 +654,23 @@
                                                 <div class="col-3">
                                                     
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="embalaje[${c}][caja]">
+                                                        <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="embalaje[${cont_em}][caja]">
                                                     </div>
                                                     
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][tipo_emp]" value="${tipo_e}">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][tipo_emp]" value="${tipo_e}">
                                                     </div>
                                                     
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][Producto]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][Producto]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
                                                     </div>
                                                     
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][UoMEntry]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][UoMEntry]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
                                                     </div>
 
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="embalaje[${c}][unidad]">
+                                                        <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="embalaje[${cont_em}][unidad]">
                                                     </div>
                                                 </div>
                                             </div>
@@ -754,6 +753,7 @@
                 $('#code_bar').focus();
 
             }
+
             
             function check_just(id) {
                 let just = $('#justy option:selected').val();
@@ -778,6 +778,7 @@
                                             </div>
                                         `);
                             for (let c = 0; c < contador_cajas+1; c++) {
+				cont_em += 1;
                                 let uni = $('#unidades-'+id+'-'+c).val();
                                 let tipo_e = $("#tipo_emp-"+id+'-'+c+" option:selected").val();
                                 console.log(tipo_e);
@@ -797,23 +798,23 @@
                                                 <div class="col-3">
                                                     
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="embalaje[${c}][caja]">
+                                                        <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="embalaje[${cont_em}][caja]">
                                                     </div>
                                                     
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][tipo_emp]" value="${tipo_e}">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][tipo_emp]" value="${tipo_e}">
                                                     </div>
                                                     
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][Producto]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][Producto]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
                                                     </div>
                                                     
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${c}][UoMEntry]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
+                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][UoMEntry]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
                                                     </div>
 
                                                     <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="embalaje[${c}][unidad]">
+                                                        <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="embalaje[${cont_em}][unidad]">
                                                     </div>
                                                 </div>
                                             </div>

@@ -26,11 +26,6 @@
                         <div class="row " id="d_fijos">
 
                         </div>
-                        <div class="row justify-content-end">
-                            <div class="col-4" id="cont_boton_f">
-
-                            </div>
-                        </div>
                     </div>
                     <div class="col-md-12 col-lg-9 columna">
                         <div class="row justify-content-center pb-3">
@@ -56,6 +51,12 @@
 
                                 </tbody>
                             </table>
+                        </div>
+                        
+                        <div class="row justify-content-end">
+                            <div class="col-4" id="cont_boton_f">
+
+                            </div>
                         </div>
                     </div>
                 </div>                
@@ -238,7 +239,7 @@
 
             for(let element2 of arreglo2) {
                 for(let element of arreglo) {
-                    if(element['ItemCode'] == element2['Articulo Efectuado']){
+                    if(element['ItemCode'] == element2['Articulo Efectuado'] && element['LOTE'] == element2['Lote'] && element['CantLote'] == element2['Cantidad']){
                         let bahia = "";
                         let cantidad = "";
 
