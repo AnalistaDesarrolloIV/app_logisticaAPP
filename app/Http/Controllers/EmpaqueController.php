@@ -53,7 +53,7 @@ class EmpaqueController extends Controller
             Alert::error('¡Error!', 'Usuario no existe');
             return Redirect()->route('logPack');
         } catch (\Throwable $th) {
-            Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
+            Alert::warning('Â¡La sección expiró!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
         }
     }
@@ -77,7 +77,7 @@ class EmpaqueController extends Controller
 
             return view('packing.DetalleEntrega', compact('entrega', 'id', 'justy'));
         } catch (\Throwable $th) {
-            Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
+            Alert::warning('Â¡La sección expiró!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
         }
     }
@@ -86,7 +86,7 @@ class EmpaqueController extends Controller
         try {
             $input = $request->all();
             $idFor = $input['embalaje'];
-            // dd($input );
+            
             session_start();
             $response = Http::retry(20, 300)->post('https://10.170.20.95:50000/b1s/v1/Login', [
                 'CompanyDB' => 'INVERSIONES',
@@ -103,13 +103,13 @@ class EmpaqueController extends Controller
             $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?" . '$filter ' . "=BaseRef eq ('" . $id . "')")->json();
             $ped = $ped['value'];
 
-            // dd($ped);
+            
 
 
 
             foreach ($ped  as $key => $value) {
                 $identi = $value['DocEntry'];
-                // dd($identi);
+                
                 $linenum = $value['LineNum'];
                 $itemCode = $value['ItemCode'];
 
@@ -280,10 +280,10 @@ class EmpaqueController extends Controller
             }
 
             session_destroy();
-            Alert::success('Â¡Guardado!', "Empaque finalizada exitosamente.");
+            Alert::success('¡Guardado!', "Empaque finalizada exitosamente.");
             return redirect('/');
         } catch (\Throwable $th) {
-            Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
+            Alert::warning('¡La sección expiró!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
         }
     }
