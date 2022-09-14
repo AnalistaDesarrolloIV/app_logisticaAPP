@@ -20,7 +20,7 @@ class RecoleccionController extends Controller
     }
     public function loginPick(login $request)
     {
-        // try {
+        try {
             session_start();
             $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
                 'CompanyDB' => 'INVERSIONES',
@@ -45,18 +45,17 @@ class RecoleccionController extends Controller
                         return view('picking.ListPedidos', compact('pedido'));
                     }
                 }
-                Alert::error('Â¡Error!', 'Usuario no existe');
+                Alert::error('¡Error!', 'Usuario no existe');
                 return Redirect()->route('logPick');
-        //} catch (\Throwable $th) {
-        //    Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
-        //    return redirect()->route('logPick');
-        //}
+        } catch (\Throwable $th) {
+           Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
+           return redirect()->route('logPick');
+        }
     }
 
     public function indexPick($id)
     {
         
-        // dd($id);  
         session_start();
         try {
             if ($_SESSION['H_I_REC'] == '') {
@@ -65,22 +64,17 @@ class RecoleccionController extends Controller
                 $_SESSION['H_I_REC'] = $fecha_hora->format('H:i:s');    
             }
 
-                // $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")->json();
                 $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$filter=BaseRef eq '."('".$id."')")->json();
-
                 $ped = $ped['value'];
-                // dd($ped);
                 
-                // $invoices = DB::connection('sqlsrv2')->table('Historico')->where('Pedido', $id)->get();
                 $invoices = DB::connection('sqlsrv2')->table('Historico')->where('Pedido', $id)
                 ->select('ID historico','Articulo Efectuado','Descripcion Articulo', 'Lote', 'Cantidad', 'Bahia', 'Compartimento')->get();
                 $invoices = $invoices->all();
-                // dd($invoices);
 
 
                 return view('picking.DetallePedido', compact('ped', 'id', 'invoices'));
         } catch (\Throwable $th) {
-            Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
+            Alert::warning('¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
         }
     }
@@ -126,11 +120,11 @@ class RecoleccionController extends Controller
                 ])->json();
             }
             session_destroy();
-            Alert::success('Â¡Guardado!', "RecolecciÃ³n finalizada exitosamente.");
+            Alert::success('¡Guardado!', "Recolección finalizada exitosamente.");
             return redirect('/');
         } catch (\Throwable $th) {
            session_destroy();
-           Alert::warning('Â¡La secciÃ³n expiro!', 'Por favor vuleve a acceder');
+           Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
            return redirect()->route('logPick');
         }
        

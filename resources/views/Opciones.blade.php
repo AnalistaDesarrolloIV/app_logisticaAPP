@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row justify-content-around align-content-around">
 
-                <div class="col-11 col-md-5 my-5 my-md-0  opacidad rounded ">
+                <div wire:loading class="col-11 col-md-5 my-5 my-md-0  opacidad rounded ">
                     <a href="{{route('logPick')}}" style="text-decoration: none; color:black;">
                         <div class="row justify-content-center">
                             <div class="col">
@@ -105,6 +105,7 @@
 @section('script')
 
     <script>
+       
         $(document).ready(function() {
             
         

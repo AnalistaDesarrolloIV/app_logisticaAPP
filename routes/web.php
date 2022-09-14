@@ -5,6 +5,7 @@ use App\Http\Controllers\RecoleccionController;
 use App\Models\Empleados;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use RealRashid\SweetAlert\Facades\Alert;
 
 /*
 |--------------------------------------------------------------------------

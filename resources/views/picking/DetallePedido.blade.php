@@ -5,7 +5,7 @@
 
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-12  pt-3 px-1 px-sm-5 mt-5  opacidad rounded">
+            <div class="col-12  pt-3 px-1 px-sm-5 mt-5  opacidad rounded" id="Cont_gen">
                 <div class="row">
                     <div class="col-1">
                         <a class="btn btn-outline-dark" href="{{route('logPick')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
@@ -86,11 +86,11 @@
 @endsection
 
 @section('css')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css"> -->
-<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
     <style>
         
         .picking{
@@ -236,7 +236,7 @@
             
             let arreglo2 = JSON.parse(Pedtal);
             
-
+            // -------------------------Datos de la tabla--------------------
             for(let element2 of arreglo2) {
                 for(let element of arreglo) {
                     if(element['ItemCode'] == element2['Articulo Efectuado'] && element['LOTE'] == element2['Lote'] && element['CantLote'] == element2['Cantidad']){
@@ -332,8 +332,8 @@
                     }
                 }
             }
-
             
+            // ----------------Datos Fijos----------------
             for(let element of arreglo) {
                 $('#d_fijos').text('');
                 $('#d_fijos').append(`
@@ -397,7 +397,7 @@
                 $('#cont_boton_f').text('');
                 if (tabla_cont == (arreglo.length)) {
                     $('#cont_boton_f').append(`
-                        <div class="d-grid gap-2 py-3">
+                        <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
                             <a href="{{route('savePick',$id)}}" class="btn btn-dark">
                                 Finalizar
                             </a>
@@ -446,7 +446,7 @@
                 $('#cont_boton_f').text('');
                 if (tabla_cont == (arreglo.length)) {
                     $('#cont_boton_f').append(`
-                        <div class="d-grid gap-2 py-3">
+                        <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
                             <a href="{{route('savePick',$id)}}" class="btn btn-dark">
                                 Finalizar
                             </a>
@@ -454,5 +454,113 @@
                     `);
                 }
             }
+
+            function guardar() {
+                $('#Cont_gen').html(`
+                    <div class="row">
+                        <div class="col-1">
+                            <a class="btn btn-outline-dark disabled" ><i class="fas fa-chevron-left"></i></a>
+                        </div>
+                        <div class="col-11">
+                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 col-lg-3 columna cabecera">
+                            <div class="row mb-3">
+                                <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
+                                <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
+                                <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-12 mb-3 mb-md-0">
+                                    <ul class="list-group list-group-flush rounded">
+                                        <p class="placeholder-glow">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-wave">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-glow">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-wave">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-glow">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-wave">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-9 columna">
+                            <div class="row justify-content-center pb-3">
+                                <div class="col-sm-5">
+                                    <div class="input-group flex-nowrap">
+                                        <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
+                                        <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center">Ubicación</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-center">Lote</th>
+                                            <th class="text-center">Nombre producto</th>
+                                            <th class="text-center">barras</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: bold;">
+                                        <tr>
+                                            <td><span class="placeholder col-12 placeholder-lg"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                            <td><span class="placeholder" style="width: 25%;"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="placeholder col-12 placeholder-lg"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                            <td><span class="placeholder" style="width: 25%;"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="row justify-content-end">
+                                <div class="col-4">
+                                    <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
+                                        <button type="button" class="btn btn-dark disabled">
+                                            <span class="spinner-border spinner-border-sm"
+                                            role="status" aria-hidden="true"></span> guardando...
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `) ;
+            }
+            
+            // $("#guardar").click(function () {
+            //     $("#form_pack").submit();
+            //     $(this).prop("disabled",true);
+                
+            //     $(this).html(
+            //     `<span class="spinner-border spinner-border-sm"
+            //     role="status" aria-hidden="true"></span> guardando...`
+            //     ) ;
+            // });
         </script>
 @endsection

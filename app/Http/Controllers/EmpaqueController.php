@@ -53,7 +53,7 @@ class EmpaqueController extends Controller
             Alert::error('¡Error!', 'Usuario no existe');
             return Redirect()->route('logPack');
         } catch (\Throwable $th) {
-            Alert::warning('Â¡La sección expiró!', 'Por favor vuleve a acceder');
+            Alert::warning('¡La sección expiró!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
         }
     }
@@ -77,7 +77,7 @@ class EmpaqueController extends Controller
 
             return view('packing.DetalleEntrega', compact('entrega', 'id', 'justy'));
         } catch (\Throwable $th) {
-            Alert::warning('Â¡La sección expiró!', 'Por favor vuleve a acceder');
+            Alert::warning('¡La sección expiró!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
         }
     }
@@ -159,7 +159,6 @@ class EmpaqueController extends Controller
                                 $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes(' . $identi . ')', [
                                     "DocumentPackages" => [
                                         [
-                                            "Number" => $val['caja'],
                                             "Type" => $val['tipo_emp'],
 
                                             "DocumentPackageItems" => [
@@ -178,7 +177,6 @@ class EmpaqueController extends Controller
                             $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes(' . $identi . ')', [
                                 "DocumentPackages" => [
                                     [
-                                        "Number" => $val['caja'],
                                         "Type" => $val['tipo_emp'],
 
                                         "DocumentPackageItems" => [
@@ -241,7 +239,6 @@ class EmpaqueController extends Controller
                                 $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes(' . $identi . ')', [
                                     "DocumentPackages" => [
                                         [
-                                            "Number" => $val['caja'],
                                             "Type" => $val['tipo_emp'],
 
                                             "DocumentPackageItems" => [
@@ -260,7 +257,6 @@ class EmpaqueController extends Controller
                             $gard2 = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch('https://10.170.20.95:50000/b1s/v1/DeliveryNotes(' . $identi . ')', [
                                 "DocumentPackages" => [
                                     [
-                                        "Number" => $val['caja'],
                                         "Type" => $val['tipo_emp'],
 
                                         "DocumentPackageItems" => [

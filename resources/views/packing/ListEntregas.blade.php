@@ -129,7 +129,7 @@
                         if (string.indexOf(busqueda) !== -1 || string2.indexOf(busqueda) !== -1) {
                             if (element['U_IV_ESTA'] == "Recogido") {
                                 $('#lista').append(`
-                                    <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                                    <div class="col-12 col-sm-6 col-md-4 col-xl-3" id="ingreso_${element['BaseRef']}" onclick="ingreso(${element['BaseRef']})">
                                         <a href="/indexPack/${element['BaseRef']}" style="text-decoration: none; color: black;" >
                                             <div class="card my-2 targeta">
                                                 <div class="card-body">
@@ -152,5 +152,31 @@
                 }
             }
             search();
+            
+        function ingreso(id) {
+            // $("#ingreso_"+id).prop("disabled",true);
+            
+            $("#lista").html(
+            `
+            <div class="col-12 col-md-6">
+                <div class="card" aria-hidden="true">
+                    <div class="card-body">
+                        <h5 class="card-title placeholder-glow">
+                        <span class="placeholder col-6"></span>
+                        </h5>
+                        <p class="card-text placeholder-glow">
+                        <span class="placeholder col-7"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-6"></span>
+                        <span class="placeholder col-8"></span>
+                        </p>
+                        <a href="#" tabindex="-1" class="btn btn-dark disabled placeholder col-6"></a>
+                    </div>
+                </div>
+            </div>
+            `
+            );
+        }
         </script>
 @endsection

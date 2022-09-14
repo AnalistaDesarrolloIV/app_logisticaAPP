@@ -5,7 +5,7 @@
 
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-12  py-3 px-1 px-sm-3 mt-5 mt-sm-0 opacidad rounded">
+            <div class="col-12  py-3 px-1 px-sm-3 mt-5 mt-sm-0 opacidad rounded" id="Cont_gen">
                 <div class="row mt-5 mt-lg-0">
                     <div class="col-lg-12 ">
                         <div class="row">
@@ -60,7 +60,7 @@
                                     </table>
                                 </div>
                                 
-                                <form action="{{route('savePack',$id)}}" method="post">
+                                <form action="{{route('savePack',$id)}}" method="post" id="form_emp">
                                     @csrf
                                     <div class="row justify-content-end">
                                         <div class="col-5" id="cont_boton_f">
@@ -621,7 +621,8 @@
                     `);
                 }
             }
-	    let cont_em = 0;
+
+	        let cont_em = 0;
 
             function check(id) {
 
@@ -639,7 +640,7 @@
                                         </div>
                                         `);
                             for (let c = 0; c <= contador_cajas; c++) {
-				cont_em += 1;
+				                cont_em += 1;
                                 let uni = $('#unidades-'+id+'-'+c).val();
                                 let tipo_e = $("#tipo_emp-"+id+'-'+c+" option:selected").val();
                                 console.log(tipo_e);
@@ -745,7 +746,7 @@
                     $('#cont_boton_f').text('');
                     $('#cont_boton_f').append(`
                         <div class="d-grid gap-2 py-3">
-                            <button class="btn btn-dark" type="submit">Finalizar</button>
+                            <button class="btn btn-dark" type="button" onclick="guardar()">Finalizar</button>
                         </div>
                     `);
                 }
@@ -778,7 +779,7 @@
                                             </div>
                                         `);
                             for (let c = 0; c < contador_cajas+1; c++) {
-				cont_em += 1;
+				                cont_em += 1;
                                 let uni = $('#unidades-'+id+'-'+c).val();
                                 let tipo_e = $("#tipo_emp-"+id+'-'+c+" option:selected").val();
                                 console.log(tipo_e);
@@ -848,12 +849,112 @@
                     $('#cont_boton_f').text('');
                     $('#cont_boton_f').append(`
                         <div class="d-grid gap-2 py-3">
-                            <button class="btn btn-dark" type="submit">Finalizar</button>
+                            <button class="btn btn-dark" type="button" onclick="guardar()">Finalizar</button>
                         </div>
                     `);
                 }
                 $('#code_bar').val('');
                 $('#code_bar').focus();
+            }
+            
+            function guardar() {
+                $("#form_emp").submit();
+
+                $('#Cont_gen').html(`
+                    <div class="row">
+                        <div class="col-1">
+                            <a class="btn btn-outline-dark disabled" ><i class="fas fa-chevron-left"></i></a>
+                        </div>
+                        <div class="col-11">
+                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 col-lg-3 columna cabecera">
+                            <div class="row mb-3">
+                                <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
+                                <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
+                                <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-12 mb-3 mb-md-0">
+                                    <ul class="list-group list-group-flush rounded">
+                                        <p class="placeholder-glow">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-wave">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-glow">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-wave">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-glow">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                        <p class="placeholder-wave">
+                                            <span class="placeholder col-12"></span>
+                                        </p>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-9 columna">
+                            <div class="row justify-content-center pb-3">
+                                <div class="col-sm-5">
+                                    <div class="input-group flex-nowrap">
+                                        <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
+                                        <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center">Ubicación</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-center">Lote</th>
+                                            <th class="text-center">Nombre producto</th>
+                                            <th class="text-center">barras</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: bold;">
+                                        <tr>
+                                            <td><span class="placeholder col-12 placeholder-lg"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                            <td><span class="placeholder" style="width: 25%;"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="placeholder col-12 placeholder-lg"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                            <td><span class="placeholder" style="width: 25%;"></span></td>
+                                            <td><span class="placeholder col-6"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="row justify-content-end">
+                                <div class="col-4">
+                                    <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
+                                        <button type="button" class="btn btn-dark disabled">
+                                            <span class="spinner-border spinner-border-sm"
+                                            role="status" aria-hidden="true"></span> guardando...
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `) ;
             }
         </script>
 @endsection

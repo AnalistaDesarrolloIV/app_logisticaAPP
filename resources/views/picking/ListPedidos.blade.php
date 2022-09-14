@@ -162,6 +162,8 @@
 
             console.log(arreglo);
 
+
+
         function search_most() {
             
             let busqueda = $('#b_mostrador').val();
@@ -181,8 +183,8 @@
                     if (string.indexOf(busqueda) !== -1 || string2.indexOf(busqueda) !== -1) {
                         if (element['U_IV_ESTA'] == "Por Recoger") {
                             $('#mostrador').append(`
-                                <div class="col-12 col-md-6">
-                                    <a href="indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;" >
+                                <div class="col-12 col-md-6" id="ingreso_${element['BaseRef']}" onclick="ingreso(${element['BaseRef']})">
+                                    <a href="indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;">
                                         <div class="card my-2 targeta">
                                             <div class="card-body">
                                                 <h4 class="card-title">${element['CardName']}</h4>
@@ -194,6 +196,15 @@
                                     </a>
                                 </div>
                             `);
+
+                            // $("#ingreso_"+element['BaseRef']).click(function () {
+                            //     $(this).prop("disabled",true);
+                                
+                            //     $(this).html(
+                            //     `<span class="spinner-border spinner-border-sm"
+                            //     role="status" aria-hidden="true"></span> Ingresando...`
+                            //     ) ;
+                            // });
                         }
                     }
                 }
@@ -205,6 +216,54 @@
             }
         }
         search_most();
+
+        function ingreso(id) {
+            // $("#ingreso_"+id).prop("disabled",true);
+            
+            $("#mostrador").html(
+            `
+            <div class="col-12 col-md-6">
+                <div class="card" aria-hidden="true">
+                    <div class="card-body">
+                        <h5 class="card-title placeholder-glow">
+                        <span class="placeholder col-6"></span>
+                        </h5>
+                        <p class="card-text placeholder-glow">
+                        <span class="placeholder col-7"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-6"></span>
+                        <span class="placeholder col-8"></span>
+                        </p>
+                        <a href="#" tabindex="-1" class="btn btn-dark disabled placeholder col-6"></a>
+                    </div>
+                </div>
+            </div>
+            `
+            );
+
+            $("#envio").html(
+            `
+            <div class="col-12 col-md-6">
+                <div class="card" aria-hidden="true">
+                    <div class="card-body">
+                        <h5 class="card-title placeholder-glow">
+                        <span class="placeholder col-6"></span>
+                        </h5>
+                        <p class="card-text placeholder-glow">
+                        <span class="placeholder col-7"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-6"></span>
+                        <span class="placeholder col-8"></span>
+                        </p>
+                        <a href="#" tabindex="-1" class="btn btn-dark disabled placeholder col-6"></a>
+                    </div>
+                </div>
+            </div>
+            `
+            );
+        }
 
         function search_env() {
 
@@ -223,7 +282,7 @@
                     if (string.indexOf(busqueda_env) !== -1 || string2.indexOf(busqueda_env) !== -1) {
                         if (element['U_IV_ESTA'] == "Por Recoger") {
                             $('#envio').append(`
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-6" id="ingreso2_${element['BaseRef']}" onclick="ingreso2(${element['BaseRef']})">
                                     <a href="indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;" >
                                         <div class="card my-2 targeta">
                                             <div class="card-body">
@@ -247,6 +306,54 @@
             }
         }
         search_env();
+        
+        function ingreso2(id) {
+            // $("#ingreso_"+id).prop("disabled",true);
+            
+            $("#mostrador").html(
+            `
+            <div class="col-12 col-md-6">
+                <div class="card" aria-hidden="true">
+                    <div class="card-body">
+                        <h5 class="card-title placeholder-glow">
+                        <span class="placeholder col-6"></span>
+                        </h5>
+                        <p class="card-text placeholder-glow">
+                        <span class="placeholder col-7"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-6"></span>
+                        <span class="placeholder col-8"></span>
+                        </p>
+                        <a href="#" tabindex="-1" class="btn btn-dark disabled placeholder col-6"></a>
+                    </div>
+                </div>
+            </div>
+            `
+            );
+            
+            $("#envio").html(
+            `
+            <div class="col-12 col-md-6">
+                <div class="card" aria-hidden="true">
+                    <div class="card-body">
+                        <h5 class="card-title placeholder-glow">
+                        <span class="placeholder col-6"></span>
+                        </h5>
+                        <p class="card-text placeholder-glow">
+                        <span class="placeholder col-7"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-6"></span>
+                        <span class="placeholder col-8"></span>
+                        </p>
+                        <a href="#" tabindex="-1" class="btn btn-dark disabled placeholder col-6"></a>
+                    </div>
+                </div>
+            </div>
+            `
+            );
+        }
     </script>
 
 @endsection
