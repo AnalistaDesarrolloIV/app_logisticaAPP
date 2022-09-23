@@ -9,8 +9,8 @@
                 <div class="row mt-5 mt-lg-0">
                     <div class="col-lg-12 ">
                         <div class="row">
-                            <div class="col-1">
-                                <a class="btn btn-outline-dark" href="{{route('logPack')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
+                            <div class="col-auto">
+                                <a class="btn btn-outline-dark" href="{{route('loginPack')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
                             </div>
                             <div class="col-11">
                                 <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
@@ -248,7 +248,10 @@
             console.log(m_faltante);
 
             let inicioE = '<?php echo $_SESSION['H_I_EMP']?>';
+            
+            var DE = <?php echo json_encode($datExtra)?>;
 
+            // -----------------Tabla De Entregas--------------------
             for(let element of arreglo) {
                 if (element['Biologico'] == 'BIOLOGICOS') {
                     $('#tabla').append(`
@@ -329,20 +332,27 @@
 
             let contador_cajas = 0;
 
+
+            // --------------------Datos extra-----------------------
             for(let element of arreglo) {
-                $('#d_fijos').text('');
-                $('#d_fijos').append(`
-                    <div class="col-12">
-                        <ul class="list-group list-group-flush rounded">
-                            <li class="list-group-item"><b>Hora de inicio: </b>${inicioE}</li>
-                            <li class="list-group-item"><b>Cliente: </b>${element['CardName']}</li>
-                            <li class="list-group-item"><b>Departamento: </b>${element['Departamento']}</li>
-                            <li class="list-group-item"><b>Municipio / Ciudad: </b>${element['Municipio_Ciudad']}</li>
-                            <li class="list-group-item"><b>Fecha Creación: </b>${element['DocDate']}</li>
-                            <li class="list-group-item"><b>Comentarios: </b>${element['Comments']}</li>
-                        </ul>
-                    </div>
-                `);
+                
+                for(let extra of DE) {
+                    let unidades = Math.trunc(extra['Cant_Unidades']);
+                    $('#d_fijos').text('');
+                    $('#d_fijos').append(`
+                        <div class="col-12">
+                            <ul class="list-group list-group-flush rounded">
+                                <li class="list-group-item"><b>Hora de inicio: </b>${inicioE}</li>
+                                <li class="list-group-item"><b>Cliente: </b>${element['CardName']}</li>
+                                <li class="list-group-item"><b>Cantidad de lineas: </b>${extra['Cant_Linea']} &nbsp;&nbsp;&nbsp; <b>Cantidad de unidades: </b>${unidades}</li>
+                                <li class="list-group-item"><b>Departamento: </b>${element['Departamento']}</li>
+                                <li class="list-group-item"><b>Municipio / Ciudad: </b>${element['Municipio_Ciudad']}</li>
+                                <li class="list-group-item"><b>Fecha Creación: </b>${element['DocDate']}</li>
+                                <li class="list-group-item"><b>Comentarios: </b>${extra['Comments']}</li>
+                            </ul>
+                        </div>
+                    `);
+                }
             }
 
             function modal_p(id) {

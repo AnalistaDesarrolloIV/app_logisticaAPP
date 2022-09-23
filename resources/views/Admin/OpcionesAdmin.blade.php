@@ -1,5 +1,5 @@
 @extends('welcome')
-@section('tittle',('Inicio'))
+@section('tittle',('Inicio Admin'))
 
 @section('content')
 
@@ -7,13 +7,13 @@
         <div class="row justify-content-around align-content-around">
 
                 <div wire:loading class="col-11 col-md-5 my-5 my-md-0  opacidad rounded ">
-                    <a href="{{route('loginPick')}}" style="text-decoration: none; color:black;">
+                    <a href="{{route('listPick')}}" style="text-decoration: none; color:black;">
                         <div class="row justify-content-center">
                             <div class="col">
                                 <div class="mt-2" style="width: 100%; padding: 0px; margin: 0px;">
-                                    <img src="{{url('/')}}/img/packing.svg" class="card-img-top " height="320rem" alt="Packing">
+                                    <img src="{{url('/')}}/img/ControlPanel.svg" class="card-img-top " height="320rem" alt="Packing">
                                     <div class="card-body text-center">
-                                        <h2 class="card-title"><b>Recolección</b></h2>
+                                        <h2 class="card-title"><b>Panel Administrador</b></h2>
                                     </div>
                                 </div>
                             </div>
@@ -21,8 +21,8 @@
                     </a>
                 </div>
             
-                <div class="col-11 col-md-5  opacidad rounded">
-                    <a href="{{route('loginPack')}}" style="text-decoration: none; color:black;">
+                {{-- <div class="col-11 col-md-5  opacidad rounded">
+                    <a href="{{route('listPack')}}" style="text-decoration: none; color:black;">
                         <div class="row justify-content-center">
                             <div class="col">
                                 <div class="mt-2" style="width: 100%; padding: 0px; margin: 0px;">
@@ -37,7 +37,7 @@
                             </div>
                         </div>
                     </a>
-                </div>
+                </div> --}}
                 <!-- Button trigger modal -->
                 <div class=" fixed-bottom d-flex flex-row-reverse mb-4 mr-4 pr-3">
                     <button type="button" class="boton btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" title="Descargar aplicación mobil">

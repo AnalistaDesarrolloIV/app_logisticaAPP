@@ -12,20 +12,6 @@
                         <div class="row">
                             <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedidos Envío.</h3>
                             
-                            <!-- <div class="col-auto col-sm-2 py-2 py-sm-0">
-                                <div style=" float:left;">
-                                    <button class="btn btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-auto col-sm-10 py-2 py-sm-0">
-                                <div>
-                                    <div class="collapse collapse-horizontal" id="collapseWidthExample">
-                                        <input class="form-control" type="number" width="100%" id="b_envio" onkeyup="search_env()" placeholder="Codigo Pedido">
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="input-group input-group-lg mb-3">
                                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
                                 <input type="text" class="form-control" id="b_envio" onkeyup="search_env()" placeholder="Numero Pedido" aria-label="codigo_e" aria-describedby="basic-addon1">
@@ -45,21 +31,7 @@
                 <div class="row justify-content-center">
                     <div class="col-sm-8">
                         <div class="row">
-                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedidos Mostrador.</h3>
-                            <!-- <div class="col-auto col-sm-2 py-2 py-sm-0">
-                                <div style=" float:left;">
-                                    <button class="btn btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample2" aria-expanded="false" aria-controls="collapseWidthExample2">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-auto col-sm-10 py-2 py-sm-0">
-                                <div>
-                                    <div class="collapse collapse-horizontal" id="collapseWidthExample2">
-                                        <input class="form-control" type="number" id="b_mostrador" onkeyup="search_most()" placeholder="Codigo Pedido">
-                                    </div>
-                                </div>
-                            </div> -->
+                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedidos Biologicos.</h3>
                             <div class="input-group input-group-lg  mb-3">
                                 <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
                                 <input type="text" class="form-control" type="number" id="b_mostrador" onkeyup="search_most()" placeholder="Numero Pedido" aria-label="codigo_m" aria-describedby="basic-addon2">
@@ -153,16 +125,23 @@
 
 
     <script>
-            var array = '<?php echo json_encode($pedido)?>';
-            
-            var session = '<?php echo $_SESSION['B1SESSION']?>';
-            console.log(session);
-            
-            let arreglo = JSON.parse(array);
+        const User = '<?php echo $_COOKIE['USER']?>';
 
-            console.log(arreglo);
+        var arreglo = <?php echo json_encode($pedido)?>;
 
+        var biologicos = <?php echo json_encode($pedido_bio)?>;
 
+        
+        var session = '<?php echo $_SESSION['B1SESSION']?>';
+        
+        var DE = <?php echo json_encode($datExtra)?>;
+        let numeros = [];
+
+        for(let bio of biologicos) {
+            if (User == bio['U_IV_OPERARIO']) {
+                numeros.push(bio['BaseRef']); 
+            }
+        }
 
         function search_most() {
             
@@ -170,48 +149,45 @@
                 busqueda = busqueda.toUpperCase();
             
             $('#mostrador').text('');
-            for(let element of arreglo) {
-
-
-                let elemento = element['BaseRef'];
-                let elemento2 = element['CardName'];
-                let string = String(elemento);
-                let string2 = String(elemento2);
-                let long = string.length;
-                let inicial = string.substring(1, -long);
-                if(inicial == 5) {
-                    if (string.indexOf(busqueda) !== -1 || string2.indexOf(busqueda) !== -1) {
-                        if (element['U_IV_ESTA'] == "Por Recoger") {
-                            $('#mostrador').append(`
-                                <div class="col-12 col-md-6" id="ingreso_${element['BaseRef']}" onclick="ingreso(${element['BaseRef']})">
-                                    <a href="indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;">
+            for(let bio of biologicos) {
+                for(let extra of DE) {
+                    if (bio['BaseRef'] == extra['BaseRef']) {
+                        if (bio['U_IV_ESTA'] == "Por Recoger" && User == bio['U_IV_OPERARIO']) {
+                            let unidades = Math.trunc(extra['Cant_Unidades']);
+                            let prio = bio['U_IV_Prioridad'];
+                                $('#mostrador').append(`
+                                <div class="col-12 col-md-10">
+                                    <a href="indexPick/${bio['BaseRef']}/${bio['DocEntry']}" style="text-decoration: none; color: black;">
                                         <div class="card my-2 targeta">
                                             <div class="card-body">
-                                                <h4 class="card-title">${element['CardName']}</h4>
-                                                <h5 class="card-subtitle mb-2 text-muted"><b>Pedido N°: </b> ${element['BaseRef']}</h5>
-                                                <h6 class="card-subtitle mb-2 text-muted"><b>Municipio / Ciudad: </b> ${element['Municipio_Ciudad']}</h6>
-                                                <p class="card-text">${element['Comments']}</p>
+                                                <div class="row justify-content-between">
+                                                    <div class="col-8">
+                                                        <h4 class="card-title">${bio['CardName']}</h4>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <span ${prio == "Alta" ? 'class="badge rounded-pill bg-danger"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-success"'}>
+                                                            ${prio}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <h5 class="card-subtitle mb-2 text-muted"><b>Pedido N°: </b> ${bio['BaseRef']}</h5>
+                                                <h5 class="card-subtitle mb-2 text-muted"><b>N° de lineas: </b> ${extra['Cant_Linea']}</h5>
+                                                <h5 class="card-subtitle mb-2 text-muted"><b>Cantidad unidades: </b> ${unidades}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted"><b>Municipio / Ciudad: </b> ${bio['Municipio_Ciudad']}</h6>
+                                                <p class="card-text">${extra['Comments']}</p>
                                             </div>
                                         </div>
+                                        
                                     </a>
                                 </div>
                             `);
-
-                            // $("#ingreso_"+element['BaseRef']).click(function () {
-                            //     $(this).prop("disabled",true);
-                                
-                            //     $(this).html(
-                            //     `<span class="spinner-border spinner-border-sm"
-                            //     role="status" aria-hidden="true"></span> Ingresando...`
-                            //     ) ;
-                            // });
                         }
                     }
                 }
             }
             if ($('#mostrador').text() == '') {
                 $('#mostrador').append(`
-                    <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px; color: red;">No existe ningun pedido de mostrador con este codigo</h3>
+                    <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px; color: red;">No tienes pedidos biologicos asignados por recoger.</h3>
                 `);
             }
         }
@@ -272,43 +248,61 @@
             
             $('#envio').text('');
             for(let element of arreglo) {
-                let elemento = element['BaseRef'];
-                let elemento2 = element['CardName'];
-                let string = String(elemento);
-                let string2 = String(elemento2);
-                let long = string.length;
-                let inicial = string.substring(1, -long);
-                if(inicial == 7) {
-                    if (string.indexOf(busqueda_env) !== -1 || string2.indexOf(busqueda_env) !== -1) {
-                        if (element['U_IV_ESTA'] == "Por Recoger") {
-                            $('#envio').append(`
-                                <div class="col-12 col-md-6" id="ingreso2_${element['BaseRef']}" onclick="ingreso2(${element['BaseRef']})">
-                                    <a href="indexPick/${element['BaseRef']}" style="text-decoration: none; color: black;" >
-                                        <div class="card my-2 targeta">
-                                            <div class="card-body">
-                                                <h4 class="card-title">${element['CardName']}</h4>
-                                                <h5 class="card-subtitle mb-2 text-muted"><b>Pedido N°: </b> ${element['BaseRef']}</h5>
-                                                <h6 class="card-subtitle mb-2 text-muted"><b>Municipio / Ciudad: </b> ${element['Municipio_Ciudad']}</h6>
-                                                <p class="card-text">${element['Comments']}</p>
+                let incluye = numeros.includes(element['BaseRef']);
+                if (!incluye) {
+                        
+                        let elemento = element['BaseRef'];
+                        let elemento2 = element['CardName'];
+                        let string = String(elemento);
+                        let string2 = String(elemento2);
+                        let long = string.length;
+                        let inicial = string.substring(1, -long);
+                        if (string.indexOf(busqueda_env) !== -1 || string2.indexOf(busqueda_env) !== -1) {
+                            for(let extra of DE) {
+                                if (element['BaseRef'] == extra['BaseRef']) {
+                                    if (element['U_IV_ESTA'] == "Por Recoger" && User == element['U_IV_OPERARIO']) {
+                                        let unidades = Math.trunc(extra['Cant_Unidades']);
+                                        let prio = element['U_IV_Prioridad'];
+                                        $('#envio').append(`
+                                            <div class="col-12 col-md-10">
+                                                <a href="indexPick/${element['BaseRef']}/${element['DocEntry']}" style="text-decoration: none; color: black;" >
+                                                    <div class="card my-2 targeta">
+                                                        <div class="card-body">
+                                                            <div class="row justify-content-between">
+                                                                <div class="col-8">
+                                                                    <h4 class="card-title">${element['CardName']}</h4>
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <span ${prio == "Alta" ? 'class="badge rounded-pill bg-danger"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-success"'}>
+                                                                        ${prio}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <h5 class="card-subtitle mb-2 text-muted"><b>Pedido N°: </b> ${element['BaseRef']}</h5>
+                                                            <h5 class="card-subtitle mb-2 text-muted"><b>N° de lineas: </b> ${extra['Cant_Linea']}</h5>
+                                                            <h5 class="card-subtitle mb-2 text-muted"><b>Cantidad unidades: </b> ${unidades}</h5>
+                                                            <h6 class="card-subtitle mb-2 text-muted"><b>Municipio / Ciudad: </b> ${element['Municipio_Ciudad']}</h6>
+                                                            <p class="card-text">${extra['Comments']}</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
                                             </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            `);
+                                        `);
+                                    }
+                                }
+                            }
                         }
-                    }
                 }
             }
             if ($('#envio').text() == '') {
                 $('#envio').append(`
-                    <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px; color: red;">No existe ningun pedido de envío con este codigo</h3>
+                    <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px; color: red;">No tienes pedidos asignados por recoger.</h3>
                 `);
             }
         }
         search_env();
         
         function ingreso2(id) {
-            // $("#ingreso_"+id).prop("disabled",true);
             
             $("#mostrador").html(
             `

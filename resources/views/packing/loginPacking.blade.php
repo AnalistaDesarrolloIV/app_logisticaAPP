@@ -57,7 +57,6 @@
 
 @section('script')
     <script>
-        
         $ ("#btnSubmit").click(function () {
             $("#form_pack").submit();
             $(this).prop("disabled",true);

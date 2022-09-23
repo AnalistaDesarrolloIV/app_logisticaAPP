@@ -13,51 +13,25 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class EmpaqueController extends Controller
 {
-    public function logPack()
-    {
-        return view('packing.loginPacking');
-    }
-    public function loginPack(login $request)
+    public function loginPack()
     {
         try {
             session_start();
-            $response = Http::retry(20, 300)->post('https://10.170.20.95:50000/b1s/v1/Login', [
-                'CompanyDB' => 'INVERSIONES',
-                'UserName' => 'Desarrollos',
-                'Password' => 'Asdf1234$',
-            ])->json();
 
-            $_SESSION['B1SESSION'] = $response['SessionId'];
-            $input = $request->all();
-            $identificador = $input['documento'];
+            $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))');
+            $entregas->json();
+            $entregas = $entregas['value'];
 
-            $emp = Empleados::all();
-            foreach ($emp as $key => $value) {
-                if ($value['OPE_OPERATORE'] == $identificador) {
-                    $_SESSION['EMPLEADO_E'] = $value;
+            $datExtra = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1')->json();
+            $datExtra = $datExtra['value'];
 
-                    $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA))');
-                    $estado = $entregas->status();
-                    if ($estado == 200) {
-                        $entregas->json();
-                        $entregas = $entregas['value'];
+            return view('packing.ListEntregas', compact('entregas', 'datExtra'));
 
-                        Alert::success('Bienvenid@', $_SESSION['EMPLEADO_E']['OPE_OPERATORE']);
-                        return view('packing.ListEntregas', compact('entregas'));
-                    } else {
-                        Alert::error('¡Error!', 'Error interno.');
-                        return redirect('/');
-                    }
-                }
-            }
-            Alert::error('¡Error!', 'Usuario no existe');
-            return Redirect()->route('logPack');
         } catch (\Throwable $th) {
             Alert::warning('¡La sección expiró!', 'Por favor vuleve a acceder');
-            return redirect()->route('logPick');
+            return redirect()->route('log');
         }
     }
-
 
     public function indexPack($id)
     {
@@ -74,13 +48,17 @@ class EmpaqueController extends Controller
             $justy = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/SQLQueries('codigofalt')/List")->json();
 
             $justy = $justy['value'];
+            
+            $datExtra = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1?".'$filter=BaseRef eq '."'".$id."'")->json();
+            $datExtra = $datExtra['value'];
 
-            return view('packing.DetalleEntrega', compact('entrega', 'id', 'justy'));
+            return view('packing.DetalleEntrega', compact('entrega', 'id', 'justy', 'datExtra'));
         } catch (\Throwable $th) {
             Alert::warning('¡La sección expiró!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
         }
     }
+
     public function savePack(Request $request, $id)
     {
         try {
@@ -105,11 +83,8 @@ class EmpaqueController extends Controller
 
             
 
-
-
             foreach ($ped  as $key => $value) {
                 $identi = $value['DocEntry'];
-                
                 $linenum = $value['LineNum'];
                 $itemCode = $value['ItemCode'];
 
@@ -281,6 +256,31 @@ class EmpaqueController extends Controller
         } catch (\Throwable $th) {
             Alert::warning('¡La sección expiró!', 'Por favor vuleve a acceder');
             return redirect()->route('logPick');
+        }
+    }
+
+
+    // ---------------------------------ADMIN------------------------------
+
+    
+    public function listPack()
+    {
+        try {
+            session_start();
+
+            $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA))');
+            $estado = $entregas->status();
+            $entregas->json();
+            $entregas = $entregas['value'];
+
+            $datExtra = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1')->json();
+            $datExtra = $datExtra['value'];
+
+            return view('packing.ListEntregas', compact('entregas', 'datExtra'));
+
+        } catch (\Throwable $th) {
+            Alert::warning('¡La sección expiró!', 'Por favor vuleve a acceder');
+            return redirect()->route('log');
         }
     }
 }

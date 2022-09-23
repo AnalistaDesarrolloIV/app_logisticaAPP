@@ -33,8 +33,9 @@
                 height: 100%;
                 background-attachment: fixed;
             }
-            .back{
-                cursor: pointer;
+            .opacidad{
+                background: rgba(10, 10, 10, 0.3);
+                font-size: larger;
             }
         </style>
         @yield('css')
@@ -43,14 +44,60 @@
     </head>
     <body class="antialiased">
         <div class="relative flex items-top justify-center min-h-screen sm:items-center py-4 sm:pt-0">
-            @if ($_COOKIE['USER_ROL']== 'ADMINISTRADOR')
-                @include('Admin.layoutAdmin.NavBarAdmin')
-            @elseif($_COOKIE['USER_ROL']== 'OPERARIO')
-                @include('Layouts.NavBar')
-            @else 
-                @include('User_Bio.Layout.NavBarBio')
-            @endif
-            @yield('content')
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-7 py-1 py-sm-5 px-1 px-sm-5 mt-5 mt-md-0 opacidad rounded">
+                        <form action="{{route('login')}}" method="post" id="form_pick">
+                            @csrf
+                            <div class="row">
+                                <div class="col text-center mb-3">
+                                    <img src="{{url('/')}}/img/login.svg" width="50%" alt="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class=" mb-3">
+                                        {{-- <input type="text" class="form-control @error('documento') is-invalid @enderror" id="doc" placeholder="name@example.com" name="documento" aria-describedby="helpDoc" autofocus>
+                                        <label for="doc">Usuario <b style="color: red;">*</b></label>
+                                        <div id="helpDoc" class="form-text">
+                                            Ingresar nombre de usuario para iniciar recolección.
+                                        </div>
+                                        @error('documento')
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <strong>¡Error!</strong> {{ $message }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                        @enderror --}}
+        
+                                        <label for="user" class="form-label">Usuario <b style="color: red;">*</b></label>
+                                        <input class="form-control form-control-lg @error('usuario') is-invalid @enderror" type="email" multiple name="usuario" id="user" list="dopusuarios" required size="64" autofocus>
+        
+                                        <datalist id="dopusuarios">
+                                            @foreach($users as $key => $value)
+                                                <option value="{{$value['Code']}}" selected>{{$value['U_Tipo_Opr']}}</option>
+                                            @endforeach
+                                        </datalist>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    
+                                    <div class=" mb-3">
+                                        <label class="form-label" for="pass">Contraseña <b style="color: red;">*</b></label>
+                                        <input type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" id="pass"  name="password" autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row d-flex justify-content-end mb-2">
+                                <div class="col-12 col-md-5 pb-3 pb-md-0 d-grid gap-2">
+                                    <button type="button" class="btn btn-dark text-white" id="btnSubmit"><i class="fas fa-door-open"></i> Ingresar</button>
+                                </div>
+                            </div>
+        
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
                 
         <!-- Scripts -->
@@ -68,6 +115,25 @@
             function volover() {
                 window.history.back();
             }
+            
+            $ ("#btnSubmit").click(function () {
+                $("#form_pick").submit();
+                $(this).prop("disabled",true);
+                
+                $(this).html(
+                `<span class="spinner-border spinner-border-sm"
+                role="status" aria-hidden="true"></span> Ingresando...`
+                ) ;
+                
+            });
+            
+            $(document).keypress(function(event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13'){
+                    $("#btnSubmit").click();
+                    // alert('You pressed a "enter" key in textbox');  
+                }
+            });
         </script>
         
         <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>

@@ -107,10 +107,12 @@
 @section('script')
         <script>
             
-            var array = '<?php echo json_encode($entregas)?>';
+            let User = '<?php echo $_COOKIE['USER']?>';
+
+            console.log(User);
+            var pedi = <?php echo json_encode($entregas)?>;
             
-            let pedi = JSON.parse(array);
-            console.log(pedi);
+            var DE = <?php echo json_encode($datExtra)?>;
              
         
             function search() {
@@ -127,21 +129,38 @@
                     let string = String(elemento);
                     let string2 = String(elemento2);
                         if (string.indexOf(busqueda) !== -1 || string2.indexOf(busqueda) !== -1) {
-                            if (element['U_IV_ESTA'] == "Recogido") {
-                                $('#lista').append(`
-                                    <div class="col-12 col-sm-6 col-md-4 col-xl-3" id="ingreso_${element['BaseRef']}" onclick="ingreso(${element['BaseRef']})">
-                                        <a href="/indexPack/${element['BaseRef']}" style="text-decoration: none; color: black;" >
-                                            <div class="card my-2 targeta">
-                                                <div class="card-body">
-                                                    <h4 class="card-title">${element['CardName']}</h4>
-                                                    <h5 class="card-subtitle mb-2 text-muted"><b>Pedido N°: </b> ${element['BaseRef']}</h5>
-                                                    <h6 class="card-subtitle mb-2 text-muted"><b>Municipio / Ciudad: </b> ${element['Municipio_Ciudad']}</h6>
-                                                    <p class="card-text">${element['Comments']}</p>
-                                                </div>
+                            for(let extra of DE) {
+                                if (element['BaseRef'] == extra['BaseRef'] ) {
+                                    if (element['U_IV_ESTA'] == "Recogido" && User == element['U_IV_OPERARIO']) {
+                                        let unidades = Math.trunc(extra['Cant_Unidades']);
+                                        let prio = element['U_IV_Prioridad'];
+                                        $('#lista').append(`
+                                            <div class="col-12 col-sm-6 col-md-4" id="ingreso_${element['BaseRef']}" onclick="ingreso(${element['BaseRef']})">
+                                                <a href="indexPack/${element['BaseRef']}" style="text-decoration: none; color: black;" >
+                                                    <div class="card my-2 targeta">
+                                                        <div class="card-body">
+                                                            <div class="row justify-content-between">
+                                                                <div class="col-8">
+                                                                    <h4 class="card-title">${element['CardName']}</h4>
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <span ${prio == "Alta" ? 'class="badge rounded-pill bg-danger"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-success"'}>
+                                                                        ${prio}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <h5 class="card-subtitle mb-2 text-muted"><b>Pedido N°: </b> ${element['BaseRef']}</h5>
+                                                            <h5 class="card-subtitle mb-2 text-muted"><b>N° de lineas: </b> ${extra['Cant_Linea']}</h5>
+                                                            <h5 class="card-subtitle mb-2 text-muted"><b>Cantidad unidades: </b> ${unidades}</h5>
+                                                            <h6 class="card-subtitle mb-2 text-muted"><b>Municipio / Ciudad: </b> ${element['Municipio_Ciudad']}</h6>
+                                                            <p class="card-text">${extra['Comments']}</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
                                             </div>
-                                        </a>
-                                    </div>
-                                `);
+                                        `);
+                                    }
+                                }
                             }
                         }
                 }
@@ -154,7 +173,6 @@
             search();
             
         function ingreso(id) {
-            // $("#ingreso_"+id).prop("disabled",true);
             
             $("#lista").html(
             `

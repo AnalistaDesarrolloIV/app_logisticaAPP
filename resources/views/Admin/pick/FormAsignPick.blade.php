@@ -1,5 +1,5 @@
 @extends('welcome')
-@section('tittle',('Lista Productos'))
+@section('tittle',('Asignación Pedidos'))
 
 @section('content')
 
@@ -8,7 +8,7 @@
             <div class="col-12  pt-3 px-1 px-sm-5 mt-5  opacidad rounded" id="Cont_gen">
                 <div class="row">
                     <div class="col-auto">
-                        <a class="btn btn-outline-dark" href="{{route('loginPick')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
+                        <a class="btn btn-outline-dark" href="{{route('listPick')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
                     </div>
                     <div class="col-11">
                         <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
@@ -26,16 +26,61 @@
                         <div class="row " id="d_fijos">
 
                         </div>
-                    </div>
-                    <div class="col-md-12 col-lg-9 columna">
-                        <div class="row justify-content-center pb-3">
-                            <div class="col-sm-5">
-                                <div class="input-group flex-nowrap">
-                                    <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                                    <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
-                                </div>
+                        <div class="row justify-content-end mt-4">
+                            <div class="col-12 d-grid gap-2" id="btn_as">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#Modal_asignacion">
+                                    Asignar
+                                </button>
                             </div>
                         </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="Modal_asignacion" tabindex="-1" aria-labelledby="titulo" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="titulo">Formulario de asignación</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{route('storeAsign')}}" method="post" id="Form_asig">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{$id}}">
+                                        <input type="hidden" name="DL" value="{{$DL}}">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <lable class="form-label" for="operatore">Operador</lable>
+                                                <select class="form-select" id="operatore" aria-label="Default select example" name="operatore">
+                                                    <option selected value="">Selecciones</option>
+                                                    @foreach ($user as $key => $val)
+                                                        @if ($val['U_Tipo_Opr'] !== "ADMINISTRADOR")
+                                                            <option value="{{$val['Code']}}">{{$val['Code']}}</option>
+                                                        @endif
+                                                    @endforeach
+                                                  </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <lable class="form-label" for="prioridad">Prioridad</lable>
+                                                <select class="form-select" id="prioridad" aria-label="Default select example" name="prioridad">
+                                                    <option selected value="">Selecciones</option>
+                                                    <option value="Baja">Baja</option>
+                                                    <option value="Media">Media</option>
+                                                    <option value="Alta">Alta</option>
+                                                  </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" onclick="guardar()">Asignar</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-9 columna">
                         <div class="table-responsive">
                             <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
                                 <thead class="table-dark">
@@ -53,34 +98,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        
-                        <div class="row justify-content-end">
-                            <div class="col-4" id="cont_boton_f">
-
-                            </div>
-                        </div>
                     </div>
                 </div>                
-            </div>
-            <div id="cont_boton_m2">
-                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="boton_m2"></button>
-            </div>
-            <!-- Modal 2-->
-            <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"  aria-hidden="true">
-                <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">productos</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" id="close_m" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="list-group" id="contenido2">
-                            </div>
-                        </div>
-                        <div class="modal-footer" id="foot2">
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -253,43 +272,51 @@
                 
                 let arregloP = [];
 
-            for(let element of arreglo) {
-                let id = element['LineNum'];
-                let CodArt = element['ItemCode'];
-                let Lote = element['LOTE'];
-                let cod_wms = [];
+                for(let element of arreglo) {
+                    let id = element['LineNum'];
+                    let CodArt = element['ItemCode'];
+                    let Lote = element['LOTE'];
+                    let cod_wms = [];
 
-                let incluye = arregloP.includes(CodArt+"-"+Lote);
-                if (!incluye) {
-                    arregloP.push(CodArt+"-"+Lote);
-                    let busqueda = buscar_pedido(cod_wms, CodArt, Lote);
-                    for(let res of busqueda) {
-        
-                            let bahia = "";
-                            let cantidad = "";
+                    if (element['U_IV_OPERARIO'] !== '' && element['U_IV_OPERARIO'] !== null) {
+                        $("#btn_as").html(`
+                                <button type="button" class="btn btn-dark" data-bs-toggle="modal" disabled>
+                                    Asignado a ${element['U_IV_OPERARIO']}
+                                </button>
+                        `);
+                    }
 
-                            if (res[0] == '80000') {
-                                bahia = "Biologico";
-                            }else if (res[0] == '80003') {
-                                bahia = "Almacen";
-                            } else if(res[0] == '80005'){
-                                bahia = "Venenos";
-                            } else if(res[0] == '80002' || res[0] == '80011' || res[0] == '80012' || res[0] == '80013' || res[0] == '80014' || res[0] == '80015'){
-                                bahia = "Abastecimiento";
-                            } else if(res[0] == '11'){
-                                bahia = "Modula 1";
-                            } else if(res[0] == '21'){
-                                bahia = "Modula 2";
-                            } else if(res[0] == '31'){
-                                bahia = "Modula 3";
-                            }
-                                cantidad = Math.trunc(res[1]);
-                            if (element['U_IV_ESTA'] == "Por Recoger") {
+                    let incluye = arregloP.includes(CodArt+"-"+Lote);
+                    if (!incluye) {
+                        arregloP.push(CodArt+"-"+Lote);
+                        let busqueda = buscar_pedido(cod_wms, CodArt, Lote);
+                        for(let res of busqueda) {
+            
+                                let bahia = "";
+                                let cantidad = "";
+
+                                if (res[0] == '80000') {
+                                    bahia = "Biologico";
+                                }else if (res[0] == '80003') {
+                                    bahia = "Almacen";
+                                } else if(res[0] == '80005'){
+                                    bahia = "Venenos";
+                                } else if(res[0] == '80002' || res[0] == '80011' || res[0] == '80012' || res[0] == '80013' || res[0] == '80014' || res[0] == '80015'){
+                                    bahia = "Abastecimiento";
+                                } else if(res[0] == '11'){
+                                    bahia = "Modula 1";
+                                } else if(res[0] == '21'){
+                                    bahia = "Modula 2";
+                                } else if(res[0] == '31'){
+                                    bahia = "Modula 3";
+                                }
+                                    cantidad = Math.trunc(res[1]);
+
                                 if (element['Biologico'] == 'BIOLOGICOS') {
                                     $('#tabla').append(`
                                         <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}" class="bio">
                                             <td>
-                                                <input class="form-check-input" type="checkbox"  disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}" value="" aria-label="...">
+                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -352,12 +379,11 @@
                                         </tr> 
                                     `);
                                 }
-                            }
 
+                        }
                     }
+                    
                 }
-                
-            }
             
             // ----------------Datos Fijos----------------
             for(let element of arreglo) {
@@ -381,146 +407,8 @@
                 }
             }
 
-            function lector() {
-                let codigo = $('#code_bar').val();
-                let cont = 0;
-                let idu = [];
-                $("#tabla").find("tr").each(function (idx, row) {
-                    id = $(this).attr('id');
-                    if (idx >= 0) {
-                        let cod_tbl = $("td:eq(4)", row).text();
-                        codigo_tbl = parseInt(cod_tbl);
-                        if (codigo == codigo_tbl) {
-                            idu[idx] = id.trim();
-                            cont += 1;
-                        }
-                    }
-                });
-                
-                if (cont == 1) {
-                    $("#tabla").find("tr").each(function (idx, row) {
-                        id = $(this).attr('id');
-                        if (idx >= 0) {
-                            for(let id_t of idu) {
-                                if (id_t == id) {
-                                    if ($('#check-'+id).prop('checked') != true) {
-                                        $('#'+id).addClass('table-success');
-                                        $('#check-'+id).prop("checked", true);
-                                        $('#code_bar').focus();
-                                            
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Producto',
-                                            text: $("td:eq(3)", row).text()+' encontrado.',
-                                        })
-                                    }
-                                    
-                                }
-                            }
-                        }
-                    });
-
-                }else if(cont > 1) {
-                    modal2(codigo);
-
-                    $('#boton_m2').click();
-                }
-                
-                if (cont == 0){
-                    
-                    $('#code_bar').val('');
-                    $('#code_bar').focus();
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Producto',
-                        text: 'Producto no encontrado dentro del pedido.',
-                    })
-
-                }
-                
-                
-                btnFin()
-                $('#code_bar').val('');
-            }
-
-            
-            function modal2 (codigo) {
-                $('#code_bar').val('');
-                $("#contenido2").text('');
-                $("#contenido2").removeClass('d-flex justify-content-center');
-                
-                $("#tabla").find("tr").each(function (idx, row) {
-                    id = String($(this).attr('id'));
-                    if (idx >= 0) {
-                        let cod_tbl = $("td:eq(4)", row).text();
-                        codigo_tbl = parseInt(cod_tbl);
-                        if (codigo == codigo_tbl) {
-                            if ($('#check-'+id).prop('checked') != true) {
-                                
-                                $("#contenido2").append(`
-
-                                    <button type="button" class="list-group-item list-group-item-action" id="boton_m" onclick="check_ind('${id}')">
-                                        <strong>id: ${id} ---- ${$("td:eq(3)", row).text().trim()}</strong> ----  Lote: <small>${$("td:eq(2)", row).text().trim()} ---- Cantidad: <small>${$("td:eq(1)", row).text().trim()}</small>
-                                    </button>
-
-                                `);
-
-                            }
-                        }
-                    }
-                });
-
-                if ($("#contenido2").text()== '') {
-                    $("#contenido2").addClass('d-flex justify-content-center');
-                    $("#contenido2").append(`
-                        <strong class="text-center text-danger">Los productos no estan en el pedido o ya fueron revisados</strong>
-                    `);
-                }
-            }
-
-            function check_ind( id) {
-                $('#code_bar').val('');
-                id = id.toString();
-                if ($('#check-'+id).prop('checked') != true) {
-                    $('#'+id).addClass('table-success');
-                    $('#check-'+id).prop("checked", true);
-                    $('#close_m').click();
-                    $('#code_bar').focus();
-                    btnFin()
-                }
-                
-            }
-
-            let ID = <?php echo $id?>;
-            let dl = <?php echo $DL?>;
-
-            function btnFin(){
-                let tabla_cont = 0;
-                let filas = 0;
-                $('#cont_boton_f').text('');
-                $("#tabla").find("tr").each(function (idx, row) {
-                    if (idx >= 0) {
-                        let check = $("td:eq(0) input:checkbox", row).prop('checked')
-                        if (check) {
-                            tabla_cont+=1
-                        }
-                    }
-                    filas+=1
-                })
-
-                if ((tabla_cont) == filas) {
-                    $('#cont_boton_f').append(`
-                        <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
-                            <a href="{{route('savePick', ['id' => $id, 'DL'=> $DL])}}" class="btn btn-dark">
-                                Finalizar
-                            </a>
-                        </div>
-                    `);
-                }
-            }
-            btnFin()
-
             function guardar() {
+                $("#Form_asig").submit();
                 $('#Cont_gen').html(`
                     <div class="row">
                         <div class="col-1">
@@ -565,14 +453,6 @@
                             </div>
                         </div>
                         <div class="col-md-12 col-lg-9 columna">
-                            <div class="row justify-content-center pb-3">
-                                <div class="col-sm-5">
-                                    <div class="input-group flex-nowrap">
-                                        <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                                        <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
-                                    </div>
-                                </div>
-                            </div>
                             <div class="table-responsive">
                                 <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
                                     <thead class="table-dark">
