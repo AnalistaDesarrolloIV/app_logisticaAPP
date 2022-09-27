@@ -51,7 +51,7 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <lable class="form-label" for="operatore">Operador</lable>
-                                                <select class="form-select" id="operatore" aria-label="Default select example" name="operatore">
+                                                <select class="form-select select2" id="operatore" aria-label="Default select example" name="operatore">
                                                     <option selected value="">Selecciones</option>
                                                     @foreach ($user as $key => $val)
                                                         @if ($val['U_Tipo_Opr'] !== "ADMINISTRADOR")
@@ -62,7 +62,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <lable class="form-label" for="prioridad">Prioridad</lable>
-                                                <select class="form-select" id="prioridad" aria-label="Default select example" name="prioridad">
+                                                <select class="form-select select2" id="prioridad" aria-label="Default select example" name="prioridad">
                                                     <option selected value="">Selecciones</option>
                                                     <option value="Baja">Baja</option>
                                                     <option value="Media">Media</option>
@@ -239,9 +239,8 @@
                     }
                 } );
             
-                new $.fn.dataTable.FixedHeader( table );
+                // new $.fn.dataTable.FixedHeader( table );
 
-                $('#code_bar').focus();
             } );
             
             var arreglo = <?php echo json_encode($ped)?>;

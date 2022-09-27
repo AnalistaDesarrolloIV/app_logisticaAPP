@@ -252,10 +252,10 @@ class EmpaqueController extends Controller
 
             session_destroy();
             Alert::success('¡Guardado!', "Empaque finalizada exitosamente.");
-            return redirect('/');
+            return redirect()->route('loginPack');
         } catch (\Throwable $th) {
             Alert::warning('¡La sección expiró!', 'Por favor vuleve a acceder');
-            return redirect()->route('logPick');
+            return redirect()->route('loginPick');
         }
     }
 

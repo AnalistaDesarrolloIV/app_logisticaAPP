@@ -7,8 +7,8 @@
         <div class="row mt-5 mb-3">
             <div class="col-12 mt-4 cont_head">
                 <div class="table-responsive">
-                    <table class="table tbl table-striped table-bordered nowrap table-light py-2" style="width:100%; min-width: 100%">
-                        <thead class="table-dark pt-4">
+                    <table class="table table-striped table-bordered table-light" id="tbl" style="width:100%;">
+                        <thead class="table-dark">
                             <tr>
                                 <th class="text-center">Nombre</th>
                                 <th class="text-center">N° Pedidos asignados</th>
@@ -195,8 +195,8 @@
     <script>
         
         $(document).ready(function() {
-            var table = $('.tbl').DataTable( {
-                responsive: false,
+            var table = $('#tbl').DataTable( {
+                "responsive": false,
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ registros por página",
                     "zeroRecords": "No hay registros por mostrar",
@@ -211,9 +211,7 @@
                 }
             } );
         
-            new $.fn.dataTable.FixedHeader( table );
-
-            $('#code_bar').focus();
+            // new $.fn.dataTable.FixedHeader( table );
         } );
             
 
@@ -618,7 +616,7 @@
         filtros();
 
         function modal(cod_ped, DL) {
-            let url = 'formAsi/'+cod_ped+'/'+DL;
+            let url = '/formAsi/'+cod_ped+'/'+DL;
             $(location).attr('href', url);
         }
 
