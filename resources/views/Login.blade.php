@@ -83,7 +83,7 @@
                                     
                                     <div class=" mb-3">
                                         <label class="form-label" for="pass">Contraseña <b style="color: red;">*</b></label>
-                                        <input type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" id="pass"  name="password" autofocus>
+                                        <input type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" id="pass"  name="password">
                                     </div>
                                 </div>
                             </div>

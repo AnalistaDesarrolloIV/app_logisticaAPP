@@ -3,7 +3,7 @@
 
 @section('content')
 
-    <div class="container-fluid mx-3">
+    <div class="container-fluid mx-3" id="content">
         <div class="row mt-5 mb-3">
             <div class="col-12 mt-4 cont_head">
                 <div class="table-responsive">
@@ -245,7 +245,7 @@
                 let ped = element['BaseRef'];
                 let cod_ped = element['U_IV_OPERARIO'];
                 let estado = element['U_IV_ESTA'];
-                if (cod_ped == codigo && estado == "Por Recoger" ) {
+                if (cod_ped == codigo && estado !== "Empacado" ) {
                     contP+=1;
                     if (element['U_IV_Prioridad'] == 'Alta') {
                         contAlt+=1;
@@ -616,8 +616,95 @@
         filtros();
 
         function modal(cod_ped, DL) {
-            let url = '/formAsi/'+cod_ped+'/'+DL;
+            let url = 'formAsi/'+cod_ped+'/'+DL;
             $(location).attr('href', url);
+            $('#content').html(`
+                <div class="row mt-5 mb-3">
+                    <div class="col-12 mt-4 cont_head">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-light" style="width:100%;">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-center">Nombre</th>
+                                        <th class="text-center">N° Pedidos asignados</th>
+                                        <th class="text-center">P Alta <small><i class="fas fa-circle text-danger"></i></small></th>
+                                        <th class="text-center">P Media <small><i class="fas fa-circle text-warning"></i></small></th>
+                                        <th class="text-center">P Baja <small><i class="fas fa-circle text-success"></i></small></th>
+                                        <th class="text-center">N° Biologicos Asignados</th>
+                                        <th class="text-center">Total Lineas</th>
+                                        <th class="text-center">Total Unidades</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: bold;">
+                                    <tr>
+                                        <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mb-3">
+                    <div class="col-10">
+                        <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Filtros</h3>
+                        <div class="row justify-content-around">
+                            <div class="col-12 col-md-4">
+                                <label for="us">Por Operador: </label>
+                                <select class="form-select " id="us" aria-label="Disabled  select example" onchange="filtros()">
+                                    <option selected value="">Todos</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label for="prior">Por prioridad: </label>
+                                <select class="form-select " id="prior" aria-label="Disabled  select example" onchange="filtros()">
+                                    <option selected value="">Seleccione</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 cont_head">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover nowrap table-light" style="width:100%; min-width: 100%">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-center">Cliente</th>
+                                        <th class="text-center">N° Pedido</th>
+                                        <th class="text-center">N° De lineas</th>
+                                        <th class="text-center">N° de unidades</th>
+                                        <th class="text-center">Municipio</th>
+                                        <th class="text-center">Comentarios</th>
+                                        <th class="text-center">Asignado A</th>
+                                        <th class="text-center">Prioridad</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: bold;">
+                                    <tr>
+                                        <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                        <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `);
         }
 
     </script>

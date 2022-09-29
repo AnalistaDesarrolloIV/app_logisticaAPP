@@ -88,7 +88,6 @@ class RecoleccionController extends Controller
     
             $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")->json();
             $ped = $ped['value'];
-            // dd($ped);
             $H_F_REC = new DateTime("now", new DateTimeZone('America/Bogota'));
     
             foreach ( $ped  as $key => $value ) {
@@ -96,11 +95,11 @@ class RecoleccionController extends Controller
                 $linenum = $value['LineNum'];
                 $itemCode = $value['ItemCode'];
     
-                // if ($value['Biologico'] != "BIOLOGICOS") {
                     $gard = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$identi.")", [
                             "U_IV_FECHREC"=>$H_F_REC->format('Y-m-d'),
                             "U_IV_INIREC"=> $_SESSION['H_I_REC'],
                             "U_IN_FINREC"=> $H_F_REC->format('H:i:s'),
+                            "U_IV_PATINADOR"=> $_COOKIE['USER'],
                             "DocumentLines"=> [
                                 [
                                     "LineNum"=> $linenum,
@@ -109,10 +108,9 @@ class RecoleccionController extends Controller
                                 ]
                             ]
                     ])->json();
-                // }
             }
             Alert::success('¡Guardado!', "Recolección finalizada exitosamente.");
-            return redirect()->route('loginPick');
+            return redirect()->route('opciones');
       
        
         

@@ -287,9 +287,9 @@
                             if (element['U_IV_ESTA'] == "Por Recoger") {
                                 if (element['Biologico'] == 'BIOLOGICOS') {
                                     $('#tabla').append(`
-                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}" class="bio">
+                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" class="bio">
                                             <td>
-                                                <input class="form-check-input" type="checkbox"  disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}" value="" aria-label="...">
+                                                <input class="form-check-input" type="checkbox" checked disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -302,16 +302,16 @@
                                                 <b>${element['Dscription']}</b>
                                             </td>
                                             <td>
-                                                <b>${element['CodeBars']}</b>
+                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
                                             </td>
                                             
                                         </tr> 
                                     `);
                                 }else if (element['TOXICO'] == "Y") {
                                     $('#tabla').append(`
-                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}" class="tox">
+                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" class="tox">
                                             <td>
-                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}" value="" aria-label="...">
+                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -324,16 +324,16 @@
                                                 <b>${element['Dscription']}</b>
                                             </td>
                                             <td>
-                                                <b>${element['CodeBars']}</b>
+                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
                                             </td>
                                             
                                         </tr> 
                                     `);
                                 }else {
                                     $('#tabla').append(`
-                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}">
+                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}">
                                             <td>
-                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}" value="" aria-label="...">
+                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -346,7 +346,7 @@
                                                 <b>${element['Dscription']}</b>
                                             </td>
                                             <td>
-                                                <b>${element['CodeBars']}</b>
+                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
                                             </td>
                                             
                                         </tr> 
@@ -385,6 +385,7 @@
                 let codigo = $('#code_bar').val();
                 let cont = 0;
                 let idu = [];
+
                 $("#tabla").find("tr").each(function (idx, row) {
                     id = $(this).attr('id');
                     if (idx >= 0) {
@@ -404,7 +405,7 @@
                             for(let id_t of idu) {
                                 if (id_t == id) {
                                     if ($('#check-'+id).prop('checked') != true) {
-                                        $('#'+id).addClass('table-success');
+                                        // $('#'+id).addClass('table-success');
                                         $('#check-'+id).prop("checked", true);
                                         $('#code_bar').focus();
                                             
@@ -460,7 +461,7 @@
                                 $("#contenido2").append(`
 
                                     <button type="button" class="list-group-item list-group-item-action" id="boton_m" onclick="check_ind('${id}')">
-                                        <strong>id: ${id} ---- ${$("td:eq(3)", row).text().trim()}</strong> ----  Lote: <small>${$("td:eq(2)", row).text().trim()} ---- Cantidad: <small>${$("td:eq(1)", row).text().trim()}</small>
+                                        <strong>${$("td:eq(3)", row).text().trim()}</strong> ----  Lote: <small>${$("td:eq(2)", row).text().trim()} ---- Cantidad: <small>${$("td:eq(1)", row).text().trim()}</small>
                                     </button>
 
                                 `);
@@ -482,7 +483,7 @@
                 $('#code_bar').val('');
                 id = id.toString();
                 if ($('#check-'+id).prop('checked') != true) {
-                    $('#'+id).addClass('table-success');
+                    // $('#'+id).addClass('table-success');
                     $('#check-'+id).prop("checked", true);
                     $('#close_m').click();
                     $('#code_bar').focus();

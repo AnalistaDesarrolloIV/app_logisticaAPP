@@ -47,13 +47,9 @@ class LoginController extends Controller
 
                     return redirect()->route('opcionesAdmin');
 
-                }elseif ($user_db['U_Tipo_Opr'] == 'OPERARIO') {
+                }elseif ($user_db['U_Tipo_Opr'] == 'OPERARIO' || $user_db['U_Tipo_Opr'] == 'OPERARIO BIOLOGICOS') {
 
                     return redirect()->route('opciones');
-
-                }elseif ($user_db['U_Tipo_Opr'] == 'OPERARIO BIOLOGICOS') {
-
-                    return redirect()->route('opcionesBio');
 
                 }else {
                     Alert::error('¡Error!', 'Usuario no autorizado');

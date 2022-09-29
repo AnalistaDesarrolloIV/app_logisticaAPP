@@ -45,10 +45,8 @@
         <div class="relative flex items-top justify-center min-h-screen sm:items-center py-4 sm:pt-0">
             @if ($_COOKIE['USER_ROL']== 'ADMINISTRADOR')
                 @include('Admin.layoutAdmin.NavBarAdmin')
-            @elseif($_COOKIE['USER_ROL']== 'OPERARIO')
+            @elseif($_COOKIE['USER_ROL']== 'OPERARIO' || $_COOKIE['USER_ROL']== 'OPERARIO BIOLOGICOS')
                 @include('Layouts.NavBar')
-            @else 
-                @include('User_Bio.Layout.NavBarBio')
             @endif
             @yield('content')
         </div>

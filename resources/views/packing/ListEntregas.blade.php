@@ -109,7 +109,6 @@
             
             let User = '<?php echo $_COOKIE['USER']?>';
 
-            console.log(User);
             var pedi = <?php echo json_encode($entregas)?>;
             
             var DE = <?php echo json_encode($datExtra)?>;

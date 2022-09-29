@@ -50,7 +50,7 @@
                                                 <th class="text-center">Nombre producto</th>
                                                 <th class="text-center">Lote</th>
                                                 <th class="text-center">Cantidad</th>
-                                                <th class="text-center">Cajas</th>
+                                                <th class="text-center">Justificación</th>
                                             </tr>
                                         </thead>
                                         <tbody style="font-size: bold;" id="tabla">
@@ -214,7 +214,6 @@
         <script src="https://cdn.datatables.net/responsive/2.3.0/js/responsive.bootstrap.min.js"></script>
         <!-- <script src="sweetalert2.all.min.js"></script> -->
         <script>
-            let tabla_cont = 0;
             $(document).ready(function() {
                 var table = $('#tbl').DataTable( {
                     responsive: false,
@@ -245,7 +244,6 @@
             
             let m_faltante = JSON.parse(faltante);
 
-            console.log(m_faltante);
 
             let inicioE = '<?php echo $_SESSION['H_I_EMP']?>';
             
@@ -257,7 +255,7 @@
                     $('#tabla').append(`
                         <tr id="fila-${element['id__']}" class="bio">
                             <td>
-                                <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                <input class="form-check-input" type="checkbox" checked disabled id="check-${element['id__']}" value="" aria-label="...">
                                 <b>${element['CodeBars']}</b>
                             </td>
                             <td>
@@ -397,27 +395,6 @@
                                             <b>de</b> 
                                             ${element['CantLote']}
                                         </li>
-                                        <li class="list-group-item">
-                                            <b>Comentarios de empaque:</b>
-                                            ${element['Comments']}
-                                        </li>
-                                        <li class="list-group-item">
-                                            <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}" onchange="valid(${element['id__']}, ${contador_cajas})"> 
-                                            <b> unidades empacadas en </b>
-                                                <select class="conta" id="tipo_emp-${element['id__']}-${contador_cajas}">
-                                                    <option value="CAJA GENERICA">CAJA GENERICA</option>
-                                                    <option value="BOLSA">BOLSA</option>
-                                                    <option value="NEVERA 7LT">NEVERA 7LT</option>
-                                                    <option value="NEVERA 10LT">NEVERA 10LT</option>
-                                                    <option value="NEVERA 14LT">NEVERA 14LT</option>
-                                                </select>
-                                            <b> N° </b>
-                                            <input type="number" class="conta" id="caja-${element['id__']}-${contador_cajas}" value="${contador_cajas+1}"> 
-                                            <button class="btn btn-dark btn-sm" id="btn_div" onclick="dividir(${element['id__']})">Dividir</button>
-                                        </li>
-                                        <li class="list-group-item" id="divi">
-
-                                        </li>
 
                                     </ul>
 
@@ -436,7 +413,6 @@
                                     <button type="button" class="btn btn-primary" onclick="check(${element['id__']})">Guardar</button>
                                 `);
                             }else {
-                                
                                 $("#contenido").append(`
                                     <div class="row justify-content-center pb-3">
                                         <div class="col-lg-5">
@@ -469,27 +445,6 @@
                                             <b>de</b>
                                             ${element['CantLote']}
                                         </li>
-                                        <li class="list-group-item">
-                                            <b>Comentarios de empaque:</b> 
-                                            ${element['Comments']}
-                                        </li>
-                                        <li class="list-group-item">
-                                            <input type="number" class="conta" id="unidades-${element['id__']}-${contador_cajas}" onchange="valid(${element['id__']}, ${contador_cajas})"> 
-                                            <b> unidades empacadas en </b>
-                                                <select class="conta" id="tipo_emp-${element['id__']}-${contador_cajas}">
-                                                    <option value="CAJA GENERICA">CAJA GENERICA</option>
-                                                    <option value="BOLSA">BOLSA</option>
-                                                    <option value="NEVERA 7LT">NEVERA 7LT</option>
-                                                    <option value="NEVERA 10LT">NEVERA 10LT</option>
-                                                    <option value="NEVERA 14LT">NEVERA 14LT</option>
-                                                </select>
-                                            <b> N° </b>
-                                            <input type="number" class="conta" id="caja-${element['id__']}-${contador_cajas}" value="${contador_cajas+1}"> 
-                                            <button class=" btn btn-dark btn-sm" id="btn_div" onclick="dividir(${element['id__']})">Dividir</button>
-                                        </li>
-                                        <li class="list-group-item" id="divi">
-
-                                        </li>
                                     </ul>
 
                                     <div id="tit_just">
@@ -516,41 +471,41 @@
                 }
             }
 
-            function dividir(id) {
-                contador_cajas +=1;
-                $('#divi').append(` 
-                    <hr>
-                    <input type="number" class="conta" id="unidades-${id}-${contador_cajas}" onchange="valid(${id}, ${contador_cajas})"> 
-                    <b> unidades empacadas en </b>
-                        <select class="conta" id="tipo_emp-${id}-${contador_cajas}">
-                            <option value="CAJA GENERICA">CAJA GENERICA</option>
-                            <option value="BOLSA">BOLSA</option>
-                            <option value="NEVERA 7LT">NEVERA 7LT</option>
-                            <option value="NEVERA 10LT">NEVERA 10LT</option>
-                            <option value="NEVERA 14LT">NEVERA 14LT</option>
-                        </select>
-                    <b> N° </b>
-                    <input type="number" class="conta" id="caja-${id}-${contador_cajas}" value="${contador_cajas+1}"> 
-                    <button class=" btn btn-dark btn-sm" id="btn_div" onclick="dividir(${id})">Dividir</button>
-                `);
-            }
+            // function dividir(id) {
+            //     contador_cajas +=1;
+            //     $('#divi').append(` 
+            //         <hr>
+            //         <input type="number" class="conta" id="unidades-${id}-${contador_cajas}" onchange="valid(${id}, ${contador_cajas})"> 
+            //         <b> unidades empacadas en </b>
+            //             <select class="conta" id="tipo_emp-${id}-${contador_cajas}">
+            //                 <option value="CAJA GENERICA">CAJA GENERICA</option>
+            //                 <option value="BOLSA">BOLSA</option>
+            //                 <option value="NEVERA 7LT">NEVERA 7LT</option>
+            //                 <option value="NEVERA 10LT">NEVERA 10LT</option>
+            //                 <option value="NEVERA 14LT">NEVERA 14LT</option>
+            //             </select>
+            //         <b> N° </b>
+            //         <input type="number" class="conta" id="caja-${id}-${contador_cajas}" value="${contador_cajas+1}"> 
+            //         <button class=" btn btn-dark btn-sm" id="btn_div" onclick="dividir(${id})">Dividir</button>
+            //     `);
+            // }
 
-            function valid(id, contador_cajas) {
-                let u = $("#unidades-"+id+"-"+contador_cajas).val();
-                let u_esc = $("#contador"+id).val();
-                // for(let element of arreglo) {
-                //     if (element['id__'] == id) {
-                        if (parseInt(u_esc) < parseInt(u)) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Cantidad en caja',
-                                text: 'Imposible cantidad escaneada insuficiente.',
-                            })
-                            $("#unidades-"+id+"-"+contador_cajas).val('');
-                        }
-                //     }
-                // }
-            }
+            // function valid(id, contador_cajas) {
+            //     let u = $("#unidades-"+id+"-"+contador_cajas).val();
+            //     let u_esc = $("#contador"+id).val();
+            //     // for(let element of arreglo) {
+            //     //     if (element['id__'] == id) {
+            //             if (parseInt(u_esc) < parseInt(u)) {
+            //                 Swal.fire({
+            //                     icon: 'warning',
+            //                     title: 'Cantidad en caja',
+            //                     text: 'Imposible cantidad escaneada insuficiente.',
+            //                 })
+            //                 $("#unidades-"+id+"-"+contador_cajas).val('');
+            //             }
+            //     //     }
+            //     // }
+            // }
             
             function contador(id) {
                 let codigo = $('#code').val();
@@ -596,7 +551,6 @@
                     modal2(codigo);
                 }
                 if (cont == 0) {
-                    
                     $('#code_bar').val('');
                     $('#code_bar').focus();
                     Swal.fire({
@@ -639,73 +593,24 @@
                 for(let element of arreglo) {
                     if (element['id__'] == id) {
                         if ($('#contador'+element['id__']).val() == element['CantLote']) {
-                            // $('#fila-'+id).addClass('table-success');
-                                let cantidadEmp = $('#contador'+element['id__']).val();
-                                    $('#lista_form').append(`
-                                        <div class="form-floating mb-3">
-                                            <input type="hidden" class="form-control" id="floatingInput" name="cantidadE[]" value="${cantidadEmp}" placeholder="${cantidadEmp}">
-                                        </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="hidden" class="form-control" id="floatingInput" value=" " name="justify[]">
-                                        </div>
-                                        `);
-                            for (let c = 0; c <= contador_cajas; c++) {
-				                cont_em += 1;
-                                let uni = $('#unidades-'+id+'-'+c).val();
-                                let tipo_e = $("#tipo_emp-"+id+'-'+c+" option:selected").val();
-                                console.log(tipo_e);
-                                let ca = $('#caja-'+id+'-'+c).val();
-                                if (uni !== '') {
-                                    $('#n_cajas-'+id).append(`
-                                        <li><b>${uni}</b> unidades en <b> ${tipo_e} </b> N° <b>${ca}</b></li>
-                                    `);
-                                    $('#lista_form').append(`
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-3">
-                                                    
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="embalaje[${cont_em}][caja]">
-                                                    </div>
-                                                    
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][tipo_emp]" value="${tipo_e}">
-                                                    </div>
-                                                    
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][Producto]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
-                                                    </div>
-                                                    
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][UoMEntry]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
-                                                    </div>
-
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="embalaje[${cont_em}][unidad]">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `);
-                                    
-                                    $('#check-'+id).prop("checked", true);
-                                    tabla_cont += 1;
-                                    console.log(tabla_cont);
-                                    $('#cerrar1').click();
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Check',
-                                        text: 'Checkeado completo.',
-                                    })
-                                }
-                                if (uni == '') {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Complete',
-                                        text: 'Ingresar las cunidades en cajas.',
-                                    })
-                                }
-                            }
+                            let cantidadEmp = $('#contador'+element['id__']).val();
+                            $('#lista_form').append(`
+                                <div class="form-floating mb-3">
+                                    <input type="hidden" class="form-control" id="floatingInput" name="cantidadE[]" value="${cantidadEmp}" placeholder="${cantidadEmp}">
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="hidden" class="form-control" id="floatingInput" value=" " name="justify[]">
+                                </div>
+                            `);
+                            $('#check-'+id).prop("checked", true);
+                            $('#cerrar1').click();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Check',
+                                text: 'Checkeado completo.',
+                            })
+                            
+                            btnFin()
                         }
                     }
                 }
@@ -752,17 +657,18 @@
                     }
                 }
                 
-                if (tabla_cont >= (arreglo.length)) {
-                    $('#cont_boton_f').text('');
-                    $('#cont_boton_f').append(`
-                        <div class="d-grid gap-2 py-3">
-                            <button class="btn btn-dark" type="button" onclick="guardar()">Finalizar</button>
-                        </div>
-                    `);
-                }
+                // if (tabla_cont >= (arreglo.length)) {
+                //     $('#cont_boton_f').text('');
+                //     $('#cont_boton_f').append(`
+                //         <div class="d-grid gap-2 py-3">
+                //             <button class="btn btn-dark" type="button" onclick="guardar()">Finalizar</button>
+                //         </div>
+                //     `);
+                // }
+
+
                 $('#code_bar').val('');
                 $('#code_bar').focus();
-
             }
 
             
@@ -778,94 +684,61 @@
                 }else {
                     for(let element of arreglo) {
                         if (element['id__'] == id) {
-                                let cantidadEmp = $('#contador'+element['id__']).val();
-                                    $('#lista_form').append(`
+                            let cantidadEmp = $('#contador'+element['id__']).val();
+                            $('#lista_form').append(`
                                         <div class="form-floating mb-3">
                                             <input type="hidden" class="form-control" id="floatingInput" name="cantidadE[]" value="${cantidadEmp}" placeholder="${cantidadEmp}">
                                         </div>
-                                        
-                                            <div class="form-floating mb-3">
-                                                <input type="hidden" class="form-control" id="floatingInput" value="${just}" name="justify[]">
-                                            </div>
-                                        `);
-                            for (let c = 0; c < contador_cajas+1; c++) {
-				                cont_em += 1;
-                                let uni = $('#unidades-'+id+'-'+c).val();
-                                let tipo_e = $("#tipo_emp-"+id+'-'+c+" option:selected").val();
-                                console.log(tipo_e);
-                                let ca = $('#caja-'+id+'-'+c).val();
-                                if (uni !== '') {
-                                    $('#check-'+id).prop("checked", true);
-                                    
-                                    $('#n_cajas-'+id).append(`
-                                            <li><b>Justificación faltante: </b>${just_text} </li>
-                                        `);
-                                    $('#n_cajas-'+id).append(`
-                                        <li><b>${uni}</b> unidades en <b> ${tipo_e} </b> N° <b>${ca}</b></li>
-                                    `);
-                                    $('#lista_form').append(`
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-3">
-                                                    
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" value="${ca}" name="embalaje[${cont_em}][caja]">
-                                                    </div>
-                                                    
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][tipo_emp]" value="${tipo_e}">
-                                                    </div>
-                                                    
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][Producto]" value="${element['ItemCode']}" placeholder="${element['ItemCode']}">
-                                                    </div>
-                                                    
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" name="embalaje[${cont_em}][UoMEntry]" value="${element['UomEntry']}" placeholder="${element['UomEntry']}">
-                                                    </div>
+                                <div class="form-floating mb-3">
+                                    <input type="hidden" class="form-control" id="floatingInput" value="${just}" name="justify[]">
+                                </div>
+                            `);
+                            $('#check-'+id).prop("checked", true);
+                            
+                            $('#n_cajas-'+id).append(`
+                                    <li><b>Justificación faltante: </b>${just_text} </li>
+                            `);
 
-                                                    <div class="form-floating mb-3">
-                                                        <input type="hidden" class="form-control" id="floatingInput" value="${uni}" name="embalaje[${cont_em}][unidad]">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `);
-                                    tabla_cont += 1;
-                                    console.log(tabla_cont);
-                                    $('#close_m').click();
-                                    Swal.fire(
-                                        'Justificado!',
-                                        'Checkeado y justificado exitosamente.',
-                                        'success'
-                                    );
-                                }
+                            $('#close_m').click();
+                            Swal.fire(
+                                'Justificado!',
+                                'Checkeado y justificado exitosamente.',
+                                'success'
+                            );
                                 
-                                if (uni == '') {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Complete',
-                                        text: 'Ingresar las cunidades en cajas.',
-                                    })
-                                }
-                            }
-                                
+                            btnFin()
                         }
                     }
                 }
                 
-              
-                if (tabla_cont >= (arreglo.length)) {
-                    $('#cont_boton_f').text('');
+                $('#code_bar').val('');
+                $('#code_bar').focus();
+            }
+            
+            function btnFin(){
+                let tabla_cont = 0;
+                let filas = 0;
+                $('#cont_boton_f').text('');
+                $("#tabla").find("tr").each(function (idx, row) {
+                    if (idx >= 0) {
+                        let check = $("td:eq(0) input:checkbox", row).prop('checked')
+                        if (check) {
+                            tabla_cont+=1
+                        }
+                    }
+                    filas+=1
+                })
+
+
+                if ((tabla_cont) == filas) {
                     $('#cont_boton_f').append(`
                         <div class="d-grid gap-2 py-3">
                             <button class="btn btn-dark" type="button" onclick="guardar()">Finalizar</button>
                         </div>
                     `);
                 }
-                $('#code_bar').val('');
-                $('#code_bar').focus();
             }
+            btnFin()
             
             function guardar() {
                 $("#form_emp").submit();
@@ -918,7 +791,7 @@
                                 <div class="col-sm-5">
                                     <div class="input-group flex-nowrap">
                                         <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                                        <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
+                                        <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar">
                                     </div>
                                 </div>
                             </div>
