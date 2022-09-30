@@ -70,7 +70,7 @@
                                         @enderror --}}
         
                                         <label for="user" class="form-label">Usuario <b style="color: red;">*</b></label>
-                                        <input class="form-control form-control-lg @error('usuario') is-invalid @enderror" type="email" multiple name="usuario" id="user" list="dopusuarios" required size="64" autofocus>
+                                        <input class="form-control form-control-lg @error('usuario') is-invalid @enderror" type="text" multiple name="usuario" id="user" list="dopusuarios" required size="64" autofocus>
         
                                         <datalist id="dopusuarios">
                                             @foreach($users as $key => $value)
@@ -117,13 +117,47 @@
             }
             
             $ ("#btnSubmit").click(function () {
-                $("#form_pick").submit();
-                $(this).prop("disabled",true);
                 
-                $(this).html(
-                `<span class="spinner-border spinner-border-sm"
-                role="status" aria-hidden="true"></span> Ingresando...`
-                ) ;
+                let user = $("#user").val();
+                let pass = $("#pass").val();
+                console.log(user +"---"+ pass);
+                if(user == "" && pass == "") {
+                    $("#user").removeClass('is-invalid');
+                    $("#pass").removeClass('is-invalid');
+                    $("#user").addClass('is-invalid');
+                    $("#pass").addClass('is-invalid');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Usuario',
+                        text: 'Completar todos los campos requeridos.',
+                    })
+                }else if(user == "" && pass != ""){
+                    
+                    $("#pass").removeClass('is-invalid');
+                    $("#user").addClass('is-invalid');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Usuario',
+                        text: 'El campo Usuario es obligarorio.',
+                    })
+                }else if(user != "" && pass == ""){
+                    
+                    $("#user").removeClass('is-invalid');
+                    $("#pass").addClass('is-invalid');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Usuario',
+                        text: 'El campo Contraseña es obligarorio.',
+                    })
+                }else {
+                    $("#form_pick").submit();
+                    $(this).prop("disabled",true);
+                    
+                    $(this).html(
+                    `<span class="spinner-border spinner-border-sm"
+                    role="status" aria-hidden="true"></span> Ingresando...`
+                    ) ;
+                }  
                 
             });
             
@@ -131,7 +165,7 @@
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if(keycode == '13'){
                     $("#btnSubmit").click();
-                    // alert('You pressed a "enter" key in textbox');  
+                    // alert('You pressed a "enter" key in textbox');
                 }
             });
         </script>

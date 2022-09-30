@@ -207,7 +207,15 @@
                 var table = $('#tbl').DataTable( {
                     responsive: false,
                     "language": {
-                        "lengthMenu": "Mostrar _MENU_ registros por página",
+                        "lengthMenu": "Mostrar"+ `
+                            <select class="custom-select custom-select-sm form-select form-select-sm">
+                                <option value="50" selected>50</option>    
+                                <option value="100">100</option>    
+                                <option value="150">150</option>    
+                                <option value="200">200</option>    
+                                <option value="-1">Todos</option>
+                            </select>
+                        ` +"registros por página",
                         "zeroRecords": "No hay registros por mostrar",
                         "info": "Mostrando página _PAGE_ de _PAGES_",
                         "infoEmpty": "No hay registros disponibles",
@@ -284,12 +292,22 @@
                                 bahia = "Modula 3";
                             }
                                 cantidad = Math.trunc(res[1]);
+                                
+                                let id = element['ItemCode']+"-"+res[0]+"-"+cantidad+"-"+element['LOTE'];
+                                let ID = id.toString();
+                                // console.log(ID);
+                                var miTexto = 'Texto reemplazar';
+                                // Vamos a cambiar la palabra reemplazar por reemplazado
+                                ID = ID.replace('/','-');
+                                // Dará cómo resultado: 'Texto reemplazado'
+                                console.log(ID);
+
                             if (element['U_IV_ESTA'] == "Por Recoger") {
                                 if (element['Biologico'] == 'BIOLOGICOS') {
                                     $('#tabla').append(`
-                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" class="bio">
+                                        <tr id="fila-${ID}" class="bio">
                                             <td>
-                                                <input class="form-check-input" type="checkbox" checked disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" value="" aria-label="...">
+                                                <input class="form-check-input" type="checkbox" checked disabled id="check-fila-${ID}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -309,9 +327,9 @@
                                     `);
                                 }else if (element['TOXICO'] == "Y") {
                                     $('#tabla').append(`
-                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" class="tox">
+                                        <tr id="fila-${ID}" class="tox">
                                             <td>
-                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" value="" aria-label="...">
+                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${ID}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -331,9 +349,9 @@
                                     `);
                                 }else {
                                     $('#tabla').append(`
-                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}">
+                                        <tr id="fila-${ID}">
                                             <td>
-                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}-${element['LOTE']}" value="" aria-label="...">
+                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${ID}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -404,9 +422,10 @@
                         if (idx >= 0) {
                             for(let id_t of idu) {
                                 if (id_t == id) {
-                                    if ($('#check-'+id).prop('checked') != true) {
+                                    let ID = id.toString();
+                                    if ($('#check-'+ID).prop('checked') != true) {
                                         // $('#'+id).addClass('table-success');
-                                        $('#check-'+id).prop("checked", true);
+                                        $('#check-'+ID).prop("checked", true);
                                         $('#code_bar').focus();
                                             
                                         Swal.fire({
@@ -456,7 +475,8 @@
                         let cod_tbl = $("td:eq(4)", row).text();
                         codigo_tbl = parseInt(cod_tbl);
                         if (codigo == codigo_tbl) {
-                            if ($('#check-'+id).prop('checked') != true) {
+                                    let ID = id.toString();
+                            if ($('#check-'+ID).prop('checked') != true) {
                                 
                                 $("#contenido2").append(`
 
@@ -481,10 +501,10 @@
 
             function check_ind( id) {
                 $('#code_bar').val('');
-                id = id.toString();
-                if ($('#check-'+id).prop('checked') != true) {
+                let ID = id.toString();
+                if ($('#check-'+ID).prop('checked') != true) {
                     // $('#'+id).addClass('table-success');
-                    $('#check-'+id).prop("checked", true);
+                    $('#check-'+ID).prop("checked", true);
                     $('#close_m').click();
                     $('#code_bar').focus();
                     btnFin()
@@ -509,7 +529,7 @@
                     filas+=1
                 })
 
-                if ((tabla_cont) == filas) {
+                if ((tabla_cont) >= filas) {
                     $('#cont_boton_f').append(`
                         <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
                             <a href="{{route('savePick', ['id' => $id, 'DL'=> $DL])}}" class="btn btn-dark">

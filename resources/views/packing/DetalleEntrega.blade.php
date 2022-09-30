@@ -217,8 +217,16 @@
             $(document).ready(function() {
                 var table = $('#tbl').DataTable( {
                     responsive: false,
-                    "language": {
-                        "lengthMenu": "Mostrar _MENU_ registros por pagina",
+                    "language": { 
+                        "lengthMenu": "Mostrar"+ `
+                            <select class="custom-select custom-select-sm form-select form-select-sm">
+                                <option value="50" selected>50</option>    
+                                <option value="100">100</option>    
+                                <option value="150">150</option>    
+                                <option value="200">200</option>    
+                                <option value="-1">Todos</option>
+                            </select>
+                            ` +"registros por página",
                         "zeroRecords": "No hay registros por mostrar",
                         "info": "Mostrando página _PAGE_ de _PAGES_",
                         "infoEmpty": "No hay registros disponibles",
@@ -256,7 +264,7 @@
                         <tr id="fila-${element['id__']}" class="bio">
                             <td>
                                 <input class="form-check-input" type="checkbox" checked disabled id="check-${element['id__']}" value="" aria-label="...">
-                                <b>${element['CodeBars']}</b>
+                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-sm " data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
@@ -282,7 +290,7 @@
                         <tr id="fila-${element['id__']}" class="tox">
                             <td>
                                 <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
-                                <b>${element['CodeBars']}</b>
+                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
                             </td>
                             <td>
                                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
@@ -306,7 +314,7 @@
                         <tr id="fila-${element['id__']}">
                             <td>
                                 <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
-                                <b>${element['CodeBars']}</b>
+                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
                             </td>
                             <td>
                                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
@@ -470,42 +478,6 @@
                     `);
                 }
             }
-
-            // function dividir(id) {
-            //     contador_cajas +=1;
-            //     $('#divi').append(` 
-            //         <hr>
-            //         <input type="number" class="conta" id="unidades-${id}-${contador_cajas}" onchange="valid(${id}, ${contador_cajas})"> 
-            //         <b> unidades empacadas en </b>
-            //             <select class="conta" id="tipo_emp-${id}-${contador_cajas}">
-            //                 <option value="CAJA GENERICA">CAJA GENERICA</option>
-            //                 <option value="BOLSA">BOLSA</option>
-            //                 <option value="NEVERA 7LT">NEVERA 7LT</option>
-            //                 <option value="NEVERA 10LT">NEVERA 10LT</option>
-            //                 <option value="NEVERA 14LT">NEVERA 14LT</option>
-            //             </select>
-            //         <b> N° </b>
-            //         <input type="number" class="conta" id="caja-${id}-${contador_cajas}" value="${contador_cajas+1}"> 
-            //         <button class=" btn btn-dark btn-sm" id="btn_div" onclick="dividir(${id})">Dividir</button>
-            //     `);
-            // }
-
-            // function valid(id, contador_cajas) {
-            //     let u = $("#unidades-"+id+"-"+contador_cajas).val();
-            //     let u_esc = $("#contador"+id).val();
-            //     // for(let element of arreglo) {
-            //     //     if (element['id__'] == id) {
-            //             if (parseInt(u_esc) < parseInt(u)) {
-            //                 Swal.fire({
-            //                     icon: 'warning',
-            //                     title: 'Cantidad en caja',
-            //                     text: 'Imposible cantidad escaneada insuficiente.',
-            //                 })
-            //                 $("#unidades-"+id+"-"+contador_cajas).val('');
-            //             }
-            //     //     }
-            //     // }
-            // }
             
             function contador(id) {
                 let codigo = $('#code').val();
@@ -730,7 +702,7 @@
                 })
 
 
-                if ((tabla_cont) == filas) {
+                if ((tabla_cont) >= filas) {
                     $('#cont_boton_f').append(`
                         <div class="d-grid gap-2 py-3">
                             <button class="btn btn-dark" type="button" onclick="guardar()">Finalizar</button>
@@ -791,7 +763,7 @@
                                 <div class="col-sm-5">
                                     <div class="input-group flex-nowrap">
                                         <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                                        <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar">
+                                        <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" disabled>
                                     </div>
                                 </div>
                             </div>

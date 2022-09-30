@@ -49,7 +49,7 @@
                                         <input type="hidden" name="id" value="{{$id}}">
                                         <input type="hidden" name="DL" value="{{$DL}}">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="col-md-6">
                                                 <lable class="form-label" for="operatore">Operador</lable>
                                                 <select class="form-select select2" id="operatore" aria-label="Default select example" name="operatore">
                                                     <option selected value="">Selecciones</option>
@@ -60,7 +60,7 @@
                                                     @endforeach
                                                   </select>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-md-6">
                                                 <lable class="form-label" for="prioridad">Prioridad</lable>
                                                 <select class="form-select select2" id="prioridad" aria-label="Default select example" name="prioridad">
                                                     <option selected value="">Selecciones</option>
@@ -225,8 +225,16 @@
             $(document).ready(function() {
                 var table = $('#tbl').DataTable( {
                     responsive: false,
-                    "language": {
-                        "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "language": { 
+                        "lengthMenu": "Mostrar"+ `
+                            <select class="custom-select custom-select-sm form-select form-select-sm">
+                                <option value="50" selected>50</option>    
+                                <option value="100">100</option>    
+                                <option value="150">150</option>    
+                                <option value="200">200</option>    
+                                <option value="-1">Todos</option>
+                            </select>
+                            ` +"registros por página",
                         "zeroRecords": "No hay registros por mostrar",
                         "info": "Mostrando página _PAGE_ de _PAGES_",
                         "infoEmpty": "No hay registros disponibles",
@@ -311,11 +319,11 @@
                                 }
                                     cantidad = Math.trunc(res[1]);
 
+
                                 if (element['Biologico'] == 'BIOLOGICOS') {
                                     $('#tabla').append(`
-                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}" class="bio">
+                                        <tr class="bio">
                                             <td>
-                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -335,9 +343,8 @@
                                     `);
                                 }else if (element['TOXICO'] == "Y") {
                                     $('#tabla').append(`
-                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}" class="tox">
+                                        <tr class="tox">
                                             <td>
-                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -357,9 +364,8 @@
                                     `);
                                 }else {
                                     $('#tabla').append(`
-                                        <tr id="fila-${element['ItemCode']}-${res[0]}-${cantidad}">
+                                        <tr>
                                             <td>
-                                                <input class="form-check-input" type="checkbox" disabled id="check-fila-${element['ItemCode']}-${res[0]}-${cantidad}" value="" aria-label="...">
                                                 <b>${bahia}</b>
                                             </td>
                                             <td>
@@ -386,14 +392,12 @@
             
             // ----------------Datos Fijos----------------
             for(let element of arreglo) {
-                
                 for(let extra of DE) {
                     let unidades = Math.trunc(extra['Cant_Unidades']);
                     $('#d_fijos').text('');
                     $('#d_fijos').append(`
                         <div class="col-12 mb-3 mb-md-0">
                             <ul class="list-group list-group-flush rounded">
-                                <li class="list-group-item"><b>Hora de inicio: </b>${inicioR}</li>
                                 <li class="list-group-item"><b>Cliente: </b>${element['CardName']}</li>
                                 <li class="list-group-item"><b>Cantidad de lineas: </b>${extra['Cant_Linea']} &nbsp;&nbsp;&nbsp; <b>Cantidad de unidades: </b>${unidades}</li>
                                 <li class="list-group-item"><b>Departamento: </b>${element['Departamento']}</li>
@@ -407,94 +411,126 @@
             }
 
             function guardar() {
-                $("#Form_asig").submit();
-                $('#Cont_gen').html(`
-                    <div class="row">
-                        <div class="col-1">
-                            <a class="btn btn-outline-dark disabled" ><i class="fas fa-chevron-left"></i></a>
-                        </div>
-                        <div class="col-11">
-                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
-                        </div>
-                    </div>
+                let person = $("#operatore").val();
+                let priori = $("#prioridad").val();
+                if(person == "" && priori == "") {
+                    $("#operatore").removeClass('is-invalid');
+                    $("#prioridad").removeClass('is-invalid');
+                    $("#operatore").addClass('is-invalid');
+                    $("#prioridad").addClass('is-invalid');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Usuario',
+                        text: 'Selecione Operario y Prioridad.',
+                    })
+                }else if(person == "" && priori != ""){
                     
-                    <div class="row">
-                        <div class="col-md-12 col-lg-3 columna cabecera">
-                            <div class="row mb-3">
-                                <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
-                                <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
-                                <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
+                    $("#prioridad").removeClass('is-invalid');
+                    $("#operatore").addClass('is-invalid');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Usuario',
+                        text: 'Asignar a un operaro.',
+                    })
+                }else if(person != "" && priori == ""){
+                    
+                    $("#operatore").removeClass('is-invalid');
+                    $("#prioridad").addClass('is-invalid');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Usuario',
+                        text: 'Asignar una prioridad.',
+                    })
+                }else {
+                    $("#Form_asig").submit();
+                    $('#Cont_gen').html(`
+                        <div class="row">
+                            <div class="col-1">
+                                <a class="btn btn-outline-dark disabled" ><i class="fas fa-chevron-left"></i></a>
                             </div>
-                            
-                            <div class="row">
-                                <div class="col-12 mb-3 mb-md-0">
-                                    <ul class="list-group list-group-flush rounded">
-                                        <p class="placeholder-glow">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-wave">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-glow">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-wave">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-glow">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-wave">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                    </ul>
+                            <div class="col-11">
+                                <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 col-lg-3 columna cabecera">
+                                <div class="row mb-3">
+                                    <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
+                                    <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
+                                    <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-12 mb-3 mb-md-0">
+                                        <ul class="list-group list-group-flush rounded">
+                                            <p class="placeholder-glow">
+                                                <span class="placeholder col-12"></span>
+                                            </p>
+                                            <p class="placeholder-wave">
+                                                <span class="placeholder col-12"></span>
+                                            </p>
+                                            <p class="placeholder-glow">
+                                                <span class="placeholder col-12"></span>
+                                            </p>
+                                            <p class="placeholder-wave">
+                                                <span class="placeholder col-12"></span>
+                                            </p>
+                                            <p class="placeholder-glow">
+                                                <span class="placeholder col-12"></span>
+                                            </p>
+                                            <p class="placeholder-wave">
+                                                <span class="placeholder col-12"></span>
+                                            </p>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-12 col-lg-9 columna">
-                            <div class="table-responsive">
-                                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th class="text-center">Ubicación</th>
-                                            <th class="text-center">Cantidad</th>
-                                            <th class="text-center">Lote</th>
-                                            <th class="text-center">Nombre producto</th>
-                                            <th class="text-center">barras</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody style="font-size: bold;">
-                                        <tr>
-                                            <td><span class="placeholder col-12 placeholder-lg"></span></td>
-                                            <td><span class="placeholder col-6"></span></td>
-                                            <td><span class="placeholder col-6"></span></td>
-                                            <td><span class="placeholder" style="width: 25%;"></span></td>
-                                            <td><span class="placeholder col-6"></span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="placeholder col-12 placeholder-lg"></span></td>
-                                            <td><span class="placeholder col-6"></span></td>
-                                            <td><span class="placeholder col-6"></span></td>
-                                            <td><span class="placeholder" style="width: 25%;"></span></td>
-                                            <td><span class="placeholder col-6"></span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="row justify-content-end">
-                                <div class="col-4">
-                                    <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
-                                        <button type="button" class="btn btn-dark disabled">
-                                            <span class="spinner-border spinner-border-sm"
-                                            role="status" aria-hidden="true"></span> guardando...
-                                        </button>
+                            <div class="col-md-12 col-lg-9 columna">
+                                <div class="table-responsive">
+                                    <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th class="text-center">Ubicación</th>
+                                                <th class="text-center">Cantidad</th>
+                                                <th class="text-center">Lote</th>
+                                                <th class="text-center">Nombre producto</th>
+                                                <th class="text-center">barras</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="font-size: bold;">
+                                            <tr>
+                                                <td><span class="placeholder col-12 placeholder-lg"></span></td>
+                                                <td><span class="placeholder col-6"></span></td>
+                                                <td><span class="placeholder col-6"></span></td>
+                                                <td><span class="placeholder" style="width: 25%;"></span></td>
+                                                <td><span class="placeholder col-6"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="placeholder col-12 placeholder-lg"></span></td>
+                                                <td><span class="placeholder col-6"></span></td>
+                                                <td><span class="placeholder col-6"></span></td>
+                                                <td><span class="placeholder" style="width: 25%;"></span></td>
+                                                <td><span class="placeholder col-6"></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="row justify-content-end">
+                                    <div class="col-4">
+                                        <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
+                                            <button type="button" class="btn btn-dark disabled">
+                                                <span class="spinner-border spinner-border-sm"
+                                                role="status" aria-hidden="true"></span> guardando...
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `) ;
+                    `) ;
+                }
             }
             
         </script>

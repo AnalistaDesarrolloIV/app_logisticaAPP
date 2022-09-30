@@ -59,7 +59,7 @@ class LoginController extends Controller
                 return redirect()->route('opciones');
 
             }else{
-                Alert::error('¡Error!', 'Usuario no existe');
+                Alert::error('¡Error!', 'Credenciales de usuario no corresponden con nuestros registros.');
                 return redirect('/');
             }
             

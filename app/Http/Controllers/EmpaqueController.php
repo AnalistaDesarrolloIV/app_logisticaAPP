@@ -15,8 +15,8 @@ class EmpaqueController extends Controller
 {
     public function loginPack()
     {
+        session_start();
         try {
-            session_start();
 
             $entregas = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))');
             $entregas->json();

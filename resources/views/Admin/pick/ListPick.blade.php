@@ -7,7 +7,7 @@
         <div class="row mt-5 mb-3">
             <div class="col-12 mt-4 cont_head">
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-light" id="tbl" style="width:100%;">
+                    <table class="table table-striped table-bordered table-light tbl" style="width:100%;">
                         <thead class="table-dark">
                             <tr>
                                 <th class="text-center">Nombre</th>
@@ -54,7 +54,7 @@
         <div class="row">
             <div class="col-12 cont_head">
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover nowrap table-light" style="width:100%; min-width: 100%">
+                    <table class="table table-striped table-bordered table-hover nowrap table-light tbl" style="width:100%; min-width: 100%">
                         <thead class="table-dark">
                             <tr>
                                 <th class="text-center">Cliente</th>
@@ -63,6 +63,7 @@
                                 <th class="text-center">N° de unidades</th>
                                 <th class="text-center">Municipio</th>
                                 <th class="text-center">Comentarios</th>
+                                <th class="text-center">Estado</th>
                                 <th class="text-center">Asignado A</th>
                                 <th class="text-center">Prioridad</th>
                             </tr>
@@ -71,6 +72,50 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+        {{-- Modal --}}
+        <div class="modal fade" id="Modal_asignacion" tabindex="-1" aria-labelledby="titulo" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="titulo">Formulario de asignación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{route('storeAsign')}}" method="post" id="Form_asig">
+                        @csrf
+                        <input type="hidden" name="id" id="id">
+                        <input type="hidden" name="DL" id="DL">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <lable class="form-label" for="operatore">Operador</lable>
+                                <select class="form-select select2" id="operatore" aria-label="Default select example" name="operatore">
+                                    <option selected value="">Selecciones</option>
+                                    @foreach ($user as $key => $val)
+                                        @if ($val['U_Tipo_Opr'] !== "ADMINISTRADOR")
+                                            <option value="{{$val['Code']}}">{{$val['Code']}}</option>
+                                        @endif
+                                    @endforeach
+                                  </select>
+                            </div>
+                            <div class="col-md-6">
+                                <lable class="form-label" for="prioridad">Prioridad</lable>
+                                <select class="form-select select2" id="prioridad" aria-label="Default select example" name="prioridad">
+                                    <option selected value="">Selecciones</option>
+                                    <option value="Baja">Baja</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Alta">Alta</option>
+                                  </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Asignar</button>
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -195,21 +240,29 @@
     <script>
         
         $(document).ready(function() {
-            var table = $('#tbl').DataTable( {
-                "responsive": false,
-                "language": {
-                    "lengthMenu": "Mostrar _MENU_ registros por página",
-                    "zeroRecords": "No hay registros por mostrar",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay registros disponibles",
-                    "infoFiltered": "(filtrado de _MAX_ registros totales)",
-                    "search": "Buscar:",
-                    "paginate": {
-                        'next': 'Siguiente',
-                        'previous': 'Anterior'
+                var table = $('.tbl').DataTable( {
+                    responsive: false,
+                    "language": { 
+                        "lengthMenu": "Mostrar"+ `
+                            <select class="custom-select custom-select-sm form-select form-select-sm">
+                                <option value="50">50</option>    
+                                <option value="100">100</option>    
+                                <option value="150">150</option>    
+                                <option value="200">200</option>    
+                                <option value="-1">Todos</option>
+                            </select>
+                            ` +"registros por página",
+                        "zeroRecords": "No hay registros por mostrar",
+                        "info": "Mostrando página _PAGE_ de _PAGES_",
+                        "infoEmpty": "No hay registros disponibles",
+                        "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                        "search": "Buscar:",
+                        "paginate": {
+                            'next': 'Siguiente',
+                            'previous': 'Anterior'
+                        }
                     }
-                }
-            } );
+                } );
         
             // new $.fn.dataTable.FixedHeader( table );
         } );
@@ -245,7 +298,7 @@
                 let ped = element['BaseRef'];
                 let cod_ped = element['U_IV_OPERARIO'];
                 let estado = element['U_IV_ESTA'];
-                if (cod_ped == codigo && estado !== "Empacado" ) {
+                if (cod_ped == codigo) {
                     contP+=1;
                     if (element['U_IV_Prioridad'] == 'Alta') {
                         contAlt+=1;
@@ -313,36 +366,36 @@
                                 }else {
                                     ope = element['U_IV_OPERARIO'];
                                 }
-                                if (element['U_IV_ESTA'] == "Por Recoger") {
-                                    let unidades = Math.trunc(extra['Cant_Unidades']);
-                                    $('#tblPed_admin').append(`
-                                        <tr class="btn_list" onclick="modal(${element['BaseRef']}, ${element['DocEntry']})">
-                                            
-                                            <td class="text-center">${element['CardName']}</td>
-                                            <td class="text-center">${element['BaseRef']}</td>
-                                            <td class="text-center">${extra['Cant_Linea']}</td>
-                                            <td class="text-center">${unidades}</td>
-                                            <td class="text-center">${element['Municipio_Ciudad']}</td>
-                                            <td class="text-center">${extra['Comments']}</td>
-                                            <td class="text-center">
-                                                <span ${ope == "sin asignar" ? 'class="badge rounded-pill bg-danger"' : 'class="badge rounded-pill bg-success"'}>${ope}</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
-                                            </td>
-                                        </tr>
-                                    `);
-                                }
+                                let unidades = Math.trunc(extra['Cant_Unidades']);
+                                $('#tblPed_admin').append(`
+                                    <tr>
+                                        
+                                        <td class="text-center">${element['CardName']}</td>
+                                        <td class="text-center"><button class="btn btn-outline-dark" onclick="modal(${element['BaseRef']}, ${element['DocEntry']})">${element['BaseRef']}</button> </td>
+                                        <td class="text-center">${extra['Cant_Linea']}</td>
+                                        <td class="text-center">${unidades}</td>
+                                        <td class="text-center">${element['Municipio_Ciudad']}</td>
+                                        <td class="text-center">${extra['Comments']}</td>
+                                        <td class="text-center">${element['U_IV_ESTA']}</td>
+                                        <td class="text-center">
+                                            <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'} 
+                                            data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${element['BaseRef']}, ${element['DocEntry']})">${ope}</button>
+                                        </td>
+                                        <td class="text-center">
+                                            <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
+                                        </td>
+                                    </tr>
+                                `);
                             }
                         }
                     }
                 }
                 
-                $('#tblPed_admin').append(`
-                    <tr class="table-dark">
-                        <td class="text-center" colspan="8">Con Biologicos</td>
-                    </tr>
-                `);
+                // $('#tblPed_admin').append(`
+                //     <tr class="table-dark">
+                //         <td class="text-center" colspan="8">Con Biologicos</td>
+                //     </tr>
+                // `);
 
                 for(let bio of biologicos) {
                     for(let extra of DE) {
@@ -353,26 +406,26 @@
                         }else {
                             ope = bio['U_IV_OPERARIO'];
                         }
-                        if (bio['U_IV_ESTA'] == "Por Recoger") {
-                            if (bio['BaseRef'] == extra['BaseRef']) {
-                                let unidades = Math.trunc(extra['Cant_Unidades']);
-                                $('#tblPed_admin').append(`
-                                    <tr class="btn_list" onclick="modal(${bio['BaseRef']}, ${bio['DocEntry']})">
-                                        <td class="text-center">${bio['CardName']}</td>
-                                        <td class="text-center">${bio['BaseRef']}</td>
-                                        <td class="text-center">${extra['Cant_Linea']}</td>
-                                        <td class="text-center">${unidades}</td>
-                                        <td class="text-center">${bio['Municipio_Ciudad']}</td>
-                                        <td class="text-center">${extra['Comments']}</td>
-                                        <td class="text-center">
-                                            <span ${ope == "sin asignar" ? 'class="badge rounded-pill bg-danger"' : 'class="badge rounded-pill bg-success"'}>${ope}</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
-                                        </td>
-                                    </tr>
-                                `);
-                            }
+                        if (bio['BaseRef'] == extra['BaseRef']) {
+                            let unidades = Math.trunc(extra['Cant_Unidades']);
+                            $('#tblPed_admin').append(`
+                                <tr class="table-warning">
+                                    <td class="text-center">${bio['CardName']}</td>
+                                    <td class="text-center"><button class="btn btn-outline-dark" onclick="modal(${bio['BaseRef']}, ${bio['DocEntry']})">${bio['BaseRef']}</button></td>
+                                    <td class="text-center">${extra['Cant_Linea']}</td>
+                                    <td class="text-center">${unidades}</td>
+                                    <td class="text-center">${bio['Municipio_Ciudad']}</td>
+                                    <td class="text-center">${extra['Comments']}</td>
+                                        <td class="text-center">${bio['U_IV_ESTA']}</td>
+                                    <td class="text-center">
+                                        <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="badge rounded-pill bg-success" disabled'}
+                                        data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${bio['BaseRef']}, ${bio['DocEntry']})">${ope}</button>
+                                    </td>
+                                    <td class="text-center">
+                                        <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
+                                    </td>
+                                </tr>
+                            `);
                         }
                     }
                 }
@@ -391,19 +444,21 @@
                                 }else {
                                     ope = element['U_IV_OPERARIO'];
                                 }
-                                if (element['U_IV_ESTA'] == "Por Recoger" && prioridad == prio) {
+                                if (prioridad == prio) {
                                     let unidades = Math.trunc(extra['Cant_Unidades']);
                                     $('#tblPed_admin').append(`
-                                        <tr class="btn_list" onclick="modal(${element['BaseRef']}, ${element['DocEntry']})">
+                                        <tr>
                                             
                                             <td class="text-center">${element['CardName']}</td>
-                                            <td class="text-center">${element['BaseRef']}</td>
+                                            <td class="text-center"><button class="btn btn-outline-dark" onclick="modal(${element['BaseRef']}, ${element['DocEntry']})">${element['BaseRef']}</button></td>
                                             <td class="text-center">${extra['Cant_Linea']}</td>
                                             <td class="text-center">${unidades}</td>
                                             <td class="text-center">${element['Municipio_Ciudad']}</td>
                                             <td class="text-center">${extra['Comments']}</td>
+                                            <td class="text-center">${element['U_IV_ESTA']}</td>
                                             <td class="text-center">
-                                                <span ${ope == "sin asignar" ? 'class="badge rounded-pill bg-danger"' : 'class="badge rounded-pill bg-success"'}>${ope}</span>
+                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'} 
+                                                data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${element['BaseRef']}, ${element['DocEntry']})">${ope}</button>
                                             </td>
                                             <td class="text-center">
                                                 <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
@@ -416,11 +471,11 @@
                     }
                 }
                 
-                $('#tblPed_admin').append(`
-                    <tr class="table-dark">
-                        <td class="text-center" colspan="8">Con Biologicos</td>
-                    </tr>
-                `);
+                // $('#tblPed_admin').append(`
+                //     <tr class="table-dark">
+                //         <td class="text-center" colspan="8">Con Biologicos</td>
+                //     </tr>
+                // `);
 
                 for(let bio of biologicos) {
                     for(let extra of DE) {
@@ -431,19 +486,21 @@
                         }else {
                             ope = bio['U_IV_OPERARIO'];
                         }
-                        if (bio['U_IV_ESTA'] == "Por Recoger" && prioridad == prio) {
+                        if (prioridad == prio) {
                             if (bio['BaseRef'] == extra['BaseRef']) {
                                 let unidades = Math.trunc(extra['Cant_Unidades']);
                                 $('#tblPed_admin').append(`
-                                    <tr class="btn_list" onclick="modal(${bio['BaseRef']}, ${bio['DocEntry']})">
+                                    <tr class="table-warning">
                                         <td class="text-center">${bio['CardName']}</td>
-                                        <td class="text-center">${bio['BaseRef']}</td>
+                                        <td class="text-center"><button class="btn btn-outline-dark" onclick="modal(${bio['BaseRef']}, ${bio['DocEntry']})">${bio['BaseRef']}</button></td>
                                         <td class="text-center">${extra['Cant_Linea']}</td>
                                         <td class="text-center">${unidades}</td>
                                         <td class="text-center">${bio['Municipio_Ciudad']}</td>
                                         <td class="text-center">${extra['Comments']}</td>
+                                        <td class="text-center">${bio['U_IV_ESTA']}</td>
                                         <td class="text-center">
-                                            <span ${ope == "sin asignar" ? 'class="badge rounded-pill bg-danger"' : 'class="badge rounded-pill bg-success"'}>${ope}</span>
+                                            <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'} 
+                                            data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${bio['BaseRef']}, ${bio['DocEntry']})">${ope}</button>
                                         </td>
                                         <td class="text-center">
                                             <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
@@ -469,19 +526,21 @@
                                 }else {
                                     ope = element['U_IV_OPERARIO'];
                                 }
-                                if (element['U_IV_ESTA'] == "Por Recoger" && ope == sel) {
+                                if (ope == sel) {
                                     let unidades = Math.trunc(extra['Cant_Unidades']);
                                     $('#tblPed_admin').append(`
-                                        <tr class="btn_list" onclick="modal(${element['BaseRef']}, ${element['DocEntry']})">
+                                        <tr>
                                             
                                             <td class="text-center">${element['CardName']}</td>
-                                            <td class="text-center">${element['BaseRef']}</td>
+                                            <td class="text-center"><button class="btn btn-outline-dark" onclick="modal(${element['BaseRef']}, ${element['DocEntry']})">${element['BaseRef']}</button></td>
                                             <td class="text-center">${extra['Cant_Linea']}</td>
                                             <td class="text-center">${unidades}</td>
                                             <td class="text-center">${element['Municipio_Ciudad']}</td>
                                             <td class="text-center">${extra['Comments']}</td>
+                                            <td class="text-center">${element['U_IV_ESTA']}</td>
                                             <td class="text-center">
-                                                <span ${ope == "sin asignar" ? 'class="badge rounded-pill bg-danger"' : 'class="badge rounded-pill bg-success"'}>${ope}</span>
+                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
+                                                data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${element['BaseRef']}, ${element['DocEntry']})">${ope}</button>
                                             </td>
                                             <td class="text-center">
                                                 <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
@@ -494,11 +553,11 @@
                     }
                 }
                 
-                $('#tblPed_admin').append(`
-                    <tr class="table-dark">
-                        <td class="text-center" colspan="8">Con Biologicos</td>
-                    </tr>
-                `);
+                // $('#tblPed_admin').append(`
+                //     <tr class="table-dark">
+                //         <td class="text-center" colspan="8">Con Biologicos</td>
+                //     </tr>
+                // `);
 
                 for(let bio of biologicos) {
                     for(let extra of DE) {
@@ -509,19 +568,21 @@
                         }else {
                             ope = bio['U_IV_OPERARIO'];
                         }
-                        if (bio['U_IV_ESTA'] == "Por Recoger" && ope == sel) {
+                        if (ope == sel) {
                             if (bio['BaseRef'] == extra['BaseRef']) {
                                 let unidades = Math.trunc(extra['Cant_Unidades']);
                                 $('#tblPed_admin').append(`
-                                    <tr class="btn_list" onclick="modal(${bio['BaseRef']}, ${bio['DocEntry']})">
+                                    <tr class="table-warning">
                                         <td class="text-center">${bio['CardName']}</td>
-                                        <td class="text-center">${bio['BaseRef']}</td>
+                                        <td class="text-center"><button class="btn btn-outline-dark" onclick="modal(${bio['BaseRef']}, ${bio['DocEntry']})">${bio['BaseRef']}</button></td>
                                         <td class="text-center">${extra['Cant_Linea']}</td>
                                         <td class="text-center">${unidades}</td>
                                         <td class="text-center">${bio['Municipio_Ciudad']}</td>
                                         <td class="text-center">${extra['Comments']}</td>
+                                        <td class="text-center">${bio['U_IV_ESTA']}</td>
                                         <td class="text-center">
-                                            <span ${ope == "sin asignar" ? 'class="badge rounded-pill bg-danger"' : 'class="badge rounded-pill bg-success"'}>${ope}</span>
+                                            <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
+                                            data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${bio['BaseRef']}, ${bio['DocEntry']})">${ope}</button>
                                         </td>
                                         <td class="text-center">
                                             <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
@@ -547,19 +608,21 @@
                                 }else {
                                     ope = element['U_IV_OPERARIO'];
                                 }
-                                if (element['U_IV_ESTA'] == "Por Recoger" && ope == sel && prioridad == prio) {
+                                if (ope == sel && prioridad == prio) {
                                     let unidades = Math.trunc(extra['Cant_Unidades']);
                                     $('#tblPed_admin').append(`
-                                        <tr class="btn_list" onclick="modal(${element['BaseRef']}, ${element['DocEntry']})">
+                                        <tr>
                                             
                                             <td class="text-center">${element['CardName']}</td>
-                                            <td class="text-center">${element['BaseRef']}</td>
+                                            <td class="text-center"><button class="btn btn-outline-dark" onclick="modal(${element['BaseRef']}, ${element['DocEntry']})">${element['BaseRef']}</button></td>
                                             <td class="text-center">${extra['Cant_Linea']}</td>
                                             <td class="text-center">${unidades}</td>
                                             <td class="text-center">${element['Municipio_Ciudad']}</td>
                                             <td class="text-center">${extra['Comments']}</td>
+                                            <td class="text-center">${element['U_IV_ESTA']}</td>
                                             <td class="text-center">
-                                                <span ${ope == "sin asignar" ? 'class="badge rounded-pill bg-danger"' : 'class="badge rounded-pill bg-success"'}>${ope}</span>
+                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
+                                                data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${element['BaseRef']}, ${element['DocEntry']})">${ope}</button>
                                             </td>
                                             <td class="text-center">
                                                 <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
@@ -572,11 +635,11 @@
                     }
                 }
                 
-                $('#tblPed_admin').append(`
-                    <tr class="table-dark">
-                        <td class="text-center" colspan="8">Con Biologicos</td>
-                    </tr>
-                `);
+                // $('#tblPed_admin').append(`
+                //     <tr class="table-dark">
+                //         <td class="text-center" colspan="8">Con Biologicos</td>
+                //     </tr>
+                // `);
 
                 for(let bio of biologicos) {
                     for(let extra of DE) {
@@ -587,19 +650,21 @@
                         }else {
                             ope = bio['U_IV_OPERARIO'];
                         }
-                        if (bio['U_IV_ESTA'] == "Por Recoger" && ope == sel && prioridad == prio) {
+                        if (ope == sel && prioridad == prio) {
                             if (bio['BaseRef'] == extra['BaseRef']) {
                                 let unidades = Math.trunc(extra['Cant_Unidades']);
                                 $('#tblPed_admin').append(`
-                                    <tr class="btn_list" onclick="modal(${bio['BaseRef']}, ${bio['DocEntry']})">
+                                    <tr class="table-warning">
                                         <td class="text-center">${bio['CardName']}</td>
-                                        <td class="text-center">${bio['BaseRef']}</td>
+                                        <td class="text-center"><button class="btn btn-outline-dark" onclick="modal(${bio['BaseRef']}, ${bio['DocEntry']})">${bio['BaseRef']}</button></td>
                                         <td class="text-center">${extra['Cant_Linea']}</td>
                                         <td class="text-center">${unidades}</td>
                                         <td class="text-center">${bio['Municipio_Ciudad']}</td>
                                         <td class="text-center">${extra['Comments']}</td>
+                                        <td class="text-center">${bio['U_IV_ESTA']}</td>
                                         <td class="text-center">
-                                            <span ${ope == "sin asignar" ? 'class="badge rounded-pill bg-danger"' : 'class="badge rounded-pill bg-success"'}>${ope}</span>
+                                            <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
+                                            data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${bio['BaseRef']}, ${bio['DocEntry']})">${ope}</button>
                                         </td>
                                         <td class="text-center">
                                             <span ${prio == "Baja" ? 'class="badge rounded-pill bg-success"' : prio == "Media" ? 'class="badge rounded-pill bg-warning"' : 'class="badge rounded-pill bg-danger"'}>${prio}</span>
@@ -614,6 +679,11 @@
 
         }
         filtros();
+
+        function openModal(id, Dl) {
+            $("#id").val(id);
+            $("#DL").val(Dl);
+        }
 
         function modal(cod_ped, DL) {
             let url = 'formAsi/'+cod_ped+'/'+DL;
@@ -705,6 +775,129 @@
                     </div>
                 </div>
             `);
+        }
+        
+        function guardar() {
+            let person = $("#operatore").val();
+            let priori = $("#prioridad").val();
+            if(person == "" && priori == "") {
+                $("#operatore").removeClass('is-invalid');
+                $("#prioridad").removeClass('is-invalid');
+                $("#operatore").addClass('is-invalid');
+                $("#prioridad").addClass('is-invalid');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Usuario',
+                    text: 'Selecione Operario y Prioridad.',
+                })
+            }else if(person == "" && priori != ""){
+                
+                $("#prioridad").removeClass('is-invalid');
+                $("#operatore").addClass('is-invalid');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Usuario',
+                    text: 'Asignar a un operaro.',
+                })
+            }else if(person != "" && priori == ""){
+                
+                $("#operatore").removeClass('is-invalid');
+                $("#prioridad").addClass('is-invalid');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Usuario',
+                    text: 'Asignar una prioridad.',
+                })
+            }else {
+                $("#Form_asig").submit();
+                $('#content').html(`
+                    <div class="row mt-5 mb-3">
+                        <div class="col-12 mt-4 cont_head">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-light" style="width:100%;">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center">Nombre</th>
+                                            <th class="text-center">N° Pedidos asignados</th>
+                                            <th class="text-center">P Alta <small><i class="fas fa-circle text-danger"></i></small></th>
+                                            <th class="text-center">P Media <small><i class="fas fa-circle text-warning"></i></small></th>
+                                            <th class="text-center">P Baja <small><i class="fas fa-circle text-success"></i></small></th>
+                                            <th class="text-center">N° Biologicos Asignados</th>
+                                            <th class="text-center">Total Lineas</th>
+                                            <th class="text-center">Total Unidades</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: bold;">
+                                        <tr>
+                                            <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-10">
+                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Filtros</h3>
+                            <div class="row justify-content-around">
+                                <div class="col-12 col-md-4">
+                                    <label for="us">Por Operador: </label>
+                                    <select class="form-select " id="us" aria-label="Disabled  select example" onchange="filtros()">
+                                        <option selected value="">Todos</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <label for="prior">Por prioridad: </label>
+                                    <select class="form-select " id="prior" aria-label="Disabled  select example" onchange="filtros()">
+                                        <option selected value="">Seleccione</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 cont_head">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover nowrap table-light" style="width:100%; min-width: 100%">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center">Cliente</th>
+                                            <th class="text-center">N° Pedido</th>
+                                            <th class="text-center">N° De lineas</th>
+                                            <th class="text-center">N° de unidades</th>
+                                            <th class="text-center">Municipio</th>
+                                            <th class="text-center">Comentarios</th>
+                                            <th class="text-center">Asignado A</th>
+                                            <th class="text-center">Prioridad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: bold;">
+                                        <tr>
+                                            <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-wave"><span class="placeholder col-12"></span></p></td>
+                                            <td class="text-center"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `) ;
+            }
         }
 
     </script>

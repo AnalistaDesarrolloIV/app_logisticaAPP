@@ -76,6 +76,7 @@ class RecoleccionController extends Controller
     public function savePick($id, $DL)
     { 
         session_start();
+        try {
             $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
                 'CompanyDB' => 'INVERSIONES',
                 'UserName' => 'Desarrollos',
@@ -104,13 +105,22 @@ class RecoleccionController extends Controller
                                 [
                                     "LineNum"=> $linenum,
                                     "ItemCode"=> $itemCode,
-                                    "U_IV_ESTA"=> "Recogido"                        
+                                    "U_IV_ESTA"=> $state                        
                                 ]
                             ]
                     ])->json();
             }
             Alert::success('¡Guardado!', "Recolección finalizada exitosamente.");
             return redirect()->route('opciones');
+
+
+        } catch (\Throwable $th) {
+            session_destroy();
+            setcookie('USER', '', time()-43200);
+            setcookie('USER_ROL', '', time()-43200);
+            Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
+            return redirect('/');
+        }
       
        
         
