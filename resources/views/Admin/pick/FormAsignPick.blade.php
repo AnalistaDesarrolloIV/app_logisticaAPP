@@ -336,7 +336,7 @@
                                                 <b>${element['Dscription']}</b>
                                             </td>
                                             <td>
-                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
+                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == null ? "1" : element['CodeBars']}</b>
                                             </td>
                                             
                                         </tr> 
@@ -357,7 +357,7 @@
                                                 <b>${element['Dscription']}</b>
                                             </td>
                                             <td>
-                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
+                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == null ? "1" : element['CodeBars']}</b>
                                             </td>
                                             
                                         </tr> 
@@ -378,7 +378,7 @@
                                                 <b>${element['Dscription']}</b>
                                             </td>
                                             <td>
-                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
+                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == null ? "1" : element['CodeBars']}</b>
                                             </td>
                                             
                                         </tr> 

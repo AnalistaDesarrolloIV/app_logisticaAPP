@@ -418,7 +418,7 @@
                                     <td class="text-center">${extra['Comments']}</td>
                                         <td class="text-center">${bio['U_IV_ESTA']}</td>
                                     <td class="text-center">
-                                        <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="badge rounded-pill bg-success" disabled'}
+                                        <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
                                         data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${bio['BaseRef']}, ${bio['DocEntry']})">${ope}</button>
                                     </td>
                                     <td class="text-center">

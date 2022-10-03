@@ -8,39 +8,40 @@
             <div class="col-12  py-3 px-1 px-sm-3 mt-5 mt-sm-0 opacidad rounded" id="Cont_gen">
                 <div class="row mt-5 mt-lg-0">
                     <div class="col-lg-12 ">
-                        <div class="row">
+                        <div class="row justify-content-around">
                             <div class="col-auto">
                                 <a class="btn btn-outline-dark" href="{{route('loginPack')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
                             </div>
-                            <div class="col-11">
+                            <div class="col-8 col-md-10">
                                 <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#ModalInfo" ><i class="fas fa-info-circle"></i></button>
+                            </div>
+                        </div>
+                       
+                    
+                        <div class="row justify-content-center py-3">
+                            <div class="col-md-8 col-lg-5">
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
+                                    <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" onchange="lector()">
+                                </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12 col-lg-3 columna cabecera">
-                                
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
-                                        <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
-                                        <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
-                                    </div>
-                                </div>
-
-                                <div class="row " id="d_fijos">
-
-                                </div>
-
-                            </div>
-                            <div class="col-md-12 col-lg-9 columna">
-                                <div class="row justify-content-center py-3">
-                                    <div class="col-md-5 col-lg-8">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                                            <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" onchange="lector()">
-                                        </div>
-                                    </div>
-                                </div>
+                            <ul class="nav justify-content-end">
+                                <li class="nav-item">
+                                    <span class="nav-link text-dark"><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</span>
+                                </li>
+                                <li class="nav-item">
+                                    <span class="nav-link text-dark"><i class="fas fa-circle text-danger"></i></small> Venenos.</a>
+                                </li>
+                                <li class="nav-item">
+                                    <span class="nav-link text-dark"><small><i class="far fa-circle text-light"></i></small> normales.</span>
+                                </li>
+                            </ul>
+                            <div class="col-12">
                                 
                                 <div class="table-responsive">
                                     <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%">
@@ -74,6 +75,24 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+             
+            <!-- Modal Info -->
+            <div class="modal fade"  id="ModalInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ModalInfoLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="ModalInfoLabel">Info Pedido N° {{$id}}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"  id="d_fijos">
+                    ...
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
                 </div>
             </div>
             
@@ -172,10 +191,6 @@
                 min-height: 48rem;
                 max-height: 48rem;
             }
-            .cabecera{
-                min-height: 48rem !important;
-                max-height: 48rem !important;
-            }
             body {
                 font-family: 'Nunito', sans-serif;
                 font-size: 12px;
@@ -183,10 +198,7 @@
         }
         
         @media (max-width: 1000px) {
-            .cabecera{
-                min-height: 22rem !important;
-                max-height: 22rem !important;
-            }
+          
         }
         .conta{
             max-width: 80px;
@@ -259,80 +271,83 @@
 
             // -----------------Tabla De Entregas--------------------
             for(let element of arreglo) {
-                if (element['Biologico'] == 'BIOLOGICOS') {
-                    $('#tabla').append(`
-                        <tr id="fila-${element['id__']}" class="bio">
-                            <td>
-                                <input class="form-check-input" type="checkbox" checked disabled id="check-${element['id__']}" value="" aria-label="...">
-                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm " data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
-                                    <b>${element['Dscription']}</b>
-                                </button>
-                            </td>
-                            
-                            <td>
-                                <b>${element['LOTE']}</b>
-                            </td>
-                            <td>
-                                <b>${element['CantLote']}</b>
-                            </td>
-                            <td>
-                                <ul  id="n_cajas-${element['id__']}">
+                
+                if (element['U_IV_ESTA'] == "Recogido") {
+                    if (element['Biologico'] == 'BIOLOGICOS') {
+                        $('#tabla').append(`
+                            <tr id="fila-${element['id__']}" class="bio">
+                                <td>
+                                    <input class="form-check-input" type="checkbox" checked disabled id="check-${element['id__']}" value="" aria-label="...">
+                                    <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm " data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                        <b>${element['Dscription']}</b>
+                                    </button>
+                                </td>
                                 
-                                </ul>
-                            </td>
-                        </tr> 
-                    `);
-                }else if (element['TOXICO'] == "Y") {
-                    $('#tabla').append(`
-                        <tr id="fila-${element['id__']}" class="tox">
-                            <td>
-                                <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
-                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
-                            </td>
-                            <td>
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
-                                    <b>${element['Dscription']}</b>
-                                </button>
-                            </td>
-                            
-                            <td>
-                                <b>${element['LOTE']}</b>
-                            </td>
-                            <td>
-                                <b>${element['CantLote']}</b>
-                            </td>
-                            <td>
-                                <b id="n_cajas-${element['id__']}"></b>
-                            </td>
-                        </tr> 
-                    `);
-                }else {
-                    $('#tabla').append(`
-                        <tr id="fila-${element['id__']}">
-                            <td>
-                                <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
-                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
-                            </td>
-                            <td>
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
-                                    <b>${element['Dscription']}</b>
-                                </button>
-                            </td>
-                            
-                            <td>
-                                <b>${element['LOTE']}</b>
-                            </td>
-                            <td>
-                                <b>${element['CantLote']}</b>
-                            </td>
-                            <td>
-                                <b id="n_cajas-${element['id__']}"></b>
-                            </td>
-                        </tr> 
-                    `);
+                                <td>
+                                    <b>${element['LOTE']}</b>
+                                </td>
+                                <td>
+                                    <b>${element['CantLote']}</b>
+                                </td>
+                                <td>
+                                    <ul  id="n_cajas-${element['id__']}">
+                                    
+                                    </ul>
+                                </td>
+                            </tr> 
+                        `);
+                    }else if (element['TOXICO'] == "Y") {
+                        $('#tabla').append(`
+                            <tr id="fila-${element['id__']}" class="tox">
+                                <td>
+                                    <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                    <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                        <b>${element['Dscription']}</b>
+                                    </button>
+                                </td>
+                                
+                                <td>
+                                    <b>${element['LOTE']}</b>
+                                </td>
+                                <td>
+                                    <b>${element['CantLote']}</b>
+                                </td>
+                                <td>
+                                    <b id="n_cajas-${element['id__']}"></b>
+                                </td>
+                            </tr> 
+                        `);
+                    }else {
+                        $('#tabla').append(`
+                            <tr id="fila-${element['id__']}">
+                                <td>
+                                    <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                    <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                        <b>${element['Dscription']}</b>
+                                    </button>
+                                </td>
+                                
+                                <td>
+                                    <b>${element['LOTE']}</b>
+                                </td>
+                                <td>
+                                    <b>${element['CantLote']}</b>
+                                </td>
+                                <td>
+                                    <b id="n_cajas-${element['id__']}"></b>
+                                </td>
+                            </tr> 
+                        `);
+                    }
                 }
             }
 
@@ -578,8 +593,8 @@
                             $('#cerrar1').click();
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Check',
-                                text: 'Checkeado completo.',
+                                title: 'Encontrado',
+                                text: 'Producto revisado.',
                             })
                             
                             btnFin()
@@ -674,7 +689,7 @@
                             $('#close_m').click();
                             Swal.fire(
                                 'Justificado!',
-                                'Checkeado y justificado exitosamente.',
+                                'Producto revisado y justificado exitosamente.',
                                 'success'
                             );
                                 
@@ -716,61 +731,51 @@
                 $("#form_emp").submit();
 
                 $('#Cont_gen').html(`
-                    <div class="row">
-                        <div class="col-1">
-                            <a class="btn btn-outline-dark disabled" ><i class="fas fa-chevron-left"></i></a>
+                
+                    <div class="row justify-content-around">
+                        <div class="col-auto">
+                            <a class="btn btn-outline-dark disabled"><i class="fas fa-chevron-left"></i></a>
                         </div>
-                        <div class="col-11">
+                        <div class="col-10">
                             <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
                         </div>
+                        <div class="col-auto">
+                            <button class="btn btn-outline-dark" disabled><i class="fas fa-info-circle"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center pb-3">
+                        <div id="cont_boton_m2">
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="boton_m2"></button>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="input-group flex-nowrap">
+                                <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
+                                <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" disabled>
+                            </div>
+                        </div>
+                        
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-12 col-lg-3 columna cabecera">
-                            <div class="row mb-3">
-                                <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
-                                <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
-                                <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-12 mb-3 mb-md-0">
-                                    <ul class="list-group list-group-flush rounded">
-                                        <p class="placeholder-glow">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-wave">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-glow">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-wave">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-glow">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-wave">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-lg-9 columna">
-                            <div class="row justify-content-center pb-3">
-                                <div class="col-sm-5">
-                                    <div class="input-group flex-nowrap">
-                                        <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                                        <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" disabled>
-                                    </div>
-                                </div>
-                            </div>
+                        <ul class="nav justify-content-end">
+                            <li class="nav-item">
+                                <span class="nav-link text-dark"><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</span>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link text-dark"><i class="fas fa-circle text-danger"></i></small> Venenos.</a>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link text-dark"><small><i class="far fa-circle text-light"></i></small> normales.</span>
+                            </li>
+                        </ul>
+                        <div class="col-12">
+                        
                             <div class="table-responsive">
-                                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
+                                <table class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
                                     <thead class="table-dark">
                                         <tr>
+                                            {{-- <th class="text-center">Id</th> --}}
                                             <th class="text-center">Ubicación</th>
                                             <th class="text-center">Cantidad</th>
                                             <th class="text-center">Lote</th>
@@ -799,16 +804,17 @@
                             
                             <div class="row justify-content-end">
                                 <div class="col-4">
-                                    <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
-                                        <button type="button" class="btn btn-dark disabled">
+                                    <div class="d-grid gap-2 py-3">
+                                        <button class="btn btn-dark" type="button" disabled>
                                             <span class="spinner-border spinner-border-sm"
-                                            role="status" aria-hidden="true"></span> guardando...
+                                            role="status" aria-hidden="true"></span> Finalizar
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>   
+
                 `) ;
             }
         </script>

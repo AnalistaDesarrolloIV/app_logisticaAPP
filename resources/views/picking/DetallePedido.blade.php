@@ -6,36 +6,45 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12  pt-3 px-1 px-sm-5 mt-5  opacidad rounded" id="Cont_gen">
-                <div class="row">
+                <div class="row justify-content-around">
                     <div class="col-auto">
                         <a class="btn btn-outline-dark" href="{{route('loginPick')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
                     </div>
-                    <div class="col-11">
+                    <div class="col-8 col-md-10">
                         <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
                     </div>
+                    <div class="col-auto">
+                        <button class="btn btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#ModalInfo" ><i class="fas fa-info-circle"></i></button>
+                    </div>
                 </div>
-                
-                <div class="row">
-                    <div class="col-md-12 col-lg-3 columna cabecera">
-                        <div class="row mb-3">
-                            <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
-                            <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
-                            <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
-                        </div>
-                        
-                        <div class="row " id="d_fijos">
 
+                <div class="row justify-content-center pb-3">
+                    <div id="cont_boton_m2">
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="boton_m2"></button>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="input-group flex-nowrap">
+                            <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
+                            <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
                         </div>
                     </div>
-                    <div class="col-md-12 col-lg-9 columna">
-                        <div class="row justify-content-center pb-3">
-                            <div class="col-sm-5">
-                                <div class="input-group flex-nowrap">
-                                    <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                                    <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
-                                </div>
-                            </div>
-                        </div>
+                    
+                </div>
+
+                <div class="row">
+                    <ul class="nav justify-content-end">
+                        <li class="nav-item">
+                            <span class="nav-link text-dark"><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</span>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link text-dark"><i class="fas fa-circle text-danger"></i></small> Venenos.</a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link text-dark"><small><i class="far fa-circle text-light"></i></small> normales.</span>
+                        </li>
+                    </ul>
+                    <div class="col-12">
+                       
                         <div class="table-responsive">
                             <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
                                 <thead class="table-dark">
@@ -62,8 +71,22 @@
                     </div>
                 </div>                
             </div>
-            <div id="cont_boton_m2">
-                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="boton_m2"></button>
+            <!-- Modal Info -->
+            <div class="modal fade"  id="ModalInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ModalInfoLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="ModalInfoLabel">Info Pedido N° {{$id}}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"  id="d_fijos">
+                    ...
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+                </div>
             </div>
             <!-- Modal 2-->
             <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"  aria-hidden="true">
@@ -132,46 +155,10 @@
         .opacidad::-webkit-scrollbar-track {
             border-radius: 10px;  
         }
-        .columna{
-            overflow: hidden;
-            overflow-y: auto;
-            min-height: 40rem;
-            max-height: 40rem;
-        }
-
-        .columna::-webkit-scrollbar {
-            -webkit-appearance: none;
-        }
-
-        .columna::-webkit-scrollbar:vertical {
-            width:10px;
-        }
-
-        .columna::-webkit-scrollbar-button:increment,.columna::-webkit-scrollbar-button {
-            display: none;
-        } 
-
-        .columna::-webkit-scrollbar:horizontal {
-            height: 10px;
-        }
-
-        .columna::-webkit-scrollbar-thumb {
-            background-color: #797979;
-            border-radius: 20px;
-            border: 2px solid #989898;
-        }
-
-        .columna::-webkit-scrollbar-track {
-            border-radius: 10px;  
-        }
         @media (max-width: 600px) {
             .columna{
                 min-height: 48rem;
                 max-height: 48rem;
-            }
-            .cabecera{
-                min-height: 48rem !important;
-                max-height: 48rem !important;
             }
             body {
                 font-family: 'Nunito', sans-serif;
@@ -179,11 +166,7 @@
             }
         } 
         @media (max-width: 1000px) {
-            .cabecera{
-                min-height: 22rem !important;
-                max-height: 22rem !important;
-                margin-bottom: 3rem !important;
-            }
+            
         }
         .bio {
             background: #ffbe00 !important;
@@ -296,8 +279,6 @@
                                 let id = element['ItemCode']+"-"+res[0]+"-"+cantidad+"-"+element['LOTE'];
                                 let ID = id.toString();
                                 // console.log(ID);
-                                var miTexto = 'Texto reemplazar';
-                                // Vamos a cambiar la palabra reemplazar por reemplazado
                                 ID = ID.replace('/','-');
                                 // Dará cómo resultado: 'Texto reemplazado'
                                 console.log(ID);
@@ -320,7 +301,7 @@
                                                 <b>${element['Dscription']}</b>
                                             </td>
                                             <td>
-                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
+                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == null ? "1" : element['CodeBars']}</b>
                                             </td>
                                             
                                         </tr> 
@@ -342,7 +323,7 @@
                                                 <b>${element['Dscription']}</b>
                                             </td>
                                             <td>
-                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
+                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == null ? "1" : element['CodeBars']}</b>
                                             </td>
                                             
                                         </tr> 
@@ -364,7 +345,7 @@
                                                 <b>${element['Dscription']}</b>
                                             </td>
                                             <td>
-                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
+                                                <b>${element['CodeBars'] == '' || element['CodeBars'] == null ? "1" : element['CodeBars']}</b>
                                             </td>
                                             
                                         </tr> 
@@ -403,12 +384,14 @@
                 let codigo = $('#code_bar').val();
                 let cont = 0;
                 let idu = [];
+                console.log(codigo);
 
                 $("#tabla").find("tr").each(function (idx, row) {
                     id = $(this).attr('id');
                     if (idx >= 0) {
                         let cod_tbl = $("td:eq(4)", row).text();
-                        codigo_tbl = parseInt(cod_tbl);
+                        codigo_tbl = cod_tbl.trim();
+                        console.log("codigo p:"+codigo_tbl);
                         if (codigo == codigo_tbl) {
                             idu[idx] = id.trim();
                             cont += 1;
@@ -424,14 +407,29 @@
                                 if (id_t == id) {
                                     let ID = id.toString();
                                     if ($('#check-'+ID).prop('checked') != true) {
-                                        // $('#'+id).addClass('table-success');
-                                        $('#check-'+ID).prop("checked", true);
-                                        $('#code_bar').focus();
-                                            
                                         Swal.fire({
-                                            icon: 'success',
-                                            title: 'Producto',
-                                            text: $("td:eq(3)", row).text()+' encontrado.',
+                                        title: $("td:eq(3)", row).text(),
+                                        text: "Producto encontrado con "+$("td:eq(1)", row).text()+" unidades.",
+                                        icon: 'success',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Si, continuar',
+                                        cancelButtonText: 'No, cancelar'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // $('#'+id).addClass('table-success');
+                                                $('#check-'+ID).prop("checked", true);
+                                                $('#code_bar').focus();
+                                                    
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Producto',
+                                                    text: $("td:eq(3)", row).text()+' recogido.',
+                                                })
+                                                
+                                                btnFin()
+                                            }
                                         })
                                     }
                                     
@@ -503,6 +501,11 @@
                 $('#code_bar').val('');
                 let ID = id.toString();
                 if ($('#check-'+ID).prop('checked') != true) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Producto',
+                        text: 'Producto recogido.',
+                    })
                     // $('#'+id).addClass('table-success');
                     $('#check-'+ID).prop("checked", true);
                     $('#close_m').click();
@@ -543,61 +546,51 @@
 
             function guardar() {
                 $('#Cont_gen').html(`
-                    <div class="row">
-                        <div class="col-1">
-                            <a class="btn btn-outline-dark disabled" ><i class="fas fa-chevron-left"></i></a>
+                
+                    <div class="row justify-content-around">
+                        <div class="col-auto">
+                            <a class="btn btn-outline-dark disabled"><i class="fas fa-chevron-left"></i></a>
                         </div>
-                        <div class="col-11">
+                        <div class="col-10">
                             <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
                         </div>
+                        <div class="col-auto">
+                            <button class="btn btn-outline-dark" disabled><i class="fas fa-info-circle"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center pb-3">
+                        <div id="cont_boton_m2">
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="boton_m2"></button>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="input-group flex-nowrap">
+                                <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
+                                <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" disabled>
+                            </div>
+                        </div>
+                        
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-12 col-lg-3 columna cabecera">
-                            <div class="row mb-3">
-                                <h5><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</h5>
-                                <h5><small><i class="fas fa-circle text-danger"></i></small> Venenos.</h5>
-                                <h5><small><i class="far fa-circle text-light"></i></small> normales.</h5>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-12 mb-3 mb-md-0">
-                                    <ul class="list-group list-group-flush rounded">
-                                        <p class="placeholder-glow">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-wave">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-glow">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-wave">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-glow">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                        <p class="placeholder-wave">
-                                            <span class="placeholder col-12"></span>
-                                        </p>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-lg-9 columna">
-                            <div class="row justify-content-center pb-3">
-                                <div class="col-sm-5">
-                                    <div class="input-group flex-nowrap">
-                                        <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                                        <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
-                                    </div>
-                                </div>
-                            </div>
+                        <ul class="nav justify-content-end">
+                            <li class="nav-item">
+                                <span class="nav-link text-dark"><small><i class="fas fa-circle text-warning"></i></small> Biologicos.</span>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link text-dark"><i class="fas fa-circle text-danger"></i></small> Venenos.</a>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link text-dark"><small><i class="far fa-circle text-light"></i></small> normales.</span>
+                            </li>
+                        </ul>
+                        <div class="col-12">
+                        
                             <div class="table-responsive">
-                                <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
+                                <table class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
                                     <thead class="table-dark">
                                         <tr>
+                                            {{-- <th class="text-center">Id</th> --}}
                                             <th class="text-center">Ubicación</th>
                                             <th class="text-center">Cantidad</th>
                                             <th class="text-center">Lote</th>
@@ -626,16 +619,16 @@
                             
                             <div class="row justify-content-end">
                                 <div class="col-4">
-                                    <div class="d-grid gap-2 py-3" id="guardar" onclick="guardar()">
-                                        <button type="button" class="btn btn-dark disabled">
+                                    <div class="d-grid gap-2 py-3">
+                                        <button class="btn btn-dark" type="button" disabled>
                                             <span class="spinner-border spinner-border-sm"
-                                            role="status" aria-hidden="true"></span> guardando...
+                                            role="status" aria-hidden="true"></span> Finalizar
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>   
                 `) ;
             }
             

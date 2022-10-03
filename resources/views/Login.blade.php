@@ -37,6 +37,19 @@
                 background: rgba(10, 10, 10, 0.3);
                 font-size: larger;
             }
+            
+            .boton {
+                height: 3rem;
+                width: 3rem;
+                border-radius: 50%;
+            }
+            .boton:hover {
+                background: rgb(116, 115, 115);
+                color: #000;
+                height: 3rem;
+                width: 3rem;
+                border-radius: 50%;
+            }
         </style>
         @yield('css')
         
@@ -95,6 +108,38 @@
                             </div>
         
                         </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Button trigger modal -->
+            <div class=" fixed-bottom d-flex flex-row-reverse mb-4 mr-4 pr-3">
+                <button type="button" class="boton btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" title="Descargar aplicación mobil">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Apk</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-center">
+                                <div class="col-auto">
+                                    <img src="https://chart.apis.google.com/chart?cht=qr&chs=200x200&chld=L|0&chl=https%3A%2F%2Fappsgeyser.com%2Fapi%2Ftrack%2Fredirect%3Furl%3Dhttps%253A%252F%252Ffiles.appsgeyser.com%252FLogisticaIvanAgro_15955868.apk%253Fsrc%253Dpage" alt="QR_Download">
+                                </div>  
+                                <div class="col-12 text-center">
+                                    <h4>
+                                        Para descargar el apk 
+                                        <a href="https://files.appsgeyser.com/LogisticaIvanAgro_15955868.apk?utm_source=email&utm_medium=email&utm_campaign=downloadApp" target="_blank">LogisticaIvanagro </a> 
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

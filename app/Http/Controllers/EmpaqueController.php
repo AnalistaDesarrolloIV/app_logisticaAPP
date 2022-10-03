@@ -68,7 +68,7 @@ class EmpaqueController extends Controller
 
     public function savePack(Request $request, $id)
     {
-        try {
+        // try {
             $input = $request->all();
             
             session_start();
@@ -78,13 +78,13 @@ class EmpaqueController extends Controller
                 'Password' => 'Asdf1234$',
             ])->json();
 
-            $_SESSION['B1SESSION'] = $response['SessionId'];
+            $Token = $response['SessionId'];
 
             $state = "Empacado";
 
             $H_F_EMP =  new DateTime("now", new DateTimeZone('America/Bogota'));
 
-            $ped = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?" . '$filter ' . "=BaseRef eq ('" . $id . "')")->json();
+            $ped = Http::retry(20, 300)->withToken($Token)->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?" . '$filter ' . "=BaseRef eq ('" . $id . "')")->json();
             $ped = $ped['value'];
 
             foreach ($ped  as $key => $value) {
@@ -128,13 +128,13 @@ class EmpaqueController extends Controller
             }
             Alert::success('¡Guardado!', "Empaque finalizado exitosamente.");
             return redirect()->route('opciones');
-        } catch (\Throwable $th) {
-            session_destroy();
-            setcookie('USER', '', time()-43200);
-            setcookie('USER_ROL', '', time()-43200);
-            Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
-            return redirect('/');
-        }
+        // } catch (\Throwable $th) {
+        //     session_destroy();
+        //     setcookie('USER', '', time()-43200);
+        //     setcookie('USER_ROL', '', time()-43200);
+        //     Alert::warning('¡La sección expiro!', 'Por favor vuleve a acceder');
+        //     return redirect('/');
+        // }
     }
 
 
