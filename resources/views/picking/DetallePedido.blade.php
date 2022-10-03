@@ -278,9 +278,7 @@
                                 
                                 let id = element['ItemCode']+"-"+res[0]+"-"+cantidad+"-"+element['LOTE'];
                                 let ID = id.toString();
-                                // console.log(ID);
                                 ID = ID.replace('/','-');
-                                // Dará cómo resultado: 'Texto reemplazado'
                                 console.log(ID);
 
                             if (element['U_IV_ESTA'] == "Por Recoger") {
@@ -506,7 +504,6 @@
                         title: 'Producto',
                         text: 'Producto recogido.',
                     })
-                    // $('#'+id).addClass('table-success');
                     $('#check-'+ID).prop("checked", true);
                     $('#close_m').click();
                     $('#code_bar').focus();

@@ -29,9 +29,6 @@
                                     <img src="{{url('/')}}/img/picking.svg" class="card-img-top " height="320rem"  alt="Packing">
                                     <div class="card-body text-center">
                                         <h2 class="card-title"><b>Empaque</b></h2>
-                                        <!-- <div class="d-grid gap-2">
-                                            <a href="#" class="btn btn-primary" type="button">Button</a>
-                                        </div> -->
                                     </div>
                                 </div>
                             </div>

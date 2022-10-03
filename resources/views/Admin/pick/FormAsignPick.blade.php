@@ -85,7 +85,6 @@
                             <table id="tbl" class="table table-striped table-bordered nowrap" style="width:100%; min-width: 100%">
                                 <thead class="table-dark">
                                     <tr>
-                                        {{-- <th class="text-center">Id</th> --}}
                                         <th class="text-center">Ubicación</th>
                                         <th class="text-center">Cantidad</th>
                                         <th class="text-center">Lote</th>
@@ -215,7 +214,6 @@
 
 @section('script')
         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-        <!-- <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap.min.js"></script> -->
         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
         <script src="https://cdn.datatables.net/fixedheader/3.2.4/js/dataTables.fixedHeader.min.js"></script>
@@ -247,7 +245,6 @@
                     }
                 } );
             
-                // new $.fn.dataTable.FixedHeader( table );
 
             } );
             

@@ -142,10 +142,8 @@
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css"> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="sweetalert2.min.css"> -->
     <style>
         
         .packing{
@@ -218,7 +216,6 @@
 
 @section('script')
         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-        <!-- <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap.min.js"></script> -->
         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
         <script src="https://cdn.datatables.net/fixedheader/3.2.4/js/dataTables.fixedHeader.min.js"></script>
@@ -643,16 +640,6 @@
                         }
                     }
                 }
-                
-                // if (tabla_cont >= (arreglo.length)) {
-                //     $('#cont_boton_f').text('');
-                //     $('#cont_boton_f').append(`
-                //         <div class="d-grid gap-2 py-3">
-                //             <button class="btn btn-dark" type="button" onclick="guardar()">Finalizar</button>
-                //         </div>
-                //     `);
-                // }
-
 
                 $('#code_bar').val('');
                 $('#code_bar').focus();

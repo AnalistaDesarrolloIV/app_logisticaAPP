@@ -194,7 +194,6 @@
         search_most();
 
         function ingreso(id) {
-            // $("#ingreso_"+id).prop("disabled",true);
             
             $("#mostrador").html(
             `

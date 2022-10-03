@@ -70,18 +70,6 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class=" mb-3">
-                                        {{-- <input type="text" class="form-control @error('documento') is-invalid @enderror" id="doc" placeholder="name@example.com" name="documento" aria-describedby="helpDoc" autofocus>
-                                        <label for="doc">Usuario <b style="color: red;">*</b></label>
-                                        <div id="helpDoc" class="form-text">
-                                            Ingresar nombre de usuario para iniciar recolección.
-                                        </div>
-                                        @error('documento')
-                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                <strong>¡Error!</strong> {{ $message }}
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                            </div>
-                                        @enderror --}}
-        
                                         <label for="user" class="form-label">Usuario <b style="color: red;">*</b></label>
                                         <input class="form-control form-control-lg @error('usuario') is-invalid @enderror" type="text" multiple name="usuario" id="user" list="dopusuarios" required size="64" autofocus>
         
@@ -210,7 +198,6 @@
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if(keycode == '13'){
                     $("#btnSubmit").click();
-                    // alert('You pressed a "enter" key in textbox');
                 }
             });
         </script>

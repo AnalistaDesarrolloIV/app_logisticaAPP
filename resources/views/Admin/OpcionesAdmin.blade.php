@@ -21,23 +21,6 @@
                     </a>
                 </div>
             
-                {{-- <div class="col-11 col-md-5  opacidad rounded">
-                    <a href="{{route('listPack')}}" style="text-decoration: none; color:black;">
-                        <div class="row justify-content-center">
-                            <div class="col">
-                                <div class="mt-2" style="width: 100%; padding: 0px; margin: 0px;">
-                                    <img src="{{url('/')}}/img/picking.svg" class="card-img-top " height="320rem"  alt="Packing">
-                                    <div class="card-body text-center">
-                                        <h2 class="card-title"><b>Empaque</b></h2>
-                                        <!-- <div class="d-grid gap-2">
-                                            <a href="#" class="btn btn-primary" type="button">Button</a>
-                                        </div> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div> --}}
         </div>
     </div>
 @endsection
