@@ -279,7 +279,6 @@
                                 let id = element['ItemCode']+"-"+res[0]+"-"+cantidad+"-"+element['LOTE'];
                                 let ID = id.toString();
                                 ID = ID.replace('/','-');
-                                console.log(ID);
 
                             if (element['U_IV_ESTA'] == "Por Recoger") {
                                 if (element['Biologico'] == 'BIOLOGICOS') {
@@ -382,14 +381,12 @@
                 let codigo = $('#code_bar').val();
                 let cont = 0;
                 let idu = [];
-                console.log(codigo);
 
                 $("#tabla").find("tr").each(function (idx, row) {
                     id = $(this).attr('id');
                     if (idx >= 0) {
                         let cod_tbl = $("td:eq(4)", row).text();
                         codigo_tbl = cod_tbl.trim();
-                        console.log("codigo p:"+codigo_tbl);
                         if (codigo == codigo_tbl) {
                             idu[idx] = id.trim();
                             cont += 1;
@@ -477,7 +474,7 @@
                                 $("#contenido2").append(`
 
                                     <button type="button" class="list-group-item list-group-item-action" id="boton_m" onclick="check_ind('${id}')">
-                                        <strong>${$("td:eq(3)", row).text().trim()}</strong> ----  Lote: <small>${$("td:eq(2)", row).text().trim()} ---- Cantidad: <small>${$("td:eq(1)", row).text().trim()}</small>
+                                        <strong>${$("td:eq(3)", row).text().trim()}</strong> ----  Lote: <small>${$("td:eq(2)", row).text().trim()} ---- Cantidad: ${$("td:eq(1)", row).text().trim()} ---- Ubicación:${$("td:eq(0)", row).text().trim()}</small>
                                     </button>
 
                                 `);

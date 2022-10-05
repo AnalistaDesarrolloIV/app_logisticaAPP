@@ -52,7 +52,7 @@
                                             <div class="col-md-6">
                                                 <lable class="form-label" for="operatore">Operador</lable>
                                                 <select class="form-select select2" id="operatore" aria-label="Default select example" name="operatore">
-                                                    <option selected value="">Selecciones</option>
+                                                    <option selected value="">Seleccione</option>
                                                     @foreach ($user as $key => $val)
                                                         @if ($val['U_Tipo_Opr'] !== "ADMINISTRADOR")
                                                             <option value="{{$val['Code']}}">{{$val['Code']}}</option>
@@ -63,7 +63,7 @@
                                             <div class="col-md-6">
                                                 <lable class="form-label" for="prioridad">Prioridad</lable>
                                                 <select class="form-select select2" id="prioridad" aria-label="Default select example" name="prioridad">
-                                                    <option selected value="">Selecciones</option>
+                                                    <option selected value="">Seleccione</option>
                                                     <option value="Baja">Baja</option>
                                                     <option value="Media">Media</option>
                                                     <option value="Alta">Alta</option>
@@ -250,8 +250,6 @@
             
             var arreglo = <?php echo json_encode($ped)?>;
 
-            
-            let inicioR = '<?php echo $_SESSION['H_I_REC']?>';
 
             var arreglo2 = <?php echo json_encode($invoices)?>;
 

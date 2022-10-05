@@ -12,7 +12,7 @@
                             <div class="col-auto">
                                 <a class="btn btn-outline-dark" href="{{route('loginPack')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
                             </div>
-                            <div class="col-8 col-md-10">
+                            <div class="col-10">
                                 <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
                             </div>
                             <div class="col-auto">
@@ -142,8 +142,10 @@
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css"> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="sweetalert2.min.css"> -->
     <style>
         
         .packing{
@@ -216,6 +218,7 @@
 
 @section('script')
         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+        <!-- <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap.min.js"></script> -->
         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
         <script src="https://cdn.datatables.net/fixedheader/3.2.4/js/dataTables.fixedHeader.min.js"></script>
@@ -268,83 +271,80 @@
 
             // -----------------Tabla De Entregas--------------------
             for(let element of arreglo) {
-                
-                if (element['U_IV_ESTA'] == "Recogido") {
-                    if (element['Biologico'] == 'BIOLOGICOS') {
-                        $('#tabla').append(`
-                            <tr id="fila-${element['id__']}" class="bio">
-                                <td>
-                                    <input class="form-check-input" type="checkbox" checked disabled id="check-${element['id__']}" value="" aria-label="...">
-                                    <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm " data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
-                                        <b>${element['Dscription']}</b>
-                                    </button>
-                                </td>
+                if (element['Biologico'] == 'BIOLOGICOS') {
+                    $('#tabla').append(`
+                        <tr id="fila-${element['id__']}" class="bio">
+                            <td>
+                                <input class="form-check-input" type="checkbox" checked disabled id="check-${element['id__']}" value="" aria-label="...">
+                                <b>${element['CodeBars']}</b>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm " data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                    <b>${element['Dscription']}</b>
+                                </button>
+                            </td>
+                            
+                            <td>
+                                <b>${element['LOTE']}</b>
+                            </td>
+                            <td>
+                                <b>${element['CantLote']}</b>
+                            </td>
+                            <td>
+                                <ul  id="n_cajas-${element['id__']}">
                                 
-                                <td>
-                                    <b>${element['LOTE']}</b>
-                                </td>
-                                <td>
-                                    <b>${element['CantLote']}</b>
-                                </td>
-                                <td>
-                                    <ul  id="n_cajas-${element['id__']}">
-                                    
-                                    </ul>
-                                </td>
-                            </tr> 
-                        `);
-                    }else if (element['TOXICO'] == "Y") {
-                        $('#tabla').append(`
-                            <tr id="fila-${element['id__']}" class="tox">
-                                <td>
-                                    <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
-                                    <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
-                                        <b>${element['Dscription']}</b>
-                                    </button>
-                                </td>
-                                
-                                <td>
-                                    <b>${element['LOTE']}</b>
-                                </td>
-                                <td>
-                                    <b>${element['CantLote']}</b>
-                                </td>
-                                <td>
-                                    <b id="n_cajas-${element['id__']}"></b>
-                                </td>
-                            </tr> 
-                        `);
-                    }else {
-                        $('#tabla').append(`
-                            <tr id="fila-${element['id__']}">
-                                <td>
-                                    <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
-                                    <b>${element['CodeBars'] == '' || element['CodeBars'] == 'null' ? "1" : element['CodeBars']}</b>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
-                                        <b>${element['Dscription']}</b>
-                                    </button>
-                                </td>
-                                
-                                <td>
-                                    <b>${element['LOTE']}</b>
-                                </td>
-                                <td>
-                                    <b>${element['CantLote']}</b>
-                                </td>
-                                <td>
-                                    <b id="n_cajas-${element['id__']}"></b>
-                                </td>
-                            </tr> 
-                        `);
-                    }
+                                </ul>
+                            </td>
+                        </tr> 
+                    `);
+                }else if (element['TOXICO'] == "Y") {
+                    $('#tabla').append(`
+                        <tr id="fila-${element['id__']}" class="tox">
+                            <td>
+                                <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                <b>${element['CodeBars']}</b>
+                            </td>
+                            <td>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                    <b>${element['Dscription']}</b>
+                                </button>
+                            </td>
+                            
+                            <td>
+                                <b>${element['LOTE']}</b>
+                            </td>
+                            <td>
+                                <b>${element['CantLote']}</b>
+                            </td>
+                            <td>
+                                <b id="n_cajas-${element['id__']}"></b>
+                            </td>
+                        </tr> 
+                    `);
+                }else {
+                    $('#tabla').append(`
+                        <tr id="fila-${element['id__']}">
+                            <td>
+                                <input class="form-check-input" type="checkbox" disabled id="check-${element['id__']}" value="" aria-label="...">
+                                <b>${element['CodeBars']}</b>
+                            </td>
+                            <td>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton_m" onclick="modal_p(${element['id__']})">
+                                    <b>${element['Dscription']}</b>
+                                </button>
+                            </td>
+                            
+                            <td>
+                                <b>${element['LOTE']}</b>
+                            </td>
+                            <td>
+                                <b>${element['CantLote']}</b>
+                            </td>
+                            <td>
+                                <b id="n_cajas-${element['id__']}"></b>
+                            </td>
+                        </tr> 
+                    `);
                 }
             }
 
@@ -640,6 +640,16 @@
                         }
                     }
                 }
+                
+                // if (tabla_cont >= (arreglo.length)) {
+                //     $('#cont_boton_f').text('');
+                //     $('#cont_boton_f').append(`
+                //         <div class="d-grid gap-2 py-3">
+                //             <button class="btn btn-dark" type="button" onclick="guardar()">Finalizar</button>
+                //         </div>
+                //     `);
+                // }
+
 
                 $('#code_bar').val('');
                 $('#code_bar').focus();
@@ -790,13 +800,8 @@
                             </div>
                             
                             <div class="row justify-content-end">
-                                <div class="col-4">
-                                    <div class="d-grid gap-2 py-3">
-                                        <button class="btn btn-dark" type="button" disabled>
-                                            <span class="spinner-border spinner-border-sm"
-                                            role="status" aria-hidden="true"></span> Finalizar
-                                        </button>
-                                    </div>
+                                <div class="col-4" id="cont_boton_f"></div>
+
                                 </div>
                             </div>
                         </div>

@@ -17,21 +17,19 @@ class LoginController extends Controller
         try {
             $input = $request->all();
             
-            $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
+            $response = Http::retry(30, 5, throw: false)->post('https://10.170.20.95:50000/b1s/v1/Login',[
                 'CompanyDB' => 'INVERSIONES',
                 'UserName' => 'Desarrollos',
                 'Password' => 'Asdf1234$',
-            ])->json();
+            ])['SessionId'];
 
-
-            $_SESSION['B1SESSION'] = $response['SessionId'];
+            $_SESSION['B1SESSION'] = $response;
             
             $name = $input['usuario'];
             $pass = $input['password'];
 
-            $user = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->post('https://10.170.20.95:50000/b1s/v1/SQLQueries(%27IV_FACTURADOR%27)/List')->json();
-            $user = $user['value'];
-
+            $user = Http::withToken($_SESSION['B1SESSION'])->retry(30, 5, throw: false)->post('https://10.170.20.95:50000/b1s/v1/SQLQueries(%27IV_FACTURADOR%27)/List')['value'];
+            
             $user_db = [];
 
             foreach ($user as $key => $user_log) {

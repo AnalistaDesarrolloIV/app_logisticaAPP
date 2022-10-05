@@ -134,7 +134,7 @@
                                         let unidades = Math.trunc(extra['Cant_Unidades']);
                                         let prio = element['U_IV_Prioridad'];
                                         $('#lista').append(`
-                                            <div class="col-12 col-sm-6 col-md-4" id="ingreso_${element['BaseRef']}" onclick="ingreso(${element['BaseRef']})">
+                                            <div class="col-12 col-sm-6 col-md-4" id="ingreso_${element['BaseRef']}" onclick="ingreso()">
                                                 <a href="indexPack/${element['BaseRef']}" style="text-decoration: none; color: black;" >
                                                     <div class="card my-2 targeta">
                                                         <div class="card-body">
@@ -171,8 +171,9 @@
             }
             search();
             
-        function ingreso(id) {
-            
+        function ingreso() {
+            $("#b_lista").attr('disabled', true);
+
             $("#lista").html(
             `
             <div class="col-12 col-md-6">
@@ -195,5 +196,7 @@
             `
             );
         }
+        
+        setInterval("location.reload()",180000);
         </script>
 @endsection

@@ -157,7 +157,7 @@
                             let prio = bio['U_IV_Prioridad'];
                                 $('#mostrador').append(`
                                 <div class="col-12 col-md-10">
-                                    <a href="indexPick/${bio['BaseRef']}/${bio['DocEntry']}" style="text-decoration: none; color: black;">
+                                    <a href="indexPick/${bio['BaseRef']}/${bio['DocEntry']}" style="text-decoration: none; color: black;" onclick="ingreso()">
                                         <div class="card my-2 targeta">
                                             <div class="card-body">
                                                 <div class="row justify-content-between">
@@ -193,7 +193,9 @@
         }
         search_most();
 
-        function ingreso(id) {
+        function ingreso() {
+            $("#b_mostrador").attr('disabled', true);
+            $("#b_envio").attr('disabled', true);
             
             $("#mostrador").html(
             `
@@ -264,7 +266,7 @@
                                         let prio = element['U_IV_Prioridad'];
                                         $('#envio').append(`
                                             <div class="col-12 col-md-10">
-                                                <a href="indexPick/${element['BaseRef']}/${element['DocEntry']}" style="text-decoration: none; color: black;" >
+                                                <a href="indexPick/${element['BaseRef']}/${element['DocEntry']}" style="text-decoration: none; color: black;"  onclick="ingreso()">
                                                     <div class="card my-2 targeta">
                                                         <div class="card-body">
                                                             <div class="row justify-content-between">
@@ -301,52 +303,8 @@
         }
         search_env();
         
-        function ingreso2(id) {
-            
-            $("#mostrador").html(
-            `
-            <div class="col-12 col-md-6">
-                <div class="card" aria-hidden="true">
-                    <div class="card-body">
-                        <h5 class="card-title placeholder-glow">
-                        <span class="placeholder col-6"></span>
-                        </h5>
-                        <p class="card-text placeholder-glow">
-                        <span class="placeholder col-7"></span>
-                        <span class="placeholder col-4"></span>
-                        <span class="placeholder col-4"></span>
-                        <span class="placeholder col-6"></span>
-                        <span class="placeholder col-8"></span>
-                        </p>
-                        <a href="#" tabindex="-1" class="btn btn-dark disabled placeholder col-6"></a>
-                    </div>
-                </div>
-            </div>
-            `
-            );
-            
-            $("#envio").html(
-            `
-            <div class="col-12 col-md-6">
-                <div class="card" aria-hidden="true">
-                    <div class="card-body">
-                        <h5 class="card-title placeholder-glow">
-                        <span class="placeholder col-6"></span>
-                        </h5>
-                        <p class="card-text placeholder-glow">
-                        <span class="placeholder col-7"></span>
-                        <span class="placeholder col-4"></span>
-                        <span class="placeholder col-4"></span>
-                        <span class="placeholder col-6"></span>
-                        <span class="placeholder col-8"></span>
-                        </p>
-                        <a href="#" tabindex="-1" class="btn btn-dark disabled placeholder col-6"></a>
-                    </div>
-                </div>
-            </div>
-            `
-            );
-        }
+        
+        setInterval("location.reload()",180000);
     </script>
 
 @endsection

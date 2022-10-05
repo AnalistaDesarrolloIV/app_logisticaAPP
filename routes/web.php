@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmpaqueController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RecoleccionController;
 use App\Models\Empleados;
+use GuzzleHttp\Client;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -22,22 +25,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 Route::get('/', function () {
     try {
         session_start();
-        $response = Http::retry(20 ,300)->post('https://10.170.20.95:50000/b1s/v1/Login',[
+
+        $response = Http::retry(20, 10, throw: false)->post('https://10.170.20.95:50000/b1s/v1/Login',[
             'CompanyDB' => 'INVERSIONES',
             'UserName' => 'Desarrollos',
             'Password' => 'Asdf1234$',
-        ])->json();
+        ])['SessionId'];
 
 
-        $_SESSION['B1SESSION'] = $response['SessionId'];
-            
-            // $datos = Http::get('https://mandaryservir.co/mys/users/remesasivanagro/2022-08-30')->json();
-            // $datos = $datos['Guia'];
-            // dd($datos); 
 
-            $users = Http::retry(20, 300)->withToken($_SESSION['B1SESSION'])->post('https://10.170.20.95:50000/b1s/v1/SQLQueries(%27IV_FACTURADOR%27)/List')->json();
-            $users = $users['value'];
-            // dd($users);
+            $users = Http::retry(20, 10, throw: false)->withToken($response)->post('https://10.170.20.95:50000/b1s/v1/SQLQueries(%27IV_FACTURADOR%27)/List')['value'];
+            // $users = $users['value'];
 
         return view('Login', compact('users'));
 
@@ -69,16 +67,10 @@ Route::post('/savePack/{id}',[EmpaqueController::class,'savePack'])->name('saveP
 
 Route::get('/opcionesAdmin',[LoginController::class,'optionAdmin'])->name('opcionesAdmin');
 
-Route::get('/listPick',[RecoleccionController::class,'listPick'])->name('listPick');
-Route::get('/formAsi/{id}/{DL}',[RecoleccionController::class,'asignar'])->name('formAsi');
-Route::post('/storeAsign',[RecoleccionController::class,'storeAsign'])->name('storeAsign');
+Route::get('/listPick',[AdminController::class,'listPick'])->name('listPick');
+Route::get('/formAsi/{id}/{DL}',[AdminController::class,'asignar'])->name('formAsi');
+Route::post('/storeAsign',[AdminController::class,'storeAsign'])->name('storeAsign');
 
 
 
 Route::get('/listPack',[EmpaqueController::class,'listPack'])->name('listPack');
-
-
-// Route::get('/logPick',[RecoleccionController::class,'logPick'])->name('logPick');
-
-
-// Route::get('/logPack',[EmpaqueController::class,'logPack'])->name('logPack');

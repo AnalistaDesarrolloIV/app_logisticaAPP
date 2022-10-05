@@ -71,13 +71,14 @@
                                 <div class="col-12">
                                     <div class=" mb-3">
                                         <label for="user" class="form-label">Usuario <b style="color: red;">*</b></label>
-                                        <input class="form-control form-control-lg @error('usuario') is-invalid @enderror" type="text" multiple name="usuario" id="user" list="dopusuarios" required size="64" autofocus>
+                                        {{-- <input class="form-control form-control-lg @error('usuario') is-invalid @enderror" type="text" multiple name="usuario" id="user" list="dopusuarios" required size="64" autofocus> --}}
         
-                                        <datalist id="dopusuarios">
+                                        <select class="select2 form-control-lg" id="dopusuarios"  name="usuario" id="user">
+                                            <option value="" selected></option>
                                             @foreach($users as $key => $value)
-                                                <option value="{{$value['Code']}}" selected>{{$value['U_Tipo_Opr']}}</option>
+                                                <option value="{{$value['Code']}}">{{$value['Code']}}</option>
                                             @endforeach
-                                        </datalist>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -153,7 +154,6 @@
                 
                 let user = $("#user").val();
                 let pass = $("#pass").val();
-                console.log(user +"---"+ pass);
                 if(user == "" && pass == "") {
                     $("#user").removeClass('is-invalid');
                     $("#pass").removeClass('is-invalid');
