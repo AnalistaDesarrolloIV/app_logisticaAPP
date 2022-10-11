@@ -3,18 +3,20 @@
 
 @section('content')
 
-    <div class="container-fluid">
+    <div class="container-fluid" id="content">
         <div class="row justify-content-center">
             <div class="col-12  pt-3 px-1 px-sm-5 mt-5  opacidad rounded" id="Cont_gen">
-                <div class="row justify-content-around">
+                <div class="row justify-content-between">
                     <div class="col-auto">
                         <a class="btn btn-outline-dark" href="{{route('loginPick')}}" id="volver" ><i class="fas fa-chevron-left"></i></a>
                     </div>
-                    <div class="col-8 col-md-10">
-                        <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
-                    </div>
                     <div class="col-auto">
                         <button class="btn btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#ModalInfo" ><i class="fas fa-info-circle"></i></button>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedido N° {{$id}}.</h3>
                     </div>
                 </div>
 
@@ -22,10 +24,12 @@
                     <div id="cont_boton_m2">
                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="boton_m2"></button>
                     </div>
-                    <div class="col-sm-5">
-                        <div class="input-group flex-nowrap">
-                            <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
-                            <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
+                    <div class="d-flex justify-content-center" id="menu">
+                        <div class="col-sm-5">
+                            <div class="input-group flex-nowrap">
+                                <span class="input-group-text" id="CodeBar"> <i class="fas fa-barcode"></i> </span>
+                                <input type="text" class="form-control" placeholder="Codigo de barras" aria-label="Codigo de barras" aria-describedby="CodeBar" id="code_bar" autofocus onchange="lector()">
+                            </div>
                         </div>
                     </div>
                     
@@ -116,7 +120,16 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
     <style>
-        
+        .menu_fix{
+            width: 100%;
+            height:9%;
+            position: fixed;
+            z-index: 10000;
+            top: 0;
+            /* margin-top: calc(100% - 86%); */
+            background: rgba(10, 10, 10, 0.3);
+
+        }
         .picking{
             border-bottom: solid 1px white;
         }
@@ -214,12 +227,24 @@
                 new $.fn.dataTable.FixedHeader( table );
 
                 $('#code_bar').focus();
+                let altura = $("#menu").offset().top;
+                
+                $(window).on('scroll', function() {
+                console.log(altura);
+                    if ($(window).scrollTop() > altura-20) {
+                        $("#menu").addClass('menu_fix pt-2');
+                    }else {
+                        $("#menu").removeClass('menu_fix pt-2');
+                    }
+                })
             } );
+            
             
             var arreglo = <?php echo json_encode($ped)?>;
 
             
-            let inicioR = '<?php echo $_SESSION['H_I_REC']?>';
+            let inicioR = '<?php echo $horaI?>';
+            let session = '<?php echo $_SESSION['B1SESSION']?>';
 
             var arreglo2 = <?php echo json_encode($invoices)?>;
 
@@ -239,7 +264,7 @@
                 }
                 return cod_wms;
             }
-            
+
             // -------------------------Datos de la tabla--------------------
                 
                 let arregloP = [];
@@ -401,10 +426,25 @@
                             for(let id_t of idu) {
                                 if (id_t == id) {
                                     let ID = id.toString();
+                                    let nombre = $("td:eq(3)", row).text();
+                                    let unidad = $("td:eq(1)", row).text();
+                                    let lote = $("td:eq(2)", row).text();
+                                    let ubicacion = $("td:eq(0)", row).text()
                                     if ($('#check-'+ID).prop('checked') != true) {
                                         Swal.fire({
-                                        title: $("td:eq(3)", row).text(),
-                                        text: "Producto encontrado con "+$("td:eq(1)", row).text()+" unidades.",
+                                        html: `
+                                            <div class="row justify-content-center" style="width:100%">
+                                                <div class="col-auto">
+                                                    <h3><b>${nombre}</b></h3>
+                                                </div>
+                                                <div class="col-12 text-start">
+                                                    <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item"><b>Cantidad: </b>${unidad}</li>
+                                                        <li class="list-group-item"><b>Lote: </b>${lote}</li>
+                                                        <li class="list-group-item"><b>Ubicación: </b>${ubicacion}</li>
+                                                    </ul>    
+                                                </div>
+                                            </div>`,
                                         icon: 'success',
                                         showCancelButton: true,
                                         confirmButtonColor: '#3085d6',
@@ -419,12 +459,30 @@
                                                     
                                                 Swal.fire({
                                                     icon: 'success',
-                                                    title: 'Producto',
-                                                    text: $("td:eq(3)", row).text()+' recogido.',
+                                                    title: 'Producto recogido',
+                                                    html: `
+                                                        <div class="row justify-content-center" style="width:100%">
+                                                            <div class="col-auto">
+                                                                <p><b>${nombre}</b></p>
+                                                            </div>
+                                                            <div class="col-12 text-start">
+                                                                <ul class="list-group list-group-flush">
+                                                                    <li class="list-group-item"><b>Cantidad: </b>${unidad}</li>
+                                                                    <li class="list-group-item"><b>Lote: </b>${lote}</li>
+                                                                    <li class="list-group-item"><b>Ubicación: </b>${ubicacion}</li>
+                                                                </ul>    
+                                                            </div>
+                                                        </div>`,
                                                 })
                                                 
                                                 btnFin()
                                             }
+                                        })
+                                    }else {
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Error producto recogido',
+                                            html: `<b>${nombre}, ya fue recogido</b>`,
                                         })
                                     }
                                     
@@ -474,7 +532,7 @@
                                 $("#contenido2").append(`
 
                                     <button type="button" class="list-group-item list-group-item-action" id="boton_m" onclick="check_ind('${id}')">
-                                        <strong>${$("td:eq(3)", row).text().trim()}</strong> ----  Lote: <small>${$("td:eq(2)", row).text().trim()} ---- Cantidad: ${$("td:eq(1)", row).text().trim()} ---- Ubicación:${$("td:eq(0)", row).text().trim()}</small>
+                                        <strong>${$("td:eq(3)", row).text().trim()}</strong> ----  Lote: <small>${$("td:eq(2)", row).text().trim()} ---- Cantidad: ${$("td:eq(1)", row).text().trim()} ---- Ubicación: ${$("td:eq(0)", row).text().trim()}</small>
                                     </button>
 
                                 `);
@@ -485,27 +543,92 @@
                 });
 
                 if ($("#contenido2").text()== '') {
-                    $("#contenido2").addClass('d-flex justify-content-center');
-                    $("#contenido2").append(`
-                        <strong class="text-center text-danger">Los productos no estan en el pedido o ya fueron revisados</strong>
-                    `);
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Error producto recogido',
+                        html: `<b>Este producto, ya fue recogido o no se encuentra en el pedido.</b>`,
+                    })
                 }
             }
 
             function check_ind( id) {
                 $('#code_bar').val('');
                 let ID = id.toString();
-                if ($('#check-'+ID).prop('checked') != true) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Producto',
-                        text: 'Producto recogido.',
-                    })
-                    $('#check-'+ID).prop("checked", true);
-                    $('#close_m').click();
-                    $('#code_bar').focus();
-                    btnFin()
-                }
+                
+                $("#tabla").find("tr").each(function (idx, row) {
+                    id = $(this).attr('id');
+                    if (idx >= 0) {
+                        if (ID == id) {
+                            
+                            let nombre = $("td:eq(3)", row).text();
+                            let unidad = $("td:eq(1)", row).text();
+                            let lote = $("td:eq(2)", row).text();
+                            if ($('#check-'+ID).prop('checked') != true) {
+                                Swal.fire({
+                                html: `
+                                    <div class="row justify-content-center" style="width:100%">
+                                        <div class="col-auto">
+                                            <h3><b>${nombre}</b></h3>
+                                        </div>
+                                        <div class="col-12 text-start">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item"><b>Cantidad: </b>${unidad}</li>
+                                                <li class="list-group-item"><b>Lote: </b>${lote}</li>
+                                                <li class="list-group-item"><b>Ubicación: </b>${ubicacion}</li>
+                                            </ul>    
+                                        </div>
+                                    </div>`,
+                                icon: 'success',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Si, continuar',
+                                cancelButtonText: 'No, cancelar'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // $('#'+id).addClass('table-success');
+                                        $('#close_m').click();
+                                        $('#check-'+ID).prop("checked", true);
+                                        $('#code_bar').val('');
+                                        $('#code_bar').focus();
+                                            
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Producto',
+                                            html: `
+                                                <div class="row justify-content-center" style="width:100%">
+                                                    <div class="col-auto">
+                                                        <h3><b>${nombre}</b></h3>
+                                                    </div>
+                                                    <div class="col-12 text-start">
+                                                        <ul class="list-group list-group-flush">
+                                                            <li class="list-group-item"><b>Cantidad: </b>${unidad}</li>
+                                                            <li class="list-group-item"><b>Lote: </b>${lote}</li>
+                                                            <li class="list-group-item"><b>Ubicación: </b>${ubicacion}</li>
+                                                        </ul>    
+                                                    </div>
+                                                </div>`,
+                                        })
+                                        
+                                        btnFin()
+                                    }
+                                })
+                            }
+                            
+                        }
+                    }
+                });
+                // if ($('#check-'+ID).prop('checked') != true) {
+                //     Swal.fire({
+                //         icon: 'success',
+                //         title: 'Producto',
+                //         text: 'Producto recogido.',
+                //     })
+                //     $('#check-'+ID).prop("checked", true);
+                //     $('#close_m').click();
+                //     $('#code_bar').focus();
+                //     btnFin()
+                // }
                 
             }
 
@@ -515,6 +638,7 @@
             function btnFin(){
                 let tabla_cont = 0;
                 let filas = 0;
+                let productos = []
                 $('#cont_boton_f').text('');
                 $("#tabla").find("tr").each(function (idx, row) {
                     if (idx >= 0) {

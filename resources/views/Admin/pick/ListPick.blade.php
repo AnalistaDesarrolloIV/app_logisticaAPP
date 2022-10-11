@@ -27,6 +27,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row justify-content-center mb-3">
             <div class="col-10">
                 {{-- <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Filtros</h3> --}}
@@ -80,7 +81,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                 <h5 class="modal-title" id="titulo">Formulario de asignación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
                 </div>
                 <div class="modal-body">
                     <form action="{{route('storeAsign')}}" method="post" id="Form_asig">
@@ -382,7 +383,7 @@
                                             <td class="text-center">${extra['Comments']}</td>
                                             <td class="text-center">${element['U_IV_ESTA']}</td>
                                             <td class="text-center">
-                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'} 
+                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success"'} 
                                                 data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${element['BaseRef']}, ${element['DocEntry']})">${ope}</button>
                                             </td>
                                             <td class="text-center">
@@ -429,7 +430,7 @@
                                         <td class="text-center">${extra['Comments']}</td>
                                             <td class="text-center">${bio['U_IV_ESTA']}</td>
                                         <td class="text-center">
-                                            <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
+                                            <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success"'}
                                             data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${bio['BaseRef']}, ${bio['DocEntry']})">${ope}</button>
                                         </td>
                                         <td class="text-center">
@@ -474,7 +475,7 @@
                                                 <td class="text-center">${extra['Comments']}</td>
                                                 <td class="text-center">${element['U_IV_ESTA']}</td>
                                                 <td class="text-center">
-                                                    <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'} 
+                                                    <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success"'} 
                                                     data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${element['BaseRef']}, ${element['DocEntry']})">${ope}</button>
                                                 </td>
                                                 <td class="text-center">
@@ -523,7 +524,7 @@
                                             <td class="text-center">${extra['Comments']}</td>
                                             <td class="text-center">${bio['U_IV_ESTA']}</td>
                                             <td class="text-center">
-                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'} 
+                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success"'} 
                                                 data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${bio['BaseRef']}, ${bio['DocEntry']})">${ope}</button>
                                             </td>
                                             <td class="text-center">
@@ -570,7 +571,7 @@
                                                 <td class="text-center">${extra['Comments']}</td>
                                                 <td class="text-center">${element['U_IV_ESTA']}</td>
                                                 <td class="text-center">
-                                                    <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
+                                                    <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success"'}
                                                     data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${element['BaseRef']}, ${element['DocEntry']})">${ope}</button>
                                                 </td>
                                                 <td class="text-center">
@@ -618,7 +619,7 @@
                                             <td class="text-center">${extra['Comments']}</td>
                                             <td class="text-center">${bio['U_IV_ESTA']}</td>
                                             <td class="text-center">
-                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
+                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success"'}
                                                 data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${bio['BaseRef']}, ${bio['DocEntry']})">${ope}</button>
                                             </td>
                                             <td class="text-center">
@@ -664,7 +665,7 @@
                                                 <td class="text-center">${extra['Comments']}</td>
                                                 <td class="text-center">${element['U_IV_ESTA']}</td>
                                                 <td class="text-center">
-                                                    <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
+                                                    <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success"'}
                                                     data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${element['BaseRef']}, ${element['DocEntry']})">${ope}</button>
                                                 </td>
                                                 <td class="text-center">
@@ -713,7 +714,7 @@
                                             <td class="text-center">${extra['Comments']}</td>
                                             <td class="text-center">${bio['U_IV_ESTA']}</td>
                                             <td class="text-center">
-                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success" disabled'}
+                                                <button ${ope == "sin asignar" ? 'class="btn btn-outline-danger"' : 'class="btn btn-outline-success"'}
                                                 data-bs-toggle="modal" data-bs-target="#Modal_asignacion" onclick="openModal(${bio['BaseRef']}, ${bio['DocEntry']})">${ope}</button>
                                             </td>
                                             <td class="text-center">

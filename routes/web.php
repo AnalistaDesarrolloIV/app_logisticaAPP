@@ -35,7 +35,8 @@ Route::get('/', function () {
 
 
             $users = Http::retry(20, 10, throw: false)->withToken($response)->post('https://10.170.20.95:50000/b1s/v1/SQLQueries(%27IV_FACTURADOR%27)/List')['value'];
-            // $users = $users['value'];
+            $orden = sort($users);
+            // dd($users);
 
         return view('Login', compact('users'));
 
@@ -60,7 +61,7 @@ Route::get('/savePick/{id}/{DL}',[RecoleccionController::class,'savePick'])->nam
 
 Route::get('/loginPack',[EmpaqueController::class,'loginPack'])->name('loginPack');
 Route::get('/indexPack/{id}',[EmpaqueController::class,'indexPack'])->name('indexPack');
-Route::post('/savePack/{id}',[EmpaqueController::class,'savePack'])->name('savePack');
+Route::get('/savePack/{id}',[EmpaqueController::class,'savePack'])->name('savePack');
 
 
 // -----------------admin---------------

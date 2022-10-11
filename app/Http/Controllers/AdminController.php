@@ -15,13 +15,15 @@ class AdminController extends Controller
         session_start();
         try {
 
-            $pedido = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))')['value'];
+            $pedido = Http::withToken($_SESSION['B1SESSION'])->retry(30, 5, throw: false)->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))')['value'];
 
-            $pedido_bio = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA2?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))')['value'];
+            $pedido_bio = Http::withToken($_SESSION['B1SESSION'])->retry(30, 5, throw: false)->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA2?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))')['value'];
             
-            $user = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->post('https://10.170.20.95:50000/b1s/v1/SQLQueries(%27IV_FACTURADOR%27)/List')['value'];
+            $user = Http::withToken($_SESSION['B1SESSION'])->retry(30, 5, throw: false)->post('https://10.170.20.95:50000/b1s/v1/SQLQueries(%27IV_FACTURADOR%27)/List')['value'];
+            $orden = sort($user);
+
             
-            $datExtra = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1')['value'];
+            $datExtra = Http::withToken($_SESSION['B1SESSION'])->retry(30, 5, throw: false)->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1')['value'];
             
             return view('Admin.pick.ListPick', compact('pedido', 'datExtra', 'pedido_bio', 'user'));
         } catch (\Throwable $th) {
@@ -48,6 +50,8 @@ class AdminController extends Controller
             $datExtra = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1?".'$filter=BaseRef eq '."'".$id."'")['value'];
 
             $user = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->post('https://10.170.20.95:50000/b1s/v1/SQLQueries(%27IV_FACTURADOR%27)/List')['value'];
+            $orden = sort($user);
+
             
 
             return view('Admin.pick.FormAsignPick', compact('ped', 'id','DL', 'invoices', 'datExtra', 'user'));

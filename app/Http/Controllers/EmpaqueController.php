@@ -18,9 +18,11 @@ class EmpaqueController extends Controller
         session_start();
         try {
 
-            $entregas = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))')['value'];
+            $entregas = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])
+            ->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))')['value'];
             
-            $datExtra = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1')['value'];
+            $datExtra = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])
+            ->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1')['value'];
             
             return view('packing.ListEntregas', compact('entregas', 'datExtra'));
 
@@ -39,15 +41,26 @@ class EmpaqueController extends Controller
         try {
             $fecha_hora = new DateTime("now", new DateTimeZone('America/Bogota'));
 
-            $_SESSION['H_I_EMP'] = $fecha_hora->format('H:i:s');
+            $hi = $fecha_hora->format('H:i:s');
 
             $entrega = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?" . '$filter ' . "=BaseRef eq ('" . $id . "')")['value'];
+            $Nped = $entrega[0]['DocEntry'];
             
+            $horaI = Http::retry(30, 5)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")")['U_IV_INIEMP'];
+            
+            if ($horaI == '') {
+                $gard = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(" . $Nped . ")", [
+                    "U_IV_FECHEMP" => $fecha_hora->format('Y-m-d'),
+                    "U_IV_INIEMP" => $hi
+                ])->throw();
+                $horaI = $hi;
+            }
+
             $justy = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/SQLQueries('codigofalt')/List")['value'];
             
             $datExtra = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1?".'$filter=BaseRef eq '."'".$id."'")['value'];
            
-            return view('packing.DetalleEntrega', compact('entrega', 'id', 'justy', 'datExtra'));
+            return view('packing.DetalleEntrega', compact('entrega', 'id','horaI', 'justy', 'datExtra'));
             
         } catch (\Throwable $th) {
             session_destroy();
@@ -58,13 +71,11 @@ class EmpaqueController extends Controller
         }
     }
 
-    public function savePack(Request $request, $id)
+    public function savePack($id)
     {
         session_start();
-        try {
-            $input = $request->all();
-            
-            $Token = Http::retry(30, 5, throw: false)->post('https://10.170.20.95:50000/b1s/v1/Login', [
+        try{
+            $session = Http::retry(30, 5, throw: false)->post('https://10.170.20.95:50000/b1s/v1/Login',[
                 'CompanyDB' => 'INVERSIONES',
                 'UserName' => 'Desarrollos',
                 'Password' => 'Asdf1234$',
@@ -72,52 +83,32 @@ class EmpaqueController extends Controller
 
             $state = "Empacado";
 
-            $H_F_EMP =  new DateTime("now", new DateTimeZone('America/Bogota'));
-
-            $ped = Http::retry(30, 5, throw: false)->withToken($Token)->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?" . '$filter ' . "=BaseRef eq ('".$id."')")['value'];
+            $ped = Http::retry(30, 5, throw: false)->withToken($session)->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")['value'];
             
             $Nped = $ped[0]['DocEntry'];
-            
-            $pedC = Http::retry(20,300)->withToken($Token)->get("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")".'?$select='."U_IV_INIEMP,U_IV_FINEMP")->json();
-            
-            $horaI = $pedC['U_IV_INIEMP'];
-            $horaF = $pedC['U_IV_FINEMP'];
+            $H_F_EMP = new DateTime("now", new DateTimeZone('America/Bogota'));
 
-            // dd("HI: ".$horaI." HF: ".$horaF);
+            $horaF = Http::retry(30, 5, throw: false)->withToken($session)->get("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")")['U_IV_FINEMP'];
             
-            if ($horaI == '' && $horaF == '') {
-                $gard = Http::retry(30, 5, throw: false)->withToken($Token)->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(" . $Nped . ")", [
-                    "U_IV_FECHEMP" => $H_F_EMP->format('Y-m-d'),
-                    "U_IV_INIEMP" => $_SESSION['H_I_EMP'],
-                    "U_IV_FINEMP" => $H_F_EMP->format('H:i:s'),
+            if ($horaF == '') {
+                $gard = Http::retry(30, 5, throw: false)->withToken($session)->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")", [
+                    "U_IV_FINEMP"=> $H_F_EMP->format('H:i:s'),
                     "U_IV_FACTURADOR"=> $_COOKIE['USER']
-                ])->throw();
+                ]);
             }
-            // dd($gard);
-
-            foreach ($ped  as $key => $value) {
+            
+            foreach ( $ped  as $key => $value ) {
                 $itemCode = $value['ItemCode'];
                 $LNum = $value['LineNum'];
-                
-                if ($input['justify'][$key] == null) {
-                    $justificacion = '';
-                }else {
-                    $justificacion = $input['justify'][$key];
-                }
-
-                $gard2 = Http::retry(30, 5, throw: false)->withToken($Token)->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")", [
-                    "DocumentLines" => [
-                        [
-                            "LineNum" => $LNum,
-                            "ItemCode" => $itemCode,
-                            "U_IV_ESTA" => $state,
-                            "U_IV_EMPAC" => $input['cantidadE'][$key],
-                            "U_IV_MTOFAL" => $justificacion
+                    $gard2 = Http::retry(30, 5, throw: false)->withToken($session)->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")", [
+                        "DocumentLines"=> [
+                            [
+                                "LineNum"=> $LNum,
+                                "ItemCode"=> $itemCode,
+                                "U_IV_ESTA"=> $state                        
+                            ]
                         ]
-                    ]
-                ]);
-            // dd($gard2);
-
+                    ]);
             }
             Alert::success('¡Guardado!', "Empaque finalizado exitosamente.");
             return redirect()->route('opciones');
@@ -129,6 +120,5 @@ class EmpaqueController extends Controller
             return redirect('/');
         }
     }
-
-   
+    
 }
