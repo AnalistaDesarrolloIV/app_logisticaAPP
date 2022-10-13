@@ -10,7 +10,7 @@
                 <div class="row justify-content-center">
                     <div class="col-sm-8">
                         <div class="row">
-                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedidos Envío.</h3>
+                            <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Pedidos Envíos.</h3>
                             
                             <div class="input-group input-group-lg mb-3">
                                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
