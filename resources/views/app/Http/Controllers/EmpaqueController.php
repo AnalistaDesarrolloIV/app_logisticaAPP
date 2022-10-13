@@ -7,27 +7,25 @@ use App\Models\Empleados;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class RecoleccionController extends Controller
+class EmpaqueController extends Controller
 {
-    public function loginPick()
+    public function loginPack()
     {
         session_start();
         try {
 
-            $_SESSION['H_I_REC'] = '';
-            $pedido = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))')['value'];
+            $entregas = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])
+            ->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))')['value'];
             
-            $pedido_bio = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA2?$apply=groupby((DocEntry,CardCode,CardName,DocDate,BaseRef,DocNum,Departamento,Municipio_Ciudad,U_IV_ESTA,U_IV_Prioridad,U_IV_OPERARIO))')['value'];
+            $datExtra = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])
+            ->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1')['value'];
             
-            $datExtra = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1')['value'];
-            
-            return view('picking.ListPedidos', compact('pedido', 'datExtra', 'pedido_bio'));
-        
+            return view('packing.ListEntregas', compact('entregas', 'datExtra'));
+
         } catch (\Throwable $th) {
             session_destroy();
             setcookie('USER', '', time()-43200);
@@ -37,37 +35,33 @@ class RecoleccionController extends Controller
         }
     }
 
-    public function indexPick($id, $DL)
+    public function indexPack($id)
     {
-        
         session_start();
         try {
             $fecha_hora = new DateTime("now", new DateTimeZone('America/Bogota'));
 
-            $hi =  $fecha_hora->format('H:i:s');  
+            $hi = $fecha_hora->format('H:i:s');
 
-            $ped = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get('https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?$filter=BaseRef eq '."('".$id."')")['value'];
-            $Nped = $ped[0]['DocEntry'];
+            $entrega = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?" . '$filter ' . "=BaseRef eq ('" . $id . "')")['value'];
+            $Nped = $entrega[0]['DocEntry'];
             
-            $horaI = Http::retry(30, 5)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")")['U_IV_INIREC'];
+            $horaI = Http::retry(30, 5)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")")['U_IV_INIEMP'];
             
             if ($horaI == '') {
                 $gard = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(" . $Nped . ")", [
-                    "U_IV_INIREC" => $hi,
-                    "U_IV_FECHREC"=>$fecha_hora->format('Y-m-d'),
+                    "U_IV_FECHEMP" => $fecha_hora->format('Y-m-d'),
+                    "U_IV_INIEMP" => $hi
                 ])->throw();
                 $horaI = $hi;
             }
-            
-            $invoices = DB::connection('sqlsrv2')->table('Historico')->where('Pedido', $id)
-            ->select('ID historico','Articulo Efectuado','Descripcion Articulo', 'Lote', 'Udc', 'Cantidad', 'Bahia', 'Compartimento')->get();
 
-            $invoices = $invoices->all();
+            $justy = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/SQLQueries('codigofalt')/List")['value'];
             
             $datExtra = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1?".'$filter=BaseRef eq '."'".$id."'")['value'];
+           
+            return view('packing.DetalleEntrega', compact('entrega', 'id','horaI', 'justy', 'datExtra'));
             
-            return view('picking.DetallePedido', compact('ped', 'id', 'DL', 'horaI', 'invoices', 'datExtra'));
-       
         } catch (\Throwable $th) {
             session_destroy();
             setcookie('USER', '', time()-43200);
@@ -77,29 +71,29 @@ class RecoleccionController extends Controller
         }
     }
 
-    public function savePick($id, $DL)
-    { 
+    public function savePack($id)
+    {
         session_start();
-        try {
+        try{
             $session = Http::retry(30, 5, throw: false)->post('https://10.170.20.95:50000/b1s/v1/Login',[
                 'CompanyDB' => 'INVERSIONES',
                 'UserName' => 'Desarrollos',
                 'Password' => 'Asdf1234$',
             ])['SessionId'];
 
-            $state = "Recogido";
-    
+            $state = "Empacado";
+
             $ped = Http::retry(30, 5, throw: false)->withToken($session)->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA?".'$filter '."=BaseRef eq ('".$id."')")['value'];
             
             $Nped = $ped[0]['DocEntry'];
-            $H_F_REC = new DateTime("now", new DateTimeZone('America/Bogota'));
+            $H_F_EMP = new DateTime("now", new DateTimeZone('America/Bogota'));
 
-            $horaF = Http::retry(30, 5, throw: false)->withToken($session)->get("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")")['U_IN_FINREC'];
+            $horaF = Http::retry(30, 5, throw: false)->withToken($session)->get("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")")['U_IV_FINEMP'];
             
             if ($horaF == '') {
                 $gard = Http::retry(30, 5, throw: false)->withToken($session)->patch("https://10.170.20.95:50000/b1s/v1/DeliveryNotes(".$Nped.")", [
-                    "U_IN_FINREC"=> $H_F_REC->format('H:i:s'),
-                    "U_IV_PATINADOR"=> $_COOKIE['USER']
+                    "U_IV_FINEMP"=> $H_F_EMP->format('H:i:s'),
+                    "U_IV_FACTURADOR"=> $_COOKIE['USER']
                 ]);
             }
             
@@ -116,9 +110,8 @@ class RecoleccionController extends Controller
                         ]
                     ]);
             }
-            Alert::success('¡Guardado!', "Recolección finalizada exitosamente.");
+            Alert::success('¡Guardado!', "Empaque finalizado exitosamente.");
             return redirect()->route('opciones');
-            
         } catch (\Throwable $th) {
             session_destroy();
             setcookie('USER', '', time()-43200);
@@ -127,6 +120,5 @@ class RecoleccionController extends Controller
             return redirect('/');
         }
     }
-
-
+    
 }

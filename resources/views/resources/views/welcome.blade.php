@@ -43,11 +43,13 @@
     </head>
     <body class="antialiased">
         <div class="relative flex items-top justify-center min-h-screen sm:items-center py-4 sm:pt-0">
-            @if ($_COOKIE['USER_ROL']== 'ADMINISTRADOR')
-                @include('Admin.layoutAdmin.NavBarAdmin')
-            @elseif($_COOKIE['USER_ROL']== 'OPERARIO' || $_COOKIE['USER_ROL']== 'OPERARIO BIOLOGICOS')
-                @include('Layouts.NavBar')
-            @endif
+            <div class="content">
+                @if ($_COOKIE['USER_ROL']== 'ADMINISTRADOR')
+                    @include('Admin.layoutAdmin.NavBarAdmin')
+                @elseif($_COOKIE['USER_ROL']== 'OPERARIO' || $_COOKIE['USER_ROL']== 'OPERARIO BIOLOGICOS')
+                    @include('Layouts.NavBar')
+                @endif
+            </div>
             @yield('content')
         </div>
                 
@@ -61,6 +63,9 @@
         @yield('script')
         <script>
             $( '.select2' ).select2( {
+                theme: "bootstrap-5"
+            } );
+            $( '.select2_m' ).select2( {
                 theme: "bootstrap-5"
             } );
             function volover() {

@@ -44,7 +44,7 @@
                     </div>
                     <div class="modal-body ">
                         <div class="table-responsive">
-                            <table id="tbl" class="table table-striped table-bordered table-light nowrap" style="width:100%">
+                            <table class="table table-striped table-bordered table-light nowrap" style="width:100%">
                                 <thead class="table-dark">
                                     <tr>
                                         <th class="text-center">Nombre producto</th>
