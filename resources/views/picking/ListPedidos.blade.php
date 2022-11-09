@@ -304,7 +304,7 @@
         search_env();
         
         
-        setInterval("location.reload()",180000);
+        setInterval("location.reload()",150000);
     </script>
 
 @endsection

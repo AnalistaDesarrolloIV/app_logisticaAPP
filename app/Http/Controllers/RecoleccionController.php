@@ -60,11 +60,13 @@ class RecoleccionController extends Controller
             }
             
             $invoices = DB::connection('sqlsrv2')->table('Historico')->where('Pedido', $id)
-            ->select('ID historico','Articulo Efectuado','Descripcion Articulo', 'Lote', 'Udc', 'Cantidad', 'Bahia', 'Compartimento')->get();
+            ->select('ID historico','Articulo Efectuado','Descripcion Articulo', 'Lote', 'Udc', 'Cantidad', 'Bahia', 'Compartimento', 'Estado')->get();
 
             $invoices = $invoices->all();
             
             $datExtra = Http::retry(30, 5, throw: false)->withToken($_SESSION['B1SESSION'])->get("https://10.170.20.95:50000/b1s/v1/sml.svc/ENTREGA1?".'$filter=BaseRef eq '."'".$id."'")['value'];
+
+            // dd($ped);
             
             return view('picking.DetallePedido', compact('ped', 'id', 'DL', 'horaI', 'invoices', 'datExtra'));
        

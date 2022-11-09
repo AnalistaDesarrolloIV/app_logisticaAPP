@@ -8,10 +8,10 @@
             <div class="col-12">
                 <ul class="nav nav-pills d-flex justify-content-around mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                      <button class="btn btn-outline-dark active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Lista Asignados</button>
+                      <button class="btn btn-outline-dark " id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Lista Asignados</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="btn btn-outline-dark" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Lista busqueda</button>
+                      <button class="btn btn-outline-dark active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Lista busqueda</button>
                     </li>
                     {{-- <li class="nav-item" role="presentation">
                       <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</button>
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="tab-pane fade" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                 <div class="row justify-content-center">
                     <div class="col-11 mt-3 cont_head">
                         <div class="table-responsive">
@@ -45,7 +45,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                 <div class="row justify-content-center mb-3">
                     <div class="col-10">
                         {{-- <h3 class="text-center pb-3" style="font-weight: bold; font-size: 35px;">Filtros</h3> --}}
@@ -146,6 +146,7 @@
 @endsection
 
 @section('css')
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <style>
         .picking{
             border-bottom: solid 1px white;
@@ -253,7 +254,6 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/fixedheader/3.2.4/js/dataTables.fixedHeader.min.js"></script>
@@ -973,7 +973,7 @@
             }
         }
 
-        setInterval("location.reload()",180000);
+        setInterval("location.reload()",150000);
     </script>
 
 @endsection

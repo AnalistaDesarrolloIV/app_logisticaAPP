@@ -167,13 +167,6 @@
         <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
         <script src="https://cdn.datatables.net/responsive/2.3.0/js/responsive.bootstrap.min.js"></script>
         <script>
-            //api consumption with javascript fetch?
-
-
-
-
-
-
 
             $(document).ready(function() {
                 var table = $('#tbl').DataTable( {
@@ -218,6 +211,7 @@
             // -----------------Tabla De Entregas--------------------
             function openModal() {
                 let total = 0;
+                    $('#tabla').text('');
                 for(let element of arreglo) {
                     if (element['U_IV_ESTA'] == "Recogido") {
                         total += element['CantLote'];
