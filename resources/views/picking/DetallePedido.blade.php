@@ -333,14 +333,6 @@
                                     TopiP= "Normal";
                                 }
                                 console.log(ID);
-                                // console.log(idPedido);
-                                // console.log(bahia);
-                                // console.log(cantidad);
-                                // console.log(element['Dscription']);
-                                // console.log(element['LOTE']);
-                                // console.log(element['CodeBars']);
-                                // console.log(estado);
-                                // console.log(TopiP);
 
                                 if (element['U_IV_ESTA'] == "Por Recoger") {
                                     let conexion = coleccionPedidos.add({
@@ -354,13 +346,6 @@
                                         Estado: estado,
                                         TipoProducto: TopiP,
                                     })
-                                    // conexion.onerror = (error) => {
-                                    //     Swal.fire({
-                                    //         icon: 'error',
-                                    //         title: 'Error',
-                                    //         html: `<b>Existen productos duplicados.</b>`,
-                                    //     })
-                                    // }
 
                                 }
                             }
